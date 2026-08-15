@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { Action } from '@/components/ui/action';
 import { Counter } from '@/components/ui/counter';
-import { Bleed, BEAT, RAIL, SHELL, staggerOffset, VOID } from '@/components/ui/layout';
+import { Bleed, BEAT, COMPARISON, RAIL, SHELL, staggerOffset, VOID } from '@/components/ui/layout';
 import { ProductCard } from '@/components/ui/product-card';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
@@ -96,17 +96,20 @@ export async function ApplicationsBand() {
         <SectionHeader index="02" label={t('applicationsLabel')} title={t('applicationsTitle')} />
       </div>
 
+      {/* No 01–06 here.
+          The section index numbers the buyer's journey, which is a real
+          sequence. These six are not: aerospace does not come before automotive,
+          and numbering them was a structural device encoding nothing — the one
+          thing a numbered marker must never be. The list is full-bleed so the
+          rows still run the width of the hall. */}
       <Bleed>
         <Reveal as="ul" className="border-t border-km-steel-600/40">
-          {applications?.children.map((child, index) => (
+          {applications?.children.map((child) => (
             <li key={child.href} data-reveal className="border-b border-km-steel-600/40">
               <Link
                 href={child.href}
                 className="group flex items-baseline gap-6 px-5 py-7 transition-colors duration-(--duration-km) ease-(--ease-km) hover:bg-km-steel-800 sm:gap-12 sm:px-6 xl:px-10"
               >
-                <span className="km-label w-8 shrink-0 text-km-steel-400 transition-colors group-hover:text-km-red-glow">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
                 <span className="font-display text-h2 text-km-paper uppercase">
                   {child.kind === 'literal' ? child.label : tNav(child.key)}
                 </span>
@@ -168,12 +171,12 @@ export async function TechnologyTeaser() {
         <div data-reveal className={RAIL.fiveSeven}>
           <p className="max-w-[42ch] text-body text-km-steel-400">{t('technologyBody')}</p>
 
-          {/* Unequal columns and three different baselines. Three equal figures
-              on one line is a scoreboard; these are a measurement, a ratio and a
-              proportion, and they are not the same kind of number. */}
-          <dl className="grid grid-cols-2 gap-x-10 gap-y-12 sm:grid-cols-[1.1fr_0.8fr_1.2fr]">
-            {(['ppi', 'split', 'contact'] as const).map((key, index) => (
-              <div key={key} className={['', 'sm:mt-14', 'sm:mt-6'][index]}>
+          {/* Three measurements of one scraped surface, read together — so one
+              baseline. They were on three different heights, which made a set of
+              related figures look like three unrelated boasts. */}
+          <dl className={`${COMPARISON} grid-cols-2 sm:grid-cols-3`}>
+            {(['ppi', 'split', 'contact'] as const).map((key) => (
+              <div key={key}>
                 <dd className="font-mono text-spec-xl text-km-paper">
                   {t(`technologyStats.${key}.value`)}
                 </dd>
@@ -221,17 +224,12 @@ export async function NumbersStrip() {
     <section className="mt-40 border-y border-km-steel-600/60 bg-km-charcoal sm:mt-56">
       <Reveal
         as="dl"
-        className={`${SHELL} grid grid-cols-2 items-start gap-x-8 gap-y-16 py-24 lg:grid-cols-[1.2fr_1fr_0.9fr_1.3fr]`}
+        className={`${SHELL} ${COMPARISON} grid-cols-2 py-24 lg:grid-cols-4`}
       >
-        {/* Four different baselines, not two. An alternating offset is still a
-            pattern the eye resolves in one pass; four unequal ones make it
-            travel. */}
-        {stats.map((stat, index) => (
-          <div
-            key={stat.key}
-            data-reveal
-            className={['', 'lg:mt-20', 'lg:mt-8', 'lg:mt-32'][index]}
-          >
+        {/* Aligned. These four are the company at a glance and they are read as
+            one row of facts; staggering them turned a summary into a scatter. */}
+        {stats.map((stat) => (
+          <div key={stat.key} data-reveal>
             <dd className="font-mono text-spec-xl text-km-paper">
               <Counter value={stat.value} suffix={stat.suffix} />
             </dd>

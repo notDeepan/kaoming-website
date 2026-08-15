@@ -4,6 +4,7 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { CompareToggle } from '@/components/compare/compare-controls';
 import { Counter } from '@/components/ui/counter';
+import { COMPARISON } from '@/components/ui/layout';
 import { SectionHeader } from '@/components/ui/section-header';
 import { ModelTable, SpecList } from '@/components/ui/spec-table';
 import type { Series, SpecRow } from '@/lib/machines';
@@ -81,18 +82,16 @@ export function SpecificationsScene({
         <SectionHeader index={index} label={t('specLabel')} title={t('specTitle')} />
 
         {/* --------------------------------------------- the big-number grid */}
-        {/* The four figures a buyer asks for first, on unequal columns and four
-            baselines. They are a travel, a speed, a taper and a load — four
-            different kinds of quantity, and a four-across ruler implies they are
-            the same kind. */}
+        {/* The four figures a buyer asks for first — and a comparison set, so
+            they are aligned on one baseline with one rule beneath them.
+            They were staggered across four heights, which read as composed and
+            cost the reader the only thing they are here for: these numbers get
+            held against another machine's four, and an eye that has to hunt for
+            each baseline cannot do that. Alignment is the feature. */}
         {highlights.length ? (
-          <dl className="mt-16 grid grid-cols-1 items-start gap-x-10 gap-y-14 sm:grid-cols-2 xl:grid-cols-[1.3fr_1fr_0.85fr_1.15fr]">
-            {highlights.map((highlight, index) => (
-              <div
-                key={highlight.label}
-                data-spec-highlight
-                className={['', 'xl:mt-16', 'xl:mt-6', 'xl:mt-24'][index % 4]}
-              >
+          <dl className={`mt-16 ${COMPARISON} grid-cols-2 xl:grid-cols-4`}>
+            {highlights.map((highlight) => (
+              <div key={highlight.label} data-spec-highlight>
                 <dd className="font-mono text-spec-xl text-km-paper">
                   <SpecFigure value={inUnit(highlight.value, unit)} />
                 </dd>

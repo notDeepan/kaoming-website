@@ -12,13 +12,22 @@ every other codebase does and it always looks fine on its own.
 What actually made the page read as generated, and what each is measured by:
 
   * every element inside one centred container    -> full-bleed count
-  * equal columns everywhere                      -> equal-column grid count
-  * every item in a row sharing one top edge      -> flat vs staggered rows
+  * no hierarchy anywhere                         -> asymmetric grid count
   * one uniform gap between everything            -> distinct section rhythms
 
-Two equal-column grids are allowed and named below. Both are deliberate: a form
-puts related fields in pairs, and the box-way/linear-way comparison is even
-*because* neither option is being recommended over the other.
+**This does not test for "never align".** An earlier version did, and that was
+the wrong rule: it counted equal-column grids as failures and pushed staggered
+baselines onto content whose entire job is being compared. A specification
+figure, a company statistic and a set of industries somebody is scanning to find
+their own are all read *across*, and alignment is what makes that possible.
+
+So the rule this encodes is the real one:
+
+  * **hierarchy** — where one thing matters more, it is bigger (the flagship)
+  * **comparison** — where things are peers, they share a baseline (the specs)
+
+and both are asserted, because either one alone is a layout that looks composed
+and reads badly.
 """
 
 import sys
@@ -75,10 +84,6 @@ COMPOSED = [
     "/en/technology",
 ]
 
-# Equal columns that are correct. Anything else failing the check is a
-# three-across grid that crept back in.
-ALLOWED_EQUAL = ("md:grid-cols-2", "sm:grid-cols-2")
-
 with sync_playwright() as p:
     browser = p.chromium.launch(
         headless=True, args=["--use-gl=swiftshader", "--enable-unsafe-swiftshader"]
@@ -99,24 +104,9 @@ with sync_playwright() as p:
 
         check(f"{path} escapes the container", a["bleed"] >= 2, f"{a['bleed']} full-bleed")
         check(
-            f"{path} composes asymmetrically",
+            f"{path} composes with hierarchy",
             a["asym"] >= 2,
             f"{a['asym']} asymmetric grids",
-        )
-
-        unexplained = [
-            e for e in a["equal"] if not any(token in e for token in ALLOWED_EQUAL)
-        ]
-        check(
-            f"{path} has no equal-column grids",
-            not unexplained,
-            str(unexplained[:2]),
-        )
-
-        check(
-            f"{path} staggers its rows",
-            a["flat"] == 0,
-            f"{a['flat']} rows share one top edge",
         )
         check(
             f"{path} varies its vertical rhythm",
@@ -124,6 +114,69 @@ with sync_playwright() as p:
             f"rhythms {sorted(set(a['rhythms']))}",
         )
         page.close()
+
+    # --- Comparison sets share a baseline.
+    #
+    # The other half of the rule, and the half that was got wrong first. These
+    # are read across, so every one of them must sit on one line.
+    compare = browser.new_page(viewport={"width": 1440, "height": 900})
+
+    for path, selector, label in (
+        (
+            "/en/products/gantry-machining-center/kmc-gm",
+            "[data-spec-highlight]",
+            "the four specification figures",
+        ),
+        (
+            "/en/products/gantry-machining-center/kmc-gm",
+            "[data-application-tile]",
+            "the five industries",
+        ),
+    ):
+        compare.goto(f"{BASE}{path}")
+        compare.wait_for_load_state("networkidle")
+        compare.evaluate("scrollTo(0, document.body.scrollHeight)")
+        compare.wait_for_timeout(1200)
+
+        tops = compare.evaluate(
+            """(sel) => {
+              const els = [...document.querySelectorAll(sel)];
+              return [...new Set(els.map((e) => Math.round(e.getBoundingClientRect().top)))].length;
+            }""",
+            selector,
+        )
+        # One row on a wide screen; the grid wraps to two on narrower ones, so
+        # anything up to two distinct baselines is alignment, not stagger.
+        check(f"{label} share a baseline", 0 < tops <= 2, f"{tops} distinct top edges")
+
+    # The hierarchy half: the flagship must still dominate its rail.
+    compare.goto(f"{BASE}/en")
+    compare.wait_for_load_state("networkidle")
+    widths = compare.evaluate(
+        """() => [...document.querySelectorAll('article')]
+             .map((a) => Math.round(a.getBoundingClientRect().width))
+             .filter((w) => w > 100)"""
+    )
+    check(
+        "the flagship machine still dominates",
+        bool(widths) and max(widths) > min(widths) * 1.4,
+        f"widths {widths[:4]}",
+    )
+
+    # A numbered marker must mean something. The industries are not a sequence.
+    compare.goto(f"{BASE}/en")
+    compare.wait_for_load_state("networkidle")
+    numbered = compare.evaluate(
+        """() => {
+          const band = [...document.querySelectorAll('section')]
+            .find((s) => s.querySelector('a[href*="/applications/"]'));
+          if (!band) return 0;
+          return [...band.querySelectorAll('a[href*="/applications/"] span')]
+            .filter((s) => /^\\d\\d$/.test(s.textContent.trim())).length;
+        }"""
+    )
+    check("industries carry no false sequence numbering", numbered == 0, f"{numbered} numerals")
+    compare.close()
 
     # The composition must not cost a sideways scroll on a phone — bleeds and
     # negative margins are exactly how that happens.

@@ -13,12 +13,32 @@ import type { ReactNode } from 'react';
  * one centred container, even rows, uniform gaps. Part B.2's own "explicitly
  * avoid" list already said as much: *too many boxes*.
  *
- * Three rules these primitives exist to enforce:
+ * ## When a grid is the right answer
+ *
+ * The rule is **not** "never align". An engineering drawing has a title block
+ * and a parts list, and the parts list is a table for a reason: the moment
+ * content exists to be *compared*, alignment stops being timid and starts being
+ * the thing that makes it readable.
+ *
+ *   **Asymmetry, stagger, bleed** — where there is a hierarchy or a narrative.
+ *   One machine that matters more than the others. A photograph that carries a
+ *   section. A title block against a wide field.
+ *
+ *   **A grid, aligned, equal** — where the reader's job is to compare like with
+ *   like. Four specification figures. A set of industries they are scanning to
+ *   find their own. Views of one machine. Staggering those makes the eye hunt
+ *   for a baseline that should have been given to it.
+ *
+ * Applying the first rule to the second kind of content is how a layout ends up
+ * decorated rather than designed — the offsets encode nothing, and the reader
+ * pays for them.
+ *
+ * Three rules these primitives still enforce:
  *
  *  1. **The container is a default, not a law.** `Bleed` escapes it.
- *  2. **Nothing is 50/50.** The rails below are 5/7, 4/8 and 3/9.
- *  3. **Space is hierarchy.** `VOID` separates unrelated things; `WELD` is for
- *     things that belong together. There is no medium.
+ *  2. **A split with a dominant side is not 50/50.** The rails are 5/7, 4/8, 3/9.
+ *  3. **Space is hierarchy.** `VOID` separates unrelated things; there is no
+ *     medium gap.
  */
 
 /** The centred measure. Still the default for reading, never for composing. */
@@ -30,20 +50,15 @@ export const VOID = 'py-40 sm:py-56';
 export const BEAT = 'py-24 sm:py-32';
 
 /**
- * Indent for a staggered list, as an inline style — the step depends on the
- * item's position, which Tailwind cannot express as a static class.
+ * A comparison set: aligned, equal, one baseline.
  *
- * **Zero below `lg`.** At 390px a fifth row indented five steps had 160px of
- * padding and 160px left for its title; the stagger is a wide-screen device and
- * on a phone it is just a squeeze. Returning a custom property that the `lg`
- * breakpoint consumes keeps the rule in CSS where the media query lives.
+ * Named so the intent is visible at the call site. Specification figures, the
+ * company's numbers, a set of industries somebody is scanning to find their
+ * own — these are read *against each other*, and every device that makes them
+ * distinct makes that harder. They were staggered across four baselines for a
+ * while, which looked composed and cost the reader the one thing they came for.
  */
-export function stepIndent(index: number, step = 2.5): React.CSSProperties {
-  return { '--km-step': `${index * step}rem` } as React.CSSProperties;
-}
-
-/** Paired with `stepIndent`: applies the step only from `lg` up. */
-export const STEP_INDENT = 'lg:ps-(--km-step)';
+export const COMPARISON = 'grid items-start gap-x-10 gap-y-12';
 
 /**
  * Asymmetric rails. The first number is the narrow column.

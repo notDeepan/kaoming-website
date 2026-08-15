@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Action } from '@/components/ui/action';
+import { COMPARISON } from '@/components/ui/layout';
 import { PageHeader, Provenance, SHELL } from '@/components/ui/page-shell';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
@@ -78,14 +79,12 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="border-y border-km-steel-600/60 bg-km-charcoal">
         <Reveal
           as="dl"
-          className={`${SHELL} grid grid-cols-2 items-start gap-x-10 gap-y-14 py-20 xl:grid-cols-[0.9fr_0.8fr_1fr_1.3fr]`}
+          className={`${SHELL} ${COMPARISON} grid-cols-2 py-20 xl:grid-cols-4`}
         >
-          {figures.map((figure, index) => (
-            <div
-              key={figure.label}
-              data-reveal
-              className={['', 'xl:mt-16', 'xl:mt-6', 'xl:mt-24'][index]}
-            >
+          {/* Founded, series, agents, plant — the company in one row, read
+              across. Aligned for the same reason the specification figures are. */}
+          {figures.map((figure) => (
+            <div key={figure.label} data-reveal>
               <dd className="font-mono text-spec-xl text-km-paper">{figure.value}</dd>
               <dt className="km-label mt-4 border-t border-km-steel-600/60 pt-4 text-km-steel-400">
                 {figure.label}

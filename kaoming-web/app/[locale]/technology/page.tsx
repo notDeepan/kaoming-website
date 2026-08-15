@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { WaySelector } from '@/components/company/way-selector';
 import { Action } from '@/components/ui/action';
-import { stepIndent, STEP_INDENT } from '@/components/ui/layout';
 import { ContentGap, PageHeader, Provenance, SHELL } from '@/components/ui/page-shell';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
@@ -71,16 +70,17 @@ export default async function TechnologyPage({
         <section id="scraping" className={`${SHELL} scroll-mt-28 pb-24`}>
           <SectionHeader index="01" label={t('sections.scraping')} title={scraping.title} />
 
-          {/* Scraping is a sequence of statements about one surface, so it reads
-              as a stack of rules stepping inward — not a two-column grid, which
-              would imply the points are unrelated pairs. */}
+          {/* Four statements about one scraped surface, each a claim a buyer
+              weighs on its own. They were stepped in by 0/28/56/84px, which
+              implied a hierarchy or a sequence — there is neither, and the
+              indent left the last point starting a third of the way across the
+              measure for no reason. Flush, on rules. */}
           <Reveal as="ul" className="mt-16 max-w-[92ch] border-t border-km-steel-600/40">
-            {scraping.points.map((point, index) => (
+            {scraping.points.map((point) => (
               <li
                 key={point}
                 data-reveal
-                className={`border-b border-km-steel-600/40 py-6 text-body text-km-offwhite ${STEP_INDENT}`}
-                style={stepIndent(index, 1.75)}
+                className="border-b border-km-steel-600/40 py-6 text-body text-km-offwhite"
               >
                 {point}
               </li>

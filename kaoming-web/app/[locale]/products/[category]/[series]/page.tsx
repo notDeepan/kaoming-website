@@ -277,18 +277,13 @@ export default async function SeriesPage({
       {gallery.length ? (
         <section className={`${SHELL} py-24`}>
           <SectionHeader label={t('galleryLabel')} title={t('galleryTitle')} />
-          {/* Views of one machine, not a contact sheet: unequal columns and
-              staggered baselines, so the eye moves between them. */}
-          <Reveal
-            as="ul"
-            className="mt-16 grid items-start gap-x-8 gap-y-16 sm:grid-cols-2 xl:grid-cols-[1.2fr_0.95fr_1.1fr]"
-          >
-            {gallery.map((image, index) => (
-              <li
-                key={image.plate.src}
-                data-reveal
-                className={['', 'xl:mt-20', 'xl:mt-8'][index % 3]}
-              >
+          {/* Views of one machine, aligned. Staggering them made the reader
+              compare a front elevation against a three-quarter at two different
+              heights — a gallery of one object is exactly the case where the
+              grid is doing the work. */}
+          <Reveal as="ul" className="mt-16 grid items-start gap-x-8 gap-y-12 sm:grid-cols-2 xl:grid-cols-3">
+            {gallery.map((image) => (
+              <li key={image.plate.src} data-reveal>
                 <figure className="border border-km-steel-600/60 bg-km-offwhite p-4">
                   <Image
                     src={image.plate.src}
