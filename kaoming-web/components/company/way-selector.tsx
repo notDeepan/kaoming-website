@@ -54,6 +54,11 @@ export function WaySelector({ box, linear }: { box: Way; linear: Way }) {
         ))}
       </div>
 
+      {/* The one place on the site where two equal columns are correct.
+          Everything else is deliberately asymmetric, because an even split
+          implies two things carry the same weight — and here they do. Box way
+          and linear way are alternatives, not a recommendation; giving one more
+          width would make a choice KAO MING has not made for the buyer. */}
       <div className="mt-6 grid gap-px md:mt-0 md:grid-cols-2">
         {(
           [

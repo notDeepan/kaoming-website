@@ -78,12 +78,18 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="border-y border-km-steel-600/60 bg-km-charcoal">
         <Reveal
           as="dl"
-          className={`${SHELL} grid gap-x-10 gap-y-12 py-16 sm:grid-cols-2 xl:grid-cols-4`}
+          className={`${SHELL} grid grid-cols-2 items-start gap-x-10 gap-y-14 py-20 xl:grid-cols-[0.9fr_0.8fr_1fr_1.3fr]`}
         >
-          {figures.map((figure) => (
-            <div key={figure.label} data-reveal className="border-t border-km-steel-600/60 pt-6">
+          {figures.map((figure, index) => (
+            <div
+              key={figure.label}
+              data-reveal
+              className={['', 'xl:mt-16', 'xl:mt-6', 'xl:mt-24'][index]}
+            >
               <dd className="font-mono text-spec-xl text-km-paper">{figure.value}</dd>
-              <dt className="km-label mt-3 text-km-steel-400">{figure.label}</dt>
+              <dt className="km-label mt-4 border-t border-km-steel-600/60 pt-4 text-km-steel-400">
+                {figure.label}
+              </dt>
             </div>
           ))}
         </Reveal>
@@ -106,12 +112,16 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="border-t border-km-steel-600/60">
         <div className={`${SHELL} py-20`}>
           <SectionHeader index="02" label={t('hqLabel')} title={identity.legalName} />
-          <div className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+
+          {/* An address block, set as one. The four fields are not four equal
+              things — the address is long and the telephone is short, so they
+              get the widths they need. */}
+          <dl className="mt-16 grid gap-x-12 gap-y-10 sm:grid-cols-2 xl:grid-cols-[1fr_1.6fr_0.8fr_1.1fr]">
             <Detail label={t('detail.chineseName')} value={identity.chineseName} />
             <Detail label={t('detail.address')} value={contact.address} />
             <Detail label={t('detail.tel')} value={contact.tel} />
             <Detail label={t('detail.email')} value={contact.email} />
-          </div>
+          </dl>
           <div className="mt-12">
             <Action href="/support/contact" variant="primary">
               {t('cta')}
@@ -127,8 +137,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div className="border-t border-km-steel-600/60 pt-5">
-      <p className="km-label text-km-steel-400">{label}</p>
-      <p className="mt-2 text-body text-km-offwhite">{value}</p>
+      <dt className="km-label text-km-steel-400">{label}</dt>
+      <dd className="mt-2 text-body text-km-offwhite">{value}</dd>
     </div>
   );
 }

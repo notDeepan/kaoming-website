@@ -81,14 +81,24 @@ export function SpecificationsScene({
         <SectionHeader index={index} label={t('specLabel')} title={t('specTitle')} />
 
         {/* --------------------------------------------- the big-number grid */}
+        {/* The four figures a buyer asks for first, on unequal columns and four
+            baselines. They are a travel, a speed, a taper and a load — four
+            different kinds of quantity, and a four-across ruler implies they are
+            the same kind. */}
         {highlights.length ? (
-          <dl className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 xl:grid-cols-4">
-            {highlights.map((highlight) => (
-              <div key={highlight.label} data-spec-highlight className="border-t border-km-steel-600/60 pt-6">
+          <dl className="mt-16 grid grid-cols-1 items-start gap-x-10 gap-y-14 sm:grid-cols-2 xl:grid-cols-[1.3fr_1fr_0.85fr_1.15fr]">
+            {highlights.map((highlight, index) => (
+              <div
+                key={highlight.label}
+                data-spec-highlight
+                className={['', 'xl:mt-16', 'xl:mt-6', 'xl:mt-24'][index % 4]}
+              >
                 <dd className="font-mono text-spec-xl text-km-paper">
                   <SpecFigure value={inUnit(highlight.value, unit)} />
                 </dd>
-                <dt className="km-label mt-3 text-km-steel-400">{tSpec(highlight.label)}</dt>
+                <dt className="km-label mt-4 border-t border-km-steel-600/60 pt-4 text-km-steel-400">
+                  {tSpec(highlight.label)}
+                </dt>
               </div>
             ))}
           </dl>

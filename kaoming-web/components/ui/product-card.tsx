@@ -4,9 +4,16 @@ import type { Series } from '@/lib/machines';
 import { DimensionRule, MachinePlate } from './machine-plate';
 
 /**
- * Part F.2 — the miniature showroom. Dark steel field, the machine lit on it,
- * the catalogue name in display type, and the series' principal dimension drawn
- * beneath. Lifts on hover; never bounces (Part D).
+ * Part F.2 — the miniature showroom.
+ *
+ * **A rule and a void, not a box.** It was a bordered, filled panel with even
+ * padding, and four of them in a row is the single most templated thing a page
+ * can do — Part B.2's own avoid-list says "too many boxes". A machine on the
+ * dark field, with a hairline above its name and nothing else drawn, reads far
+ * more engineered than the same machine inside a card.
+ *
+ * The hairline is the interaction: it is dim at rest, and on hover it lights to
+ * the accent and the machine lifts. Nothing scales, nothing bounces (Part D).
  *
  * `headline` is the one verified figure that distinguishes this series at a
  * glance. Where the catalogue page has not been transcribed the card says how
@@ -17,60 +24,80 @@ export async function ProductCard({
   series,
   headline,
   priority = false,
+  /** `lead` gives the featured machine its full weight; `rail` is the support. */
+  size = 'rail',
 }: {
   series: Series;
   headline?: { label: string; value: string } | null;
   priority?: boolean;
+  size?: 'lead' | 'rail';
 }) {
   const t = await getTranslations('Products');
   const image = series.images[0];
+  const lead = size === 'lead';
 
   return (
     <article data-reveal className="group relative">
       <Link
         href={`/products/${series.categorySlug}/${series.slug}`}
-        className="block h-full border border-km-steel-600/60 bg-km-steel-800 p-6 transition-[transform,border-color,background-color] duration-(--duration-km-slow) ease-(--ease-km) hover:-translate-y-1.5 hover:border-km-steel-600 hover:bg-km-charcoal sm:p-8"
+        className="block"
       >
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h3 className="font-display text-h3 text-km-paper">{series.name}</h3>
-            <p className="mt-1.5 text-small text-km-offwhite">{series.type}</p>
-          </div>
-          {series.flagship ? (
-            <span className="km-label shrink-0 bg-km-red px-2.5 py-1 text-km-paper">
-              {t('flagship')}
-            </span>
-          ) : null}
-        </div>
-
+        {/* The machine first. On a showroom floor you see the machine before
+            you read the plate, and the page should work the same way. */}
         {image ? (
           <MachinePlate
             image={image.cut}
             alt={`${series.name} — ${image.model}`}
-            glow="sm"
+            glow={lead ? 'lg' : 'sm'}
             priority={priority}
             transitionName={`machine-${series.slug}`}
-            sizes="(min-width: 1280px) 34vw, (min-width: 768px) 46vw, 90vw"
-            className="mt-8"
+            sizes={
+              lead
+                ? '(min-width: 1024px) 58vw, 92vw'
+                : '(min-width: 1024px) 26vw, (min-width: 640px) 46vw, 90vw'
+            }
+            className="transition-transform duration-(--duration-km-slow) ease-(--ease-km) group-hover:-translate-y-2"
           />
         ) : (
           <div
             aria-hidden="true"
-            className="mt-8 flex aspect-[3/2] items-center justify-center border border-dashed border-km-steel-600/60"
+            className="flex aspect-[3/2] items-center justify-center border border-dashed border-km-steel-600/40"
           >
             <span className="km-label text-km-steel-400">{t('noImage')}</span>
           </div>
         )}
 
-        <div className="mt-8 border-t border-km-steel-600/50 pt-5">
+        {/* Compression: the rule, the name and the type belong to each other and
+            sit almost on top of one another. The release is above, between this
+            machine and the last one. */}
+        <span
+          aria-hidden="true"
+          className="mt-8 block h-px w-full bg-km-steel-600/60 transition-colors duration-(--duration-km) ease-(--ease-km) group-hover:bg-km-red"
+        />
+
+        <div className="mt-4 flex items-start justify-between gap-4">
+          <div>
+            <h3
+              className={`font-display text-km-paper ${lead ? 'text-h2 uppercase' : 'text-h3'}`}
+            >
+              {series.name}
+            </h3>
+            <p className="mt-1 text-small text-km-steel-400">{series.type}</p>
+          </div>
+          {series.flagship ? (
+            <span className="km-label shrink-0 text-km-red-glow">{t('flagship')}</span>
+          ) : null}
+        </div>
+
+        <div className={lead ? 'mt-8 max-w-[34rem]' : 'mt-5'}>
           {headline ? (
             <DimensionRule label={headline.label} value={headline.value} />
           ) : (
-            <p className="km-label text-km-offwhite">
+            <p className="km-label text-km-steel-400">
               {t('modelCount', { count: series.models.length })}
             </p>
           )}
-          <p className="km-label mt-5 flex items-center gap-2 text-km-offwhite transition-colors group-hover:text-km-red-glow">
+          <p className="km-label mt-4 flex items-center gap-2 text-km-offwhite transition-colors group-hover:text-km-red-glow">
             {t('explore')}
             <svg aria-hidden="true" viewBox="0 0 16 16" className="size-3" fill="none">
               <path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" />

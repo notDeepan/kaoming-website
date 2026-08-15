@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { Action } from '@/components/ui/action';
 import { Counter } from '@/components/ui/counter';
+import { Bleed, BEAT, RAIL, SHELL, staggerOffset, VOID } from '@/components/ui/layout';
 import { ProductCard } from '@/components/ui/product-card';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
@@ -12,16 +13,37 @@ import { catalogueDocuments, factoryImages } from '@/lib/images';
 import { allSeries } from '@/lib/machines';
 import { navSections } from '@/lib/nav';
 
-const SHELL = 'mx-auto max-w-[1600px] px-5 sm:px-6 xl:px-10';
+/**
+ * The homepage bands (Part F.3).
+ *
+ * **No two consecutive sections share a structure.** They used to: every one was
+ * a centred container, a title block, a 56px gap and a row of equal cards. The
+ * rotation now runs
+ *
+ *   showcase   one dominant machine + a staggered rail   (7/5, offset)
+ *   industries an edge-anchored hairline list            (full bleed, no boxes)
+ *   technology a full-bleed photograph, stats overlapping its edge
+ *   numbers    a staggered baseline, unequal widths
+ *   network    a margin note against a wide field        (4/8)
+ *   resources  three rules, compressed
+ *
+ * and the centred CTA that follows them is the rare symmetric moment, which is
+ * what makes it land.
+ */
 
-/** Part F.2 — one machine per category, each card a miniature showroom. */
+/** Part F.2 — one machine per category. One of them dominates. */
 export async function MachineShowcase() {
   const t = await getTranslations('Home');
   const tSpec = await getTranslations('Spec');
-  const featured = featuredSeries();
+  const [lead, ...rest] = featuredSeries();
+
+  const headlineFor = (series: (typeof rest)[number]) => {
+    const headline = headlineDimension(series);
+    return headline ? { label: tSpec(headline.labelKey), value: headline.value } : null;
+  };
 
   return (
-    <section className={`${SHELL} py-24 sm:py-32`}>
+    <section className={`${SHELL} ${VOID}`}>
       <SectionHeader
         index="01"
         label={t('showcaseLabel')}
@@ -33,57 +55,72 @@ export async function MachineShowcase() {
           </Action>
         }
       />
-      <Reveal as="ul" className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-        {featured.map((series, index) => {
-          const headline = headlineDimension(series);
-          return (
-            <li key={series.slug} className="contents">
-              <ProductCard
-                series={series}
-                priority={index === 0}
-                headline={
-                  headline ? { label: tSpec(headline.labelKey), value: headline.value } : null
-                }
-              />
+
+      {/* The flagship takes seven columns and the other three share five, in a
+          staggered rail. A four-across row of identical cards says every machine
+          is equally important; they are not, and the catalogue says so. */}
+      <Reveal className={`mt-24 ${RAIL.sevenFive} lg:items-start`}>
+        {lead ? (
+          <div data-reveal>
+            <ProductCard series={lead} headline={headlineFor(lead)} priority size="lead" />
+          </div>
+        ) : null}
+
+        <ul className="grid gap-x-8 gap-y-20 sm:grid-cols-2 lg:grid-cols-1 lg:gap-y-28">
+          {rest.map((series, index) => (
+            <li key={series.slug} data-reveal className={staggerOffset(index + 1)}>
+              <ProductCard series={series} headline={headlineFor(series)} />
             </li>
-          );
-        })}
+          ))}
+        </ul>
       </Reveal>
     </section>
   );
 }
 
-/** Part F.3 — the six industries, linking to their application pages. */
+/**
+ * Part F.3 — the six industries.
+ *
+ * An edge-anchored list of hairline rows that run the full width of the
+ * viewport. It was a three-across grid of bordered tiles; six identical boxes
+ * is a table of contents pretending to be a feature.
+ */
 export async function ApplicationsBand() {
   const t = await getTranslations('Home');
   const tNav = await getTranslations('Nav');
   const applications = navSections.find((section) => section.key === 'applications');
 
   return (
-    <section className="border-y border-km-steel-600/60 bg-km-charcoal">
-      <div className={`${SHELL} py-24 sm:py-32`}>
+    <section className="bg-km-charcoal">
+      <div className={`${SHELL} ${BEAT}`}>
         <SectionHeader index="02" label={t('applicationsLabel')} title={t('applicationsTitle')} />
-        <Reveal as="ul" className="mt-14 grid gap-px border border-km-steel-600/60 bg-km-steel-600/60 sm:grid-cols-2 xl:grid-cols-3">
-          {applications?.children.map((child) => (
-            <li key={child.href} data-reveal className="bg-km-charcoal">
+      </div>
+
+      <Bleed>
+        <Reveal as="ul" className="border-t border-km-steel-600/40">
+          {applications?.children.map((child, index) => (
+            <li key={child.href} data-reveal className="border-b border-km-steel-600/40">
               <Link
                 href={child.href}
-                className="group flex h-full min-h-40 flex-col justify-between gap-8 p-7 transition-colors duration-(--duration-km) ease-(--ease-km) hover:bg-km-steel-800"
+                className="group flex items-baseline gap-6 px-5 py-7 transition-colors duration-(--duration-km) ease-(--ease-km) hover:bg-km-steel-800 sm:gap-12 sm:px-6 xl:px-10"
               >
-                <h3 className="font-display text-h3 text-km-paper">
+                <span className="km-label w-8 shrink-0 text-km-steel-400 transition-colors group-hover:text-km-red-glow">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="font-display text-h2 text-km-paper uppercase">
                   {child.kind === 'literal' ? child.label : tNav(child.key)}
-                </h3>
-                <span className="km-label flex items-center gap-2 text-km-steel-400 transition-colors group-hover:text-km-red-glow">
-                  {t('viewApplication')}
-                  <svg aria-hidden="true" viewBox="0 0 16 16" className="size-3" fill="none">
-                    <path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" />
-                  </svg>
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="km-label ms-auto hidden shrink-0 self-center text-km-steel-400 transition-transform duration-(--duration-km) ease-(--ease-km) group-hover:translate-x-2 group-hover:text-km-red-glow sm:block"
+                >
+                  {t('viewApplication')} →
                 </span>
               </Link>
             </li>
           ))}
         </Reveal>
-      </div>
+      </Bleed>
     </section>
   );
 }
@@ -91,55 +128,77 @@ export async function ApplicationsBand() {
 /**
  * Part F.3 — the technology teaser.
  *
- * The scraping figures are the strongest thing KAO MING can say about itself
- * and are quoted verbatim from the company record: over 20 points per square
- * inch, a 50/50 split of load-bearing points and oil pockets, 40% contact ratio
- * in use.
+ * A full-bleed photograph of the machining hall, with the figures overlapping
+ * its bottom edge on a negative margin. The scraping numbers are the strongest
+ * thing KAO MING can say about itself and are quoted verbatim: over 20 points
+ * per square inch, a 50/50 split of load-bearing points and oil pockets, 40%
+ * contact ratio in use.
  */
 export async function TechnologyTeaser() {
   const t = await getTranslations('Home');
   const hall = factoryImages[0];
 
   return (
-    <section className={`${SHELL} py-24 sm:py-32`}>
-      <Reveal className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-        <div data-reveal>
-          <SectionHeader index="03" label={t('technologyLabel')} title={t('technologyTitle')} />
-          <p className="mt-8 max-w-[54ch] text-km-steel-400">{t('technologyBody')}</p>
-          <dl className="mt-10 grid grid-cols-3 gap-6 border-t border-km-steel-600/60 pt-8">
-            {(['ppi', 'split', 'contact'] as const).map((key) => (
-              <div key={key}>
-                <dt className="km-label text-km-steel-400">{t(`technologyStats.${key}.label`)}</dt>
-                <dd className="mt-2 font-mono text-spec-xl text-km-paper">
-                  {t(`technologyStats.${key}.value`)}
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <Action href="/company/factory" variant="text" className="mt-10">
-            {t('insideKaoMing')}
-          </Action>
-        </div>
+    <section className="pt-40 sm:pt-56">
+      <div className={SHELL}>
+        <SectionHeader index="03" label={t('technologyLabel')} title={t('technologyTitle')} />
+      </div>
 
-        {hall ? (
-          <div data-reveal className="relative">
+      {hall ? (
+        <Bleed className="mt-16">
+          <div className="relative h-[52svh] min-h-80 w-full overflow-hidden sm:h-[70svh]">
             <Image
               src={hall.src}
               alt={t('factoryAlt')}
-              width={hall.width}
-              height={hall.height}
-              sizes="(min-width: 1024px) 46vw, 92vw"
-              className="h-auto w-full"
+              fill
+              sizes="100vw"
+              className="object-cover"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-t from-km-black via-km-black/20 to-transparent"
             />
           </div>
-        ) : null}
+        </Bleed>
+      ) : null}
+
+      {/* Overlapping the photograph above it. The figures belong to the hall,
+          so they sit on it rather than politely underneath. */}
+      <Reveal className={`${SHELL} relative -mt-20 sm:-mt-28`}>
+        <div data-reveal className={RAIL.fiveSeven}>
+          <p className="max-w-[42ch] text-body text-km-steel-400">{t('technologyBody')}</p>
+
+          {/* Unequal columns and three different baselines. Three equal figures
+              on one line is a scoreboard; these are a measurement, a ratio and a
+              proportion, and they are not the same kind of number. */}
+          <dl className="grid grid-cols-2 gap-x-10 gap-y-12 sm:grid-cols-[1.1fr_0.8fr_1.2fr]">
+            {(['ppi', 'split', 'contact'] as const).map((key, index) => (
+              <div key={key} className={['', 'sm:mt-14', 'sm:mt-6'][index]}>
+                <dd className="font-mono text-spec-xl text-km-paper">
+                  {t(`technologyStats.${key}.value`)}
+                </dd>
+                <dt className="km-label mt-3 border-t border-km-steel-600/60 pt-3 text-km-steel-400">
+                  {t(`technologyStats.${key}.label`)}
+                </dt>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <Action href="/company/factory" variant="text" className="mt-16">
+          {t('insideKaoMing')}
+        </Action>
       </Reveal>
     </section>
   );
 }
 
 /**
- * Part F.3 — the numbers strip.
+ * Part F.3 — the numbers.
+ *
+ * Four figures on a staggered baseline rather than a tidy four-across row. Each
+ * one is a different width and sits at a different height, so the eye travels
+ * across them instead of scanning a ruler.
  *
  * The spec sources this from a 2022 sales deck. That deck is reference-only
  * material (CLAUDE.md) and its figures are four years stale, so every number
@@ -159,14 +218,26 @@ export async function NumbersStrip() {
   ] as const;
 
   return (
-    <section className="border-y border-km-steel-600/60 bg-km-charcoal">
-      <Reveal as="dl" className={`${SHELL} grid gap-x-10 gap-y-12 py-20 sm:grid-cols-2 xl:grid-cols-4`}>
-        {stats.map((stat) => (
-          <div key={stat.key} data-reveal className="border-t border-km-steel-600/60 pt-6">
+    <section className="mt-40 border-y border-km-steel-600/60 bg-km-charcoal sm:mt-56">
+      <Reveal
+        as="dl"
+        className={`${SHELL} grid grid-cols-2 items-start gap-x-8 gap-y-16 py-24 lg:grid-cols-[1.2fr_1fr_0.9fr_1.3fr]`}
+      >
+        {/* Four different baselines, not two. An alternating offset is still a
+            pattern the eye resolves in one pass; four unequal ones make it
+            travel. */}
+        {stats.map((stat, index) => (
+          <div
+            key={stat.key}
+            data-reveal
+            className={['', 'lg:mt-20', 'lg:mt-8', 'lg:mt-32'][index]}
+          >
             <dd className="font-mono text-spec-xl text-km-paper">
               <Counter value={stat.value} suffix={stat.suffix} />
             </dd>
-            <dt className="km-label mt-3 text-km-steel-400">{t(`numbers.${stat.key}`)}</dt>
+            <dt className="km-label mt-4 border-t border-km-steel-600/60 pt-4 text-km-steel-400">
+              {t(`numbers.${stat.key}`)}
+            </dt>
           </div>
         ))}
       </Reveal>
@@ -174,45 +245,55 @@ export async function NumbersStrip() {
   );
 }
 
-/** Part F.3 — the global network teaser. Counts only; the map is M7. */
+/** Part F.3 — the network. A margin note against a wide field. */
 export async function NetworkTeaser() {
   const t = await getTranslations('Home');
 
   return (
-    <section className={`${SHELL} py-24 sm:py-32`}>
-      <Reveal className="grid gap-12 lg:grid-cols-[1fr_auto] lg:items-end">
+    <section className={`${SHELL} ${VOID}`}>
+      <Reveal className={RAIL.fourEight}>
         <div data-reveal>
           <SectionHeader index="04" label={t('networkLabel')} title={t('networkTitle')} />
-          <p className="mt-8 max-w-[54ch] text-km-steel-400">
+        </div>
+
+        <div data-reveal className="lg:pt-24">
+          <p className="max-w-[46ch] text-body text-km-steel-400">
             {t('networkBody', {
               agents: NETWORK.international,
               countries: NETWORK.countries,
             })}
           </p>
+
+          {/* The five regions as a column of rules, hard against the field's
+              right edge — a legend, not a row of chips. */}
+          <ul className="mt-14 border-t border-km-steel-600/40">
+            {NETWORK.regions.map((region) => (
+              <li
+                key={region}
+                className="km-label border-b border-km-steel-600/40 py-3 text-km-steel-400"
+              >
+                {region}
+              </li>
+            ))}
+          </ul>
+
+          <Action href="/company/network" variant="secondary" className="mt-12">
+            {t('findRepresentative')}
+          </Action>
         </div>
-        <ul data-reveal className="flex flex-wrap gap-x-8 gap-y-3">
-          {NETWORK.regions.map((region) => (
-            <li key={region} className="km-label text-km-steel-400">
-              {region}
-            </li>
-          ))}
-        </ul>
       </Reveal>
-      <Action href="/company/network" variant="secondary" className="mt-10">
-        {t('findRepresentative')}
-      </Action>
     </section>
   );
 }
 
-/** Part F.3 — resource shortcuts. The three 2026 catalogues are what exists. */
+/** Part F.3 — the three 2026 catalogues. Three rules, not three cards. */
 export async function ResourceShortcuts() {
   const t = await getTranslations('Home');
   const tCatalogue = await getTranslations('Catalogue');
 
   return (
     <section className="border-t border-km-steel-600/60 bg-km-charcoal">
-      <div className={`${SHELL} py-24 sm:py-32`}>
+      <div className={`${SHELL} ${BEAT}`}>
         <SectionHeader
           index="05"
           label={t('resourcesLabel')}
@@ -223,28 +304,30 @@ export async function ResourceShortcuts() {
             </Action>
           }
         />
-        <Reveal as="ul" className="mt-14 grid gap-6 md:grid-cols-3">
+
+        <Reveal as="ul" className="mt-20 border-t border-km-steel-600/40">
           {catalogueDocuments.map((document) => (
-            <li key={document.id} data-reveal>
+            <li key={document.id} data-reveal className="border-b border-km-steel-600/40">
               <a
                 href={document.path}
                 target="_blank"
                 rel="noopener"
-                className="group flex h-full flex-col justify-between gap-10 border border-km-steel-600/60 bg-km-steel-800 p-7 transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-steel-600"
+                className="group flex flex-wrap items-baseline gap-x-8 gap-y-2 py-6 transition-colors duration-(--duration-km) ease-(--ease-km) hover:text-km-red-glow"
               >
-                <div>
-                  <span className="km-label bg-km-red px-2 py-1 text-km-paper">
-                    {document.fileType}
-                  </span>
-                  <h3 className="mt-6 font-display text-h3 text-km-paper">
-                    {tCatalogue(document.id)}
-                  </h3>
-                </div>
-                <span className="km-label flex items-center gap-2 text-km-steel-400 transition-colors group-hover:text-km-red-glow">
-                  {t('openCatalogue')}
-                  <svg aria-hidden="true" viewBox="0 0 16 16" className="size-3" fill="none">
-                    <path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" />
-                  </svg>
+                <span className="km-label w-12 shrink-0 text-km-red-glow">
+                  {document.fileType}
+                </span>
+                <span className="font-display text-h3 text-km-paper">
+                  {tCatalogue(document.id)}
+                </span>
+                <span className="km-label ms-auto text-km-steel-400">
+                  {(document.sizeBytes / 1048576).toFixed(1)} MB · {document.version}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="km-label shrink-0 text-km-steel-400 transition-transform duration-(--duration-km) ease-(--ease-km) group-hover:translate-x-2 group-hover:text-km-red-glow"
+                >
+                  →
                 </span>
               </a>
             </li>

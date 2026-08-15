@@ -34,24 +34,32 @@ export async function ApplicationsBand({ index }: { index: string }) {
       <div className="mx-auto max-w-[1600px] px-5 py-24 sm:px-6 xl:px-10">
         <SectionHeader index={index} label={t('label')} title={t('title')} />
 
-        <Reveal as="ul" className="mt-14 grid gap-px border border-km-steel-600/60 sm:grid-cols-2 xl:grid-cols-5">
-          {INDUSTRIES.map((industry) => (
-            <li key={industry.key} data-application-tile data-reveal>
+        {/* Five hairline rows, staggered in from the left. A five-across row of
+            bordered tiles is a nav bar wearing a section's clothes; these are
+            five different industries and they are allowed to be different
+            widths. */}
+        <Reveal as="ul" className="mt-16 border-t border-km-steel-600/40">
+          {INDUSTRIES.map((industry, index) => (
+            <li
+              key={industry.key}
+              data-application-tile
+              data-reveal
+              className="border-b border-km-steel-600/40"
+              style={{ paddingInlineStart: `${index * 2.5}rem` }}
+            >
               <Link
                 href={industry.href}
-                className="group flex h-full flex-col justify-between gap-8 border border-km-steel-600/60 p-6 transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red-glow"
+                className="group flex flex-wrap items-baseline gap-x-8 gap-y-1 py-6 transition-colors duration-(--duration-km) ease-(--ease-km) hover:text-km-red-glow"
               >
-                <span>
-                  <span className="font-display text-h3 text-km-paper">
-                    {tNav(`application.${industry.key}`)}
-                  </span>
-                  <span className="mt-3 block text-small text-km-steel-400">
-                    {t(`industry.${industry.key}`)}
-                  </span>
+                <span className="font-display text-h3 text-km-paper">
+                  {tNav(`application.${industry.key}`)}
+                </span>
+                <span className="text-small text-km-steel-400">
+                  {t(`industry.${industry.key}`)}
                 </span>
                 <span
                   aria-hidden="true"
-                  className="km-label text-km-red-glow transition-transform duration-(--duration-km) ease-(--ease-km) group-hover:translate-x-1"
+                  className="km-label ms-auto shrink-0 text-km-steel-400 transition-transform duration-(--duration-km) ease-(--ease-km) group-hover:translate-x-2 group-hover:text-km-red-glow"
                 >
                   →
                 </span>

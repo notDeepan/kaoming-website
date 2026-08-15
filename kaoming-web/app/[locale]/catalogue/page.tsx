@@ -49,11 +49,22 @@ export default async function CatalogueShelfPage({
       <PageHeader label={t('label')} title={t('shelfTitle')} lede={t('shelfLede')} />
 
       <section className={`${SHELL} pb-24`}>
-        <Reveal as="ul" className="grid gap-x-10 gap-y-16 sm:grid-cols-2 xl:grid-cols-3">
-          {catalogues.map((catalogue) => {
+        {/* A shelf, not a row. Three documents of different sizes, stood at
+            different heights the way they would be if you put them on a table —
+            and the widest catalogue is the one that covers the flagship. */}
+        <Reveal
+          as="ul"
+          className="grid items-start gap-x-10 gap-y-20 sm:grid-cols-2 xl:grid-cols-[1.3fr_1fr_1.15fr]"
+        >
+          {catalogues.map((catalogue, index) => {
             const cover = catalogue.spreads[0];
             return (
-              <li key={catalogue.id} data-catalogue={catalogue.slug} data-reveal>
+              <li
+                key={catalogue.id}
+                data-catalogue={catalogue.slug}
+                data-reveal
+                className={['', 'xl:mt-24', 'xl:mt-10'][index % 3]}
+              >
                 <Link
                   href={`/catalogue/${catalogue.slug}`}
                   className="group block [perspective:1600px]"

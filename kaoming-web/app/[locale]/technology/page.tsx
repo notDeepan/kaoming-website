@@ -69,12 +69,17 @@ export default async function TechnologyPage({
       {scraping ? (
         <section id="scraping" className={`${SHELL} scroll-mt-28 pb-24`}>
           <SectionHeader index="01" label={t('sections.scraping')} title={scraping.title} />
-          <Reveal as="ul" className="mt-12 grid gap-x-12 gap-y-8 md:grid-cols-2">
-            {scraping.points.map((point) => (
+
+          {/* Scraping is a sequence of statements about one surface, so it reads
+              as a stack of rules stepping inward — not a two-column grid, which
+              would imply the points are unrelated pairs. */}
+          <Reveal as="ul" className="mt-16 max-w-[92ch] border-t border-km-steel-600/40">
+            {scraping.points.map((point, index) => (
               <li
                 key={point}
                 data-reveal
-                className="border-t border-km-steel-600/60 pt-5 text-body text-km-offwhite"
+                className="border-b border-km-steel-600/40 py-6 text-body text-km-offwhite"
+                style={{ paddingInlineStart: `${index * 1.75}rem` }}
               >
                 {point}
               </li>
@@ -110,25 +115,37 @@ export default async function TechnologyPage({
       <section id="quality" className={`${SHELL} scroll-mt-28 py-24`}>
         <SectionHeader index="03" label={t('sections.record')} title={t('record.title')} />
 
-        <Reveal as="ul" className="mt-12 grid gap-x-12 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
+        {/* A register, not a card grid: the patent number is the key and sits in
+            its own narrow column, the way it does on the certificate. */}
+        <Reveal as="ul" className="mt-16 border-t border-km-steel-600/40">
           {patents.map((patent) => (
-            <li key={patent.id} data-reveal className="border-t border-km-steel-600/60 pt-5">
+            <li
+              key={patent.id}
+              data-reveal
+              className="grid gap-x-10 gap-y-1 border-b border-km-steel-600/40 py-6 sm:grid-cols-[10rem_1fr_14rem]"
+            >
               <p className="font-mono text-spec text-km-blue">{patent.id}</p>
-              <p className="mt-2 text-body text-km-offwhite">{patent.subject}</p>
+              <p className="text-body text-km-offwhite">{patent.subject}</p>
               {patent.kind ? (
-                <p className="km-label mt-2 text-km-steel-400">{patent.kind}</p>
+                <p className="km-label text-km-steel-400 sm:text-end">{patent.kind}</p>
               ) : null}
             </li>
           ))}
           {honours.map((honour) => (
-            <li key={honour.id} data-reveal className="border-t border-km-steel-600/60 pt-5">
+            <li
+              key={honour.id}
+              data-reveal
+              className="grid gap-x-10 gap-y-1 border-b border-km-steel-600/40 py-6 sm:grid-cols-[10rem_1fr]"
+            >
               <p className="font-display text-h3 text-km-paper">{honour.id}</p>
-              {honour.subject ? (
-                <p className="mt-2 text-body text-km-offwhite">{honour.subject}</p>
-              ) : null}
-              {honour.note ? (
-                <p className="mt-2 text-small text-km-steel-400">{honour.note}</p>
-              ) : null}
+              <div>
+                {honour.subject ? (
+                  <p className="text-body text-km-offwhite">{honour.subject}</p>
+                ) : null}
+                {honour.note ? (
+                  <p className="mt-1 text-small text-km-steel-400">{honour.note}</p>
+                ) : null}
+              </div>
             </li>
           ))}
         </Reveal>

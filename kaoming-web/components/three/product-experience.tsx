@@ -130,15 +130,19 @@ export function ProductExperience({
      *
      * Three conditions, and the order they were arrived at is the point:
      *
-     *  1. **The stage is on screen.** With a 200px margin the stage — the second
-     *     screenful — counts as visible at scroll position zero, so the canvas
-     *     was mounting during the first paint. A margin of zero means the
-     *     visitor has actually scrolled to it.
-     *  2. **The page has loaded.** `readyState === 'complete'` keeps 600 KB of
-     *     script out of the window the hero photograph is competing in. Measured:
-     *     the LCP element was downloaded at 485ms and painted at 3.7s, and every
-     *     one of those three seconds was render delay behind script evaluation.
-     *  3. **The browser is idle.** The last of the three, and the cheapest.
+     *  1. **The page has loaded.** `readyState === 'complete'` is the condition
+     *     that matters: it keeps 600 KB of script out of the window the hero
+     *     photograph is competing in. Measured before it existed, the LCP
+     *     element was downloaded at 485ms and painted at 3.7s, and every one of
+     *     those three seconds was render delay behind script evaluation.
+     *  2. **The browser is idle.** Cheap, and it keeps the mount off the tail of
+     *     the load event.
+     *  3. **The stage is within a screen of the viewport.** A margin, not zero.
+     *     Zero is tempting and wrong: the stage sits ~90px below the fold, so a
+     *     visitor who scrolls one notch would arrive at an empty frame and
+     *     *then* start a 600 KB download. The margin decides how early after
+     *     load the fetch begins; it does not affect the LCP, because the load
+     *     gate above already does.
      *
      * Part B.1 asks for first paint to be text and a poster, never the 3D. This
      * is what makes that true rather than intended.
@@ -158,7 +162,7 @@ export function ProductExperience({
         }
         setActive(entry.isIntersecting && document.visibilityState === 'visible');
       },
-      { rootMargin: '0px' },
+      { rootMargin: '800px' },
     );
     observer.observe(element);
 

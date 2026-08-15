@@ -44,12 +44,20 @@ export async function HomeHero() {
           className="absolute inset-x-0 top-24 h-px origin-left bg-km-red opacity-0 sm:top-28"
         />
 
-        <div className="mx-auto grid max-w-[1600px] items-center gap-10 px-5 pt-32 pb-16 sm:px-6 sm:pt-40 lg:min-h-[86svh] lg:grid-cols-[54%_1fr] lg:gap-8 xl:px-10">
-          <div data-hero-copy>
+        {/* 4/8, and the machine overlaps the copy rather than sitting beside it.
+            A 50/50 hero with the headline in one half and the product in the
+            other is the arrangement every landing page uses; the machine is
+            14.5 metres long and should dominate the frame it is in. */}
+        <div className="mx-auto grid max-w-[1600px] items-center gap-x-8 gap-y-12 px-5 pt-32 pb-16 sm:px-6 sm:pt-40 lg:min-h-[86svh] lg:grid-cols-[minmax(0,38%)_1fr] xl:px-10">
+          <div data-hero-copy className="relative z-1">
             <p className="km-label text-km-steel-400">{t('eyebrow')}</p>
-            <h1 className="mt-6 max-w-[13ch] text-h1 text-km-paper uppercase">{t('heroTitle')}</h1>
-            <p className="mt-7 max-w-[44ch] text-km-steel-400">{t('heroBody')}</p>
-            <div className="mt-9 flex flex-wrap gap-4">
+            {/* Runs wider than its column on purpose, so the last word sits over
+                the machine's field instead of stopping at a tidy gutter. */}
+            <h1 className="mt-8 max-w-[9ch] text-hero text-km-paper uppercase lg:w-[135%]">
+              {t('heroTitle')}
+            </h1>
+            <p className="mt-10 max-w-[38ch] text-body text-km-steel-400">{t('heroBody')}</p>
+            <div className="mt-12 flex flex-wrap gap-4">
               <Action href="/products" variant="primary">
                 {t('exploreProducts')}
               </Action>
@@ -60,7 +68,7 @@ export async function HomeHero() {
           </div>
 
           {hero ? (
-            <div data-hero-machine>
+            <div data-hero-machine className="lg:-mt-24">
               {/* The machine runs off the right edge — it is 14.5 metres long and
                   should not sit politely inside a margin. The dimension rule
                   stays inside the grid so its value is never clipped with it. */}
@@ -70,7 +78,7 @@ export async function HomeHero() {
                   alt={t('heroImageAlt', { model: hero.model })}
                   priority
                   glow="lg"
-                  sizes="(min-width: 1024px) 56vw, 92vw"
+                  sizes="(min-width: 1024px) 66vw, 92vw"
                 />
               </div>
               {largest ? (

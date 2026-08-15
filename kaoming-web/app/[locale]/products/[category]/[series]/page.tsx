@@ -11,6 +11,7 @@ import { SpecificationsScene } from '@/components/product/specifications-scene';
 import { WorkpieceScene } from '@/components/product/workpiece-scene';
 import { ProductExperience } from '@/components/three/product-experience';
 import { DocumentActions } from '@/components/ui/document-actions';
+import { RAIL } from '@/components/ui/layout';
 import { MachinePlate } from '@/components/ui/machine-plate';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
@@ -165,48 +166,62 @@ export default async function SeriesPage({
           </Link>
         </nav>
 
-        <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,32rem)_1fr] lg:items-center lg:gap-16">
-          <div>
-            <h1 className="text-h1 text-km-paper uppercase">{entry.name}</h1>
-            <p className="mt-4 font-display text-h3 text-km-steel-400">{entry.type}</p>
-            {/* Several series carry a catalogue positioning line that restates
-                the type almost word for word. Printing both reads as padding. */}
-            {positioning ? (
-              <p className="mt-8 max-w-[54ch] text-km-steel-400">{positioning}</p>
-            ) : null}
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Action
-                href={`${RFQ_HREF}?machine=${entry.slug}&source=product`}
-                variant="primary"
-              >
-                {t('requestQuote')}
-              </Action>
-              <CompareToggle
-                entry={{ slug: entry.slug, name: entry.name, category: entry.categorySlug }}
-              />
-              {catalogue ? (
-                <ActionLink href={catalogue.path} target="_blank" rel="noopener" variant="secondary">
-                  {t('openCatalogue')}
-                </ActionLink>
-              ) : null}
-            </div>
+        {/* The machine leads and the plate runs to the right edge of the
+            viewport; the name and the buttons are a title block hung under it
+            on the left. It was a centred 32rem/1fr split with the type vertically
+            centred against the photograph — tidy, and it made a 50-tonne machine
+            look like a product thumbnail. */}
+        <div className="mt-12 grid items-end gap-x-10 gap-y-10 lg:grid-cols-[minmax(0,34%)_1fr]">
+          <div className="relative z-1 lg:pb-4">
+            <h1 className="max-w-[11ch] text-h1 text-balance text-km-paper uppercase lg:w-[125%]">
+              {entry.name}
+            </h1>
+            <p className="mt-5 max-w-[26ch] font-display text-h3 text-km-steel-400">
+              {entry.type}
+            </p>
           </div>
 
           {hero ? (
-            <div>
+            <div className="lg:-me-5 xl:-me-10">
               <MachinePlate
                 image={hero.cut}
                 alt={t('imageAlt', { model: hero.model, view: hero.view })}
                 priority
-                glow="md"
-                sizes="(min-width: 1024px) 60vw, 92vw"
+                glow="lg"
+                sizes="(min-width: 1024px) 68vw, 92vw"
                 transitionName={`machine-${entry.slug}`}
               />
-              <p className="km-label mt-4 text-km-steel-400">
-                {t('shown', { model: hero.model })}
-              </p>
             </div>
           ) : null}
+        </div>
+
+        {/* Compression: the caption sits almost on the plate it names, and the
+            actions ride the same hairline. */}
+        <div className="mt-4 flex flex-col gap-8 border-t border-km-steel-600/60 pt-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-[52ch]">
+            {hero ? (
+              <p className="km-label text-km-steel-400">{t('shown', { model: hero.model })}</p>
+            ) : null}
+            {/* Several series carry a catalogue positioning line that restates
+                the type almost word for word. Printing both reads as padding. */}
+            {positioning ? (
+              <p className="mt-5 text-body text-km-steel-400">{positioning}</p>
+            ) : null}
+          </div>
+
+          <div className="flex shrink-0 flex-wrap gap-4">
+            <Action href={`${RFQ_HREF}?machine=${entry.slug}&source=product`} variant="primary">
+              {t('requestQuote')}
+            </Action>
+            <CompareToggle
+              entry={{ slug: entry.slug, name: entry.name, category: entry.categorySlug }}
+            />
+            {catalogue ? (
+              <ActionLink href={catalogue.path} target="_blank" rel="noopener" variant="secondary">
+                {t('openCatalogue')}
+              </ActionLink>
+            ) : null}
+          </div>
         </div>
       </section>
 
@@ -218,21 +233,35 @@ export default async function SeriesPage({
           beyond that — Neptunus states nine — still belongs on the page, so the
           remainder is listed here rather than being silently dropped. */}
       {overflowFeatures.length ? (
-        <section className={`${SHELL} py-24`}>
-          <SectionHeader label={t('featuresLabel')} title={t('featuresTitle')} />
-          <Reveal as="ul" className="mt-14 grid gap-x-12 gap-y-10 md:grid-cols-2 xl:grid-cols-3">
-            {overflowFeatures.map((feature, index) => (
-              <li key={feature.id} data-reveal className="border-t border-km-steel-600/60 pt-6">
-                <span className="km-label text-km-red-glow">
-                  {String(index + 1 + MAX_FEATURE_CARDS).padStart(2, '0')}
-                </span>
-                <h3 className="mt-4 font-display text-h3 text-km-paper">{feature.title}</h3>
-                {feature.copy ? (
-                  <p className="mt-3 text-small text-km-steel-400">{feature.copy}</p>
-                ) : null}
-              </li>
-            ))}
-          </Reveal>
+        <section className={`${SHELL} py-32 sm:py-40`}>
+          <div className={RAIL.threeNine}>
+            <SectionHeader label={t('featuresLabel')} title={t('featuresTitle')} />
+
+            {/* A numbered list against the wide column, not a three-across grid.
+                These continue Scene 03's sequence, so they are numbered from
+                seven and read as a continuation rather than a fresh set. */}
+            <Reveal as="ul" className="border-t border-km-steel-600/40 lg:mt-3">
+              {overflowFeatures.map((feature, index) => (
+                <li
+                  key={feature.id}
+                  data-reveal
+                  className="grid gap-x-10 gap-y-2 border-b border-km-steel-600/40 py-8 sm:grid-cols-[3rem_1fr]"
+                >
+                  <span className="km-label text-km-red-glow">
+                    {String(index + 1 + MAX_FEATURE_CARDS).padStart(2, '0')}
+                  </span>
+                  <div>
+                    <h3 className="font-display text-h3 text-km-paper">{feature.title}</h3>
+                    {feature.copy ? (
+                      <p className="mt-3 max-w-[62ch] text-body text-km-steel-400">
+                        {feature.copy}
+                      </p>
+                    ) : null}
+                  </div>
+                </li>
+              ))}
+            </Reveal>
+          </div>
         </section>
       ) : null}
 
@@ -248,9 +277,18 @@ export default async function SeriesPage({
       {gallery.length ? (
         <section className={`${SHELL} py-24`}>
           <SectionHeader label={t('galleryLabel')} title={t('galleryTitle')} />
-          <Reveal as="ul" className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {gallery.map((image) => (
-              <li key={image.plate.src} data-reveal>
+          {/* Views of one machine, not a contact sheet: unequal columns and
+              staggered baselines, so the eye moves between them. */}
+          <Reveal
+            as="ul"
+            className="mt-16 grid items-start gap-x-8 gap-y-16 sm:grid-cols-2 xl:grid-cols-[1.2fr_0.95fr_1.1fr]"
+          >
+            {gallery.map((image, index) => (
+              <li
+                key={image.plate.src}
+                data-reveal
+                className={['', 'xl:mt-20', 'xl:mt-8'][index % 3]}
+              >
                 <figure className="border border-km-steel-600/60 bg-km-offwhite p-4">
                   <Image
                     src={image.plate.src}

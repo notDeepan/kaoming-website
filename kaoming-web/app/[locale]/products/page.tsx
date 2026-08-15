@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { CtaBlock } from '@/components/ui/cta-block';
 import { ProductCard } from '@/components/ui/product-card';
 import { Reveal } from '@/components/ui/reveal';
+import { staggerOffset } from '@/components/ui/layout';
 import { SectionHeader } from '@/components/ui/section-header';
 import { routing } from '@/i18n/routing';
 import { alternatesFor } from '@/lib/site';
@@ -40,28 +41,55 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
 
   return (
     <>
-      <div className={`${SHELL} pt-36 pb-10 sm:pt-44`}>
+      {/* The title runs past its column into the space the lede leaves. */}
+      <div className={`${SHELL} pt-36 pb-16 sm:pt-44`}>
         <p className="km-label text-km-red-glow">{t('label')}</p>
-        <h1 className="mt-6 max-w-[16ch] text-h1 text-km-paper uppercase">{t('allTitle')}</h1>
-        <p className="mt-8 max-w-[62ch] text-km-steel-400">{t('allLede')}</p>
+        <div className="mt-8 grid gap-x-16 gap-y-8 lg:grid-cols-[7fr_5fr] lg:items-end">
+          <h1 className="max-w-[14ch] text-h1 text-balance text-km-paper uppercase">
+            {t('allTitle')}
+          </h1>
+          <p className="max-w-[42ch] text-body text-km-steel-400 lg:pb-2">{t('allLede')}</p>
+        </div>
       </div>
 
+      {/* Each category is a different shape.
+          Gantry — the flagship family — gets the wide treatment; the rest run as
+          a 5/7 with the machines staggered. Four identical three-across grids
+          told a buyer that all four categories carry the same weight, and the
+          catalogue does not say that. */}
       {productCategories.map((category, categoryIndex) => {
         const series = seriesInCategory(category.slug);
+        const wide = categoryIndex === 0;
+
         return (
-          <section key={category.slug} className={`${SHELL} py-16`}>
+          <section
+            key={category.slug}
+            className={`${SHELL} ${categoryIndex === 0 ? 'py-20' : 'py-32 sm:py-40'}`}
+          >
             <SectionHeader
               index={String(categoryIndex + 1).padStart(2, '0')}
               label={t('category')}
               title={category.name}
             />
-            <Reveal as="ul" className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {series.map((entry) => {
+
+            <Reveal
+              as="ul"
+              className={`mt-20 grid gap-x-10 gap-y-24 ${
+                wide
+                  ? 'lg:grid-cols-[1.15fr_0.85fr] lg:gap-y-32'
+                  : 'sm:grid-cols-2 xl:grid-cols-[1.25fr_1fr_1fr]'
+              }`}
+            >
+              {series.map((entry, index) => {
                 const headline = headlineDimension(entry);
                 return (
-                  <li key={entry.slug} className="contents">
+                  <li
+                    key={entry.slug}
+                    className={wide ? (index % 2 === 1 ? 'lg:mt-28' : '') : staggerOffset(index)}
+                  >
                     <ProductCard
                       series={entry}
+                      size={wide && index === 0 ? 'lead' : 'rail'}
                       headline={
                         headline ? { label: tSpec(headline.labelKey), value: headline.value } : null
                       }
@@ -74,7 +102,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
         );
       })}
 
-      <div className="h-24" />
+      <div className="h-40" />
       <CtaBlock />
     </>
   );
