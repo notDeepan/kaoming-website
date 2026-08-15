@@ -183,6 +183,18 @@
     font-size: var(--text-body);
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    /**
+     * Full-bleed sections are `100vw`, and `100vw` includes the scrollbar. On a
+     * platform with classic scrollbars — Windows Chrome, most of this site's
+     * buyers — that is ~15px wider than the document, so every bleed would push
+     * a horizontal scrollbar. Headless Chromium uses overlay scrollbars and
+     * measures zero, which is exactly why this needs stating rather than
+     * testing for.
+     *
+     * `clip`, never `hidden`: `hidden` turns the body into a scroll container,
+     * and the pinned ScrollTrigger scenes stop sticking the moment it does.
+     */
+    overflow-x: clip;
     text-rendering: optimizeLegibility;
   }
 

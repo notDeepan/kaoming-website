@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { WaySelector } from '@/components/company/way-selector';
 import { Action } from '@/components/ui/action';
+import { stepIndent, STEP_INDENT } from '@/components/ui/layout';
 import { ContentGap, PageHeader, Provenance, SHELL } from '@/components/ui/page-shell';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
@@ -78,8 +79,8 @@ export default async function TechnologyPage({
               <li
                 key={point}
                 data-reveal
-                className="border-b border-km-steel-600/40 py-6 text-body text-km-offwhite"
-                style={{ paddingInlineStart: `${index * 1.75}rem` }}
+                className={`border-b border-km-steel-600/40 py-6 text-body text-km-offwhite ${STEP_INDENT}`}
+                style={stepIndent(index, 1.75)}
               >
                 {point}
               </li>

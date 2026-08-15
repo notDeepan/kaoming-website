@@ -28,8 +28,22 @@ export const SHELL = 'mx-auto max-w-[1600px] px-5 sm:px-6 xl:px-10';
 export const VOID = 'py-40 sm:py-56';
 /** The normal beat inside one idea. */
 export const BEAT = 'py-24 sm:py-32';
-/** Compression: things that belong to each other nearly touch. */
-export const WELD = 'gap-2';
+
+/**
+ * Indent for a staggered list, as an inline style — the step depends on the
+ * item's position, which Tailwind cannot express as a static class.
+ *
+ * **Zero below `lg`.** At 390px a fifth row indented five steps had 160px of
+ * padding and 160px left for its title; the stagger is a wide-screen device and
+ * on a phone it is just a squeeze. Returning a custom property that the `lg`
+ * breakpoint consumes keeps the rule in CSS where the media query lives.
+ */
+export function stepIndent(index: number, step = 2.5): React.CSSProperties {
+  return { '--km-step': `${index * step}rem` } as React.CSSProperties;
+}
+
+/** Paired with `stepIndent`: applies the step only from `lg` up. */
+export const STEP_INDENT = 'lg:ps-(--km-step)';
 
 /**
  * Asymmetric rails. The first number is the narrow column.
@@ -52,8 +66,15 @@ export const RAIL = {
  * Escapes the container to the full viewport width.
  *
  * `100vw` rather than `100%` because the parent is the measure, not the
- * viewport; the negative margin is half the difference. `overflow-x` is guarded
- * on `body`, so this cannot introduce a sideways scroll.
+ * viewport; the negative margin is half the difference.
+ *
+ * **`100vw` includes the scrollbar.** On a platform with classic scrollbars —
+ * Windows Chrome, which is most of this site's buyers — the viewport unit is
+ * ~15px wider than the document, so every bleed on the page would push a
+ * horizontal scrollbar. It does not here only because `body` carries
+ * `overflow-x: clip` (globals.css), and `clip` rather than `hidden` because
+ * `hidden` makes the body a scroll container and the pinned ScrollTrigger
+ * scenes stop sticking.
  */
 export function Bleed({
   children,
@@ -64,30 +85,6 @@ export function Bleed({
 }) {
   return (
     <div className={`relative left-1/2 w-screen -translate-x-1/2 ${className}`}>{children}</div>
-  );
-}
-
-/**
- * Anchors content hard to one edge of the viewport, with the measure preserved
- * on the inside — the layout equivalent of a title block.
- */
-export function EdgeAnchored({
-  side = 'start',
-  children,
-  className = '',
-}: {
-  side?: 'start' | 'end';
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`relative left-1/2 w-screen -translate-x-1/2 ${
-        side === 'start' ? 'ps-5 pe-0 sm:ps-6 xl:ps-10' : 'pe-5 ps-0 sm:pe-6 xl:pe-10'
-      } ${className}`}
-    >
-      {children}
-    </div>
   );
 }
 
@@ -107,25 +104,21 @@ export function MarginIndex({ index, className = '' }: { index: string; classNam
   return (
     <span
       aria-hidden="true"
-      className={`pointer-events-none absolute -top-6 start-0 -z-1 select-none font-mono leading-none text-km-steel-400/10 [font-size:clamp(5rem,12vw,11rem)] ${className}`}
+      /**
+       * No negative z-index.
+       *
+       * `-z-1` is the obvious way to put a numeral behind its content and it
+       * silently deleted two of the five on the homepage: a section with a
+       * background and no stacking context of its own paints that background
+       * *above* any descendant on a negative layer, so the numerals inside the
+       * charcoal bands were painted and then covered. Both elements here are
+       * positioned, so DOM order alone puts the content on top — which is all
+       * that was ever needed.
+       */
+      className={`pointer-events-none absolute -top-6 start-0 select-none font-mono leading-none text-km-steel-400/10 [font-size:clamp(5rem,12vw,11rem)] ${className}`}
     >
       {index}
     </span>
-  );
-}
-
-/**
- * A hairline that starts at the content and runs off the viewport edge — the
- * dimension line that does not stop politely at the container.
- */
-export function EdgeRule({ side = 'end' }: { side?: 'start' | 'end' }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`absolute top-0 h-px bg-km-steel-600/60 ${
-        side === 'end' ? 'start-0 w-screen' : 'end-0 w-screen'
-      }`}
-    />
   );
 }
 

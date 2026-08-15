@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
+import { stepIndent, STEP_INDENT } from '@/components/ui/layout';
 import { Link } from '@/i18n/navigation';
 
 /**
@@ -44,8 +45,8 @@ export async function ApplicationsBand({ index }: { index: string }) {
               key={industry.key}
               data-application-tile
               data-reveal
-              className="border-b border-km-steel-600/40"
-              style={{ paddingInlineStart: `${index * 2.5}rem` }}
+              className={`border-b border-km-steel-600/40 ${STEP_INDENT}`}
+              style={stepIndent(index)}
             >
               <Link
                 href={industry.href}
