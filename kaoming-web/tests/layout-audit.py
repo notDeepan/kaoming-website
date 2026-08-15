@@ -75,13 +75,22 @@ AUDIT = """() => {
   return out;
 }"""
 
-# The composed surfaces. Tool pages — the map, the catalogue reader, the RFQ —
-# are single-purpose and are not held to the section-rhythm rule.
+# The composed surfaces, and how much compositional hierarchy each one owes.
+#
+# `/en/products` is deliberately the low bar. It is a catalogue index: four
+# categories, each a grid of the machines inside it, and the machines inside a
+# category are alternatives a buyer is choosing between. Demanding narrative
+# composition of it would push exactly the decoration this audit exists to
+# prevent — the page's job is to be scanned, and a grid is how that is done.
+# Its hierarchy lives in the rhythm between the categories instead.
+#
+# Tool pages — the map, the catalogue reader, the RFQ — are single-purpose and
+# are not audited at all.
 COMPOSED = [
-    "/en",
-    "/en/products",
-    "/en/products/gantry-machining-center/kmc-gm",
-    "/en/technology",
+    ("/en", 2),
+    ("/en/products", 1),
+    ("/en/products/gantry-machining-center/kmc-gm", 2),
+    ("/en/technology", 2),
 ]
 
 with sync_playwright() as p:
@@ -89,7 +98,7 @@ with sync_playwright() as p:
         headless=True, args=["--use-gl=swiftshader", "--enable-unsafe-swiftshader"]
     )
 
-    for path in COMPOSED:
+    for path, minAsym in COMPOSED:
         page = browser.new_page(viewport={"width": 1440, "height": 900})
         page.goto(f"{BASE}{path}")
         page.wait_for_load_state("networkidle")
@@ -105,8 +114,8 @@ with sync_playwright() as p:
         check(f"{path} escapes the container", a["bleed"] >= 2, f"{a['bleed']} full-bleed")
         check(
             f"{path} composes with hierarchy",
-            a["asym"] >= 2,
-            f"{a['asym']} asymmetric grids",
+            a["asym"] >= minAsym,
+            f"{a['asym']} asymmetric grids, wanted {minAsym}",
         )
         check(
             f"{path} varies its vertical rhythm",
@@ -149,18 +158,25 @@ with sync_playwright() as p:
         # anything up to two distinct baselines is alignment, not stagger.
         check(f"{label} share a baseline", 0 < tops <= 2, f"{tops} distinct top edges")
 
-    # The hierarchy half: the flagship must still dominate its rail.
+    # The showcase is a comparison too — four categories, read against each
+    # other. The flagship was given a double-width `lead` card here, which left
+    # a screen-height void beside its shorter neighbours; the FLAGSHIP label
+    # carries that fact instead, at no cost to the grid.
     compare.goto(f"{BASE}/en")
     compare.wait_for_load_state("networkidle")
-    widths = compare.evaluate(
+    cards = compare.evaluate(
         """() => [...document.querySelectorAll('article')]
              .map((a) => Math.round(a.getBoundingClientRect().width))
              .filter((w) => w > 100)"""
     )
     check(
-        "the flagship machine still dominates",
-        bool(widths) and max(widths) > min(widths) * 1.4,
-        f"widths {widths[:4]}",
+        "the four machines are the same size",
+        bool(cards) and max(cards) - min(cards) <= 2,
+        f"widths {cards[:4]}",
+    )
+    check(
+        "and the flagship is still marked",
+        compare.get_by_text("Flagship").first.is_visible(),
     )
 
     # A numbered marker must mean something. The industries are not a sequence.
@@ -180,7 +196,7 @@ with sync_playwright() as p:
 
     # The composition must not cost a sideways scroll on a phone — bleeds and
     # negative margins are exactly how that happens.
-    for path in COMPOSED + ["/en/company/about", "/en/catalogue", "/zh-tw"]:
+    for path in [p for p, _ in COMPOSED] + ["/en/company/about", "/en/catalogue", "/zh-tw"]:
         phone = browser.new_page(viewport={"width": 390, "height": 844})
         phone.goto(f"{BASE}{path}")
         phone.wait_for_load_state("networkidle")

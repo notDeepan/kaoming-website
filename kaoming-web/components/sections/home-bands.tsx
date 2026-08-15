@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { Action } from '@/components/ui/action';
 import { Counter } from '@/components/ui/counter';
-import { Bleed, BEAT, COMPARISON, RAIL, SHELL, staggerOffset, VOID } from '@/components/ui/layout';
+import { Bleed, BEAT, COMPARISON, RAIL, SHELL, VOID } from '@/components/ui/layout';
 import { ProductCard } from '@/components/ui/product-card';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
@@ -20,10 +20,10 @@ import { navSections } from '@/lib/nav';
  * a centred container, a title block, a 56px gap and a row of equal cards. The
  * rotation now runs
  *
- *   showcase   one dominant machine + a staggered rail   (7/5, offset)
+ *   showcase   four machines, one per category, aligned
  *   industries an edge-anchored hairline list            (full bleed, no boxes)
  *   technology a full-bleed photograph, stats overlapping its edge
- *   numbers    a staggered baseline, unequal widths
+ *   numbers    four figures on one baseline, read across
  *   network    a margin note against a wide field        (4/8)
  *   resources  three rules, compressed
  *
@@ -31,13 +31,13 @@ import { navSections } from '@/lib/nav';
  * what makes it land.
  */
 
-/** Part F.2 — one machine per category. One of them dominates. */
+/** Part F.2 — one machine per category, the four compared side by side. */
 export async function MachineShowcase() {
   const t = await getTranslations('Home');
   const tSpec = await getTranslations('Spec');
-  const [lead, ...rest] = featuredSeries();
+  const featured = featuredSeries();
 
-  const headlineFor = (series: (typeof rest)[number]) => {
+  const headlineFor = (series: (typeof featured)[number]) => {
     const headline = headlineDimension(series);
     return headline ? { label: tSpec(headline.labelKey), value: headline.value } : null;
   };
@@ -56,23 +56,25 @@ export async function MachineShowcase() {
         }
       />
 
-      {/* The flagship takes seven columns and the other three share five, in a
-          staggered rail. A four-across row of identical cards says every machine
-          is equally important; they are not, and the catalogue says so. */}
-      <Reveal className={`mt-24 ${RAIL.sevenFive} lg:items-start`}>
-        {lead ? (
-          <div data-reveal>
-            <ProductCard series={lead} headline={headlineFor(lead)} priority size="lead" />
-          </div>
-        ) : null}
-
-        <ul className="grid gap-x-8 gap-y-20 sm:grid-cols-2 lg:grid-cols-1 lg:gap-y-28">
-          {rest.map((series, index) => (
-            <li key={series.slug} data-reveal className={staggerOffset(index + 1)}>
-              <ProductCard series={series} headline={headlineFor(series)} />
-            </li>
-          ))}
-        </ul>
+      {/* One machine per category, aligned.
+          This was a 7/5 split with the flagship at double size and the other
+          three staggered down a rail beside it. The hierarchy was real but the
+          composition was not: the tall lead column left a screen-height void
+          under it while the short rail ran on, and a visitor comparing four
+          categories had to read them at four different sizes and heights.
+          These are peers — one per category, which is the whole point of the
+          section — so they get one baseline. The flagship still says so, in the
+          one place that costs the layout nothing: its own label. */}
+      <Reveal as="ul" className="mt-20 grid gap-x-8 gap-y-20 sm:grid-cols-2 xl:grid-cols-4">
+        {featured.map((series, index) => (
+          <li key={series.slug} data-reveal>
+            <ProductCard
+              series={series}
+              headline={headlineFor(series)}
+              priority={index === 0}
+            />
+          </li>
+        ))}
       </Reveal>
     </section>
   );

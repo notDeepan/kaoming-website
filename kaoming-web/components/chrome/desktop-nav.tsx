@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, useId, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { NavSection } from '@/lib/nav';
 
@@ -30,17 +30,62 @@ export function DesktopNav({
   const [panelOpen, setPanelOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(0);
 
+  /**
+   * Closing is deferred; opening is immediate.
+   *
+   * The panel is `absolute top-full` on the **header**, while the pointer
+   * handlers live on this nav wrapper — and the wrapper's box ends at the bottom
+   * of the nav row, above where the panel starts. Moving the pointer from
+   * PRODUCTS down into the panel therefore crosses a band of header padding that
+   * belongs to neither element, `pointerleave` fires, and the panel shuts in the
+   * visitor's face before they reach it. That is the reported bug, and it made
+   * the entire mega-panel unusable with a mouse.
+   *
+   * A short grace period fixes it without depending on the geometry: leaving
+   * schedules a close, entering anywhere inside — nav row or panel — cancels it.
+   * It also covers the diagonal path someone takes when aiming at a link on the
+   * far side of the panel, which no amount of gap-bridging handles.
+   */
+  const closeTimer = useRef<number | undefined>(undefined);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = undefined;
+    }
+  }, []);
+
+  const openPanel = useCallback(() => {
+    cancelClose();
+    setPanelOpen(true);
+  }, [cancelClose]);
+
+  const closePanelSoon = useCallback(() => {
+    cancelClose();
+    closeTimer.current = window.setTimeout(() => setPanelOpen(false), 220);
+  }, [cancelClose]);
+
+  const closePanelNow = useCallback(() => {
+    cancelClose();
+    setPanelOpen(false);
+  }, [cancelClose]);
+
+  useEffect(() => cancelClose, [cancelClose]);
+
   // Any navigation closes the panel — the route change alone does not unmount it.
-  useEffect(() => setPanelOpen(false), [pathname]);
+  useEffect(() => {
+    cancelClose();
+    setPanelOpen(false);
+  }, [pathname, cancelClose]);
 
   useEffect(() => {
     if (!panelOpen) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setPanelOpen(false);
+      if (event.key === 'Escape') closePanelNow();
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [panelOpen]);
+  }, [panelOpen, closePanelNow]);
 
   const activeSection = (section: NavSection) =>
     pathname === section.href || pathname.startsWith(`${section.href}/`);
@@ -48,9 +93,10 @@ export function DesktopNav({
   return (
     <div
       className="hidden lg:block"
-      onPointerLeave={() => setPanelOpen(false)}
+      onPointerEnter={cancelClose}
+      onPointerLeave={closePanelSoon}
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node)) setPanelOpen(false);
+        if (!event.currentTarget.contains(event.relatedTarget as Node)) closePanelNow();
       }}
     >
       <nav aria-label={t('primaryNavigation')}>
@@ -66,9 +112,9 @@ export function DesktopNav({
                     type="button"
                     aria-expanded={panelOpen}
                     aria-controls={panelId}
-                    onClick={() => setPanelOpen((value) => !value)}
-                    onPointerEnter={() => setPanelOpen(true)}
-                    onFocus={() => setPanelOpen(true)}
+                    onClick={() => (panelOpen ? closePanelNow() : openPanel())}
+                    onPointerEnter={openPanel}
+                    onFocus={openPanel}
                     className={`km-label flex min-h-11 items-center gap-1.5 px-3 transition-colors duration-(--duration-km) ease-(--ease-km) hover:text-km-offwhite ${
                       isActive || panelOpen ? 'text-km-offwhite' : 'text-km-steel-400'
                     }`}
@@ -86,8 +132,8 @@ export function DesktopNav({
                 ) : (
                   <Link
                     href={section.href}
-                    onPointerEnter={() => setPanelOpen(false)}
-                    onFocus={() => setPanelOpen(false)}
+                    onPointerEnter={closePanelNow}
+                    onFocus={closePanelNow}
                     aria-current={isActive ? 'page' : undefined}
                     className={`km-label flex min-h-11 items-center px-3 transition-colors duration-(--duration-km) ease-(--ease-km) hover:text-km-offwhite ${
                       isActive ? 'text-km-offwhite' : 'text-km-steel-400'
@@ -106,6 +152,8 @@ export function DesktopNav({
       <div
         id={panelId}
         hidden={!panelOpen}
+        onPointerEnter={cancelClose}
+        onPointerLeave={closePanelSoon}
         className="absolute inset-x-0 top-full border-t border-km-steel-600 bg-km-charcoal"
       >
         <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,22rem)_1fr] gap-12 px-6 py-10 xl:px-10">

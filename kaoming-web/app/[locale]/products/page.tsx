@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { CtaBlock } from '@/components/ui/cta-block';
 import { ProductCard } from '@/components/ui/product-card';
 import { Reveal } from '@/components/ui/reveal';
-import { staggerOffset } from '@/components/ui/layout';
 import { SectionHeader } from '@/components/ui/section-header';
 import { routing } from '@/i18n/routing';
 import { alternatesFor } from '@/lib/site';
@@ -52,14 +51,13 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
         </div>
       </div>
 
-      {/* Each category is a different shape.
-          Gantry — the flagship family — gets the wide treatment; the rest run as
-          a 5/7 with the machines staggered. Four identical three-across grids
-          told a buyer that all four categories carry the same weight, and the
-          catalogue does not say that. */}
+      {/* The catalogue's four categories, each an aligned grid of its series.
+          The machines inside a category are alternatives a buyer is choosing
+          between, so they are set as peers on one baseline. The rhythm between
+          the categories does the composing instead: the gantry family opens
+          tight under the title, the rest are separated by a full release. */}
       {productCategories.map((category, categoryIndex) => {
         const series = seriesInCategory(category.slug);
-        const wide = categoryIndex === 0;
 
         return (
           <section
@@ -74,22 +72,14 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
 
             <Reveal
               as="ul"
-              className={`mt-20 grid gap-x-10 gap-y-24 ${
-                wide
-                  ? 'lg:grid-cols-[1.15fr_0.85fr] lg:gap-y-32'
-                  : 'sm:grid-cols-2 xl:grid-cols-[1.25fr_1fr_1fr]'
-              }`}
+              className="mt-20 grid gap-x-10 gap-y-20 sm:grid-cols-2 xl:grid-cols-3"
             >
-              {series.map((entry, index) => {
+              {series.map((entry) => {
                 const headline = headlineDimension(entry);
                 return (
-                  <li
-                    key={entry.slug}
-                    className={wide ? (index % 2 === 1 ? 'lg:mt-28' : '') : staggerOffset(index)}
-                  >
+                  <li key={entry.slug}>
                     <ProductCard
                       series={entry}
-                      size={wide && index === 0 ? 'lead' : 'rail'}
                       headline={
                         headline ? { label: tSpec(headline.labelKey), value: headline.value } : null
                       }

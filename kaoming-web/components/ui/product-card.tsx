@@ -15,6 +15,11 @@ import { DimensionRule, MachinePlate } from './machine-plate';
  * The hairline is the interaction: it is dim at rest, and on hover it lights to
  * the accent and the machine lifts. Nothing scales, nothing bounces (Part D).
  *
+ * Every card is the same size. The flagship carried a `lead` variant at roughly
+ * double scale for a while; it left a screen-height void beside its shorter
+ * neighbours and made four categories unreadable against each other. The
+ * FLAGSHIP label carries that fact at no cost to the grid.
+ *
  * `headline` is the one verified figure that distinguishes this series at a
  * glance. Where the catalogue page has not been transcribed the card says how
  * many models the series has and nothing more — an empty dimension rule would
@@ -24,17 +29,13 @@ export async function ProductCard({
   series,
   headline,
   priority = false,
-  /** `lead` gives the featured machine its full weight; `rail` is the support. */
-  size = 'rail',
 }: {
   series: Series;
   headline?: { label: string; value: string } | null;
   priority?: boolean;
-  size?: 'lead' | 'rail';
 }) {
   const t = await getTranslations('Products');
   const image = series.images[0];
-  const lead = size === 'lead';
 
   return (
     <article data-reveal className="group relative">
@@ -48,14 +49,10 @@ export async function ProductCard({
           <MachinePlate
             image={image.cut}
             alt={`${series.name} — ${image.model}`}
-            glow={lead ? 'lg' : 'sm'}
+            glow="sm"
             priority={priority}
             transitionName={`machine-${series.slug}`}
-            sizes={
-              lead
-                ? '(min-width: 1024px) 58vw, 92vw'
-                : '(min-width: 1024px) 26vw, (min-width: 640px) 46vw, 90vw'
-            }
+            sizes="(min-width: 1280px) 24vw, (min-width: 640px) 46vw, 90vw"
             className="transition-transform duration-(--duration-km-slow) ease-(--ease-km) group-hover:-translate-y-2"
           />
         ) : (
@@ -77,11 +74,7 @@ export async function ProductCard({
 
         <div className="mt-4 flex items-start justify-between gap-4">
           <div>
-            <h3
-              className={`font-display text-km-paper ${lead ? 'text-h2 uppercase' : 'text-h3'}`}
-            >
-              {series.name}
-            </h3>
+            <h3 className="font-display text-h3 text-km-paper">{series.name}</h3>
             <p className="mt-1 text-small text-km-steel-400">{series.type}</p>
           </div>
           {series.flagship ? (
@@ -89,7 +82,7 @@ export async function ProductCard({
           ) : null}
         </div>
 
-        <div className={lead ? 'mt-8 max-w-[34rem]' : 'mt-5'}>
+        <div className="mt-5">
           {headline ? (
             <DimensionRule label={headline.label} value={headline.value} />
           ) : (

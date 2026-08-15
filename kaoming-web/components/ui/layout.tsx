@@ -136,13 +136,3 @@ export function MarginIndex({ index, className = '' }: { index: string; classNam
     </span>
   );
 }
-
-/**
- * Vertical stagger for a set of items, so the eye travels diagonally instead of
- * scanning a flat line. Index-based, and it only engages from `lg:` up — on a
- * phone every item is full width and an offset would read as a mistake.
- */
-export function staggerOffset(index: number): string {
-  const steps = ['lg:mt-0', 'lg:mt-24', 'lg:mt-12', 'lg:mt-32'];
-  return steps[index % steps.length];
-}
