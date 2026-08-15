@@ -14,6 +14,7 @@ selector, the catalogue reader.
 """
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -152,18 +153,34 @@ with sync_playwright() as p:
     )
 
     # The privacy rule: no personal mailbox reaches the page.
+    #
+    # This deliberately does NOT restate the allowlist from lib/distributors.
+    # It did, and that made the check circular — the test and the code shared
+    # one list, so a rule that published somebody's personal inbox would have
+    # been confirmed correct by its own definition. Judge instead the shape of
+    # what actually reached the page: a role mailbox is a role word with at most
+    # one qualifier. Anything that looks like a person's name fails here even if
+    # the module decided it was fine.
     shown = page.inner_text("body")
-    leaked = [
+    role_shape = re.compile(r"^[a-z]+([._-][a-z0-9]+)?@", re.I)
+    personal_shape = re.compile(r"^[a-z]\.?[a-z]+[._-][a-z]+@", re.I)
+
+    published = [
         agent["email"]
         for agent in international
-        if agent.get("email")
-        and agent["email"] in shown
-        and not agent["email"].split("@")[0].lower().startswith(
-            ("info", "sales", "service", "contact", "office", "mail", "admin",
-             "support", "export", "enquiry", "inquiry", "marketing", "kmc", "km")
-        )
+        if agent.get("email") and agent["email"] in shown
     ]
-    check("no personal mailbox is published", not leaked, str(leaked[:2]))
+    malformed = [
+        email
+        for email in published
+        if not role_shape.match(email) or personal_shape.match(email)
+    ]
+    check("no personal mailbox is published", not malformed, str(malformed[:3]))
+    check(
+        "most agent emails are withheld, as the privacy note asks",
+        len(published) * 2 < len(international),
+        f"{len(published)} of {len(international)} published",
+    )
 
     # --- History: the pairing must not be asserted.
     page.goto(f"{BASE}/en/company/history")

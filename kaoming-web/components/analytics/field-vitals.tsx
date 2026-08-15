@@ -60,12 +60,27 @@ export function FieldVitals() {
       }
     };
 
+    /**
+     * Each observer is kept with the handler that reads its entries, because
+     * both have to run at flush time.
+     *
+     * `takeRecords()` returns the entries the observer has queued but not yet
+     * delivered, **and clears the queue without invoking the callback**. Calling
+     * it and discarding the result — which is the obvious-looking way to write
+     * this — therefore throws away exactly the records it exists to rescue: the
+     * ones from the end of the visit, after the last callback and before the
+     * page went away. Those are the shifts a visitor saw last and the slowest
+     * interaction they had, so losing them biases every metric optimistic.
+     */
+    const drains: (() => void)[] = [];
     const observers: PerformanceObserver[] = [];
-    const observe = (type: string, callback: (list: PerformanceObserverEntryList) => void) => {
+
+    const observe = (type: string, handle: (entries: PerformanceEntryList) => void) => {
       try {
-        const observer = new PerformanceObserver(callback);
+        const observer = new PerformanceObserver((list) => handle(list.getEntries()));
         observer.observe({ type, buffered: true } as PerformanceObserverInit);
         observers.push(observer);
+        drains.push(() => handle(observer.takeRecords()));
       } catch {
         // An unsupported entry type is not an error worth showing anyone.
       }
@@ -73,8 +88,7 @@ export function FieldVitals() {
 
     // --- LCP: the last candidate before the metric freezes.
     let lcp = 0;
-    observe('largest-contentful-paint', (list) => {
-      const entries = list.getEntries();
+    observe('largest-contentful-paint', (entries) => {
       lcp = entries[entries.length - 1]?.startTime ?? lcp;
     });
 
@@ -83,8 +97,8 @@ export function FieldVitals() {
     let windowValue = 0;
     let windowStart = 0;
     let windowPrevious = 0;
-    observe('layout-shift', (list) => {
-      for (const entry of list.getEntries() as (PerformanceEntry & {
+    observe('layout-shift', (entries) => {
+      for (const entry of entries as (PerformanceEntry & {
         value: number;
         hadRecentInput: boolean;
       })[]) {
@@ -107,8 +121,8 @@ export function FieldVitals() {
 
     // --- INP: the worst interaction the visit contained.
     let inp = 0;
-    observe('event', (list) => {
-      for (const entry of list.getEntries() as (PerformanceEntry & { duration: number })[]) {
+    observe('event', (entries) => {
+      for (const entry of entries as (PerformanceEntry & { duration: number })[]) {
         if (entry.duration > inp) inp = entry.duration;
       }
     });
@@ -122,7 +136,9 @@ export function FieldVitals() {
     const flush = () => {
       if (sent || document.visibilityState !== 'hidden') return;
       sent = true;
-      for (const observer of observers) observer.takeRecords();
+      // Drain what each observer queued after its last callback, through the
+      // same handler, so those entries actually count.
+      for (const drain of drains) drain();
       if (lcp) report('LCP', lcp);
       if (inp) report('INP', inp);
       report('CLS', cls);

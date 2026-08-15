@@ -49,13 +49,46 @@ export type Region = {
 /**
  * A mailbox that is plainly a role, not a person. Anything else — first.last@,
  * a given name, a mobile-style handle — is withheld and routed through the RFQ.
+ *
+ * **Anchored at both ends on purpose.** A prefix match is what makes this rule
+ * dangerous: `^km` publishes `kmurphy@`, `^mail` publishes `mailene@`, `^sales`
+ * publishes `salesman.john@`. Every one of those is a person's inbox on a page
+ * search engines index, which is the exact harm the source file's privacy note
+ * asks to avoid. A role mailbox is the whole local part, optionally with one
+ * qualifier after a separator — `sales`, `info_yzk`, `contacto`, `km`.
  */
-const ROLE_MAILBOX = /^(info|sales|service|contact|office|mail|admin|support|export|enquiry|inquiry|marketing|kmc|km)[.\-_]?/i;
+const ROLE_NAMES = [
+  'info',
+  'informacion',
+  'contact',
+  'contacto',
+  'kontakt',
+  'sales',
+  'service',
+  'office',
+  'mail',
+  'admin',
+  'support',
+  'export',
+  'enquiry',
+  'enquiries',
+  'inquiry',
+  'inquiries',
+  'marketing',
+  'kmc',
+  'km',
+] as const;
+
+const ROLE_MAILBOX = new RegExp(`^(${ROLE_NAMES.join('|')})([._-][a-z0-9]+)?$`, 'i');
+
+export function isRoleMailbox(local: string): boolean {
+  return ROLE_MAILBOX.test(local);
+}
 
 function publishableEmail(email: string | undefined): { email: string | null; withheld: boolean } {
   if (!email) return { email: null, withheld: false };
   const local = email.split('@')[0] ?? '';
-  if (ROLE_MAILBOX.test(local)) return { email, withheld: false };
+  if (isRoleMailbox(local)) return { email, withheld: false };
   return { email: null, withheld: true };
 }
 
