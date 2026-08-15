@@ -1,0 +1,59 @@
+/* KAO MING BRAND TOKENS — derived August 2026
+   THE OFFICIAL LOGO IS IN THIS FOLDER: brand/KMC_CIS_Final_20240108_LOGO.png
+   That file is the brand mark for the site — use it as supplied. No redraw, no recolor,
+   no substitute mark. Values below are sampled from it directly.
+   Source: KMC_CIS_Final_20240108_LOGO.png (official CIS logo, 3657x4091 px)
+   The logo is a flat 4-color mark; these are exact sampled values, not approximations.
+   Machine livery sampled from the official 325GM product render (8688x5792).
+   ------------------------------------------------------------------ */
+
+:root {
+  /* ---- OFFICIAL BRAND MARKS (exact, from logo) ---- */
+  --km-red:         #B61B31;  /* logo arch — the primary brand accent. NOTE: this REPLACES the
+                                 placeholder #D31E25 used in the master spec. Deeper and less
+                                 orange; reads as heritage/engineering rather than alarm. */
+  --km-blue:        #64A9DA;  /* logo mountain + '1968' + script tagline — the SECOND brand color.
+                                 The master spec did not know about this. Use it for interactive
+                                 states, links, data highlights and 3D emissive accents. */
+  --km-ink:         #2B2925;  /* logo 'KMC' wordmark — warm near-black. Use as the true text/UI
+                                 black instead of a neutral grey. */
+  --km-white:       #FFFFFF;
+
+  /* ---- DERIVED DARK SYSTEM (warm-shifted toward --km-ink, replaces the neutral scale) ---- */
+  --km-black:       #0C0B0A;
+  --km-charcoal:    #161513;
+  --km-steel-800:   #201E1B;
+  --km-steel-600:   #3C3936;
+  --km-steel-400:   #837E77;
+  --km-offwhite:    #F3F1EC;
+  --km-paper:       #FAF9F6;
+
+  /* ---- ACCENT DERIVATIVES ---- */
+  --km-red-glow:    #E8465C;  /* hover / emissive above bloom threshold */
+  --km-blue-glow:   #8FC7EE;  /* 3D light-line emissive, matches the machine's green-blue LED strips */
+
+  /* ---- MACHINE LIVERY (for 3D PBR materials, sampled from the 325GM render) ---- */
+  --machine-blue:       #657199;  /* main enclosure panel blue-grey */
+  --machine-blue-light: #8E9AC2;  /* upper-lit face of the same panel */
+  --machine-blue-dark:  #4D5981;  /* shadowed face */
+  --machine-grey:       #C5C5C5;  /* cast/painted structural grey (columns, crossbeam) */
+  --machine-grey-light: #E0E0E0;  /* lit face */
+  --machine-base:       #383838;  /* machine base / bed casting, near-black grey */
+  --machine-accent:     #F08A24;  /* KESSLER head orange — the only warm accent on the machine */
+  --machine-led:        #4CE0A0;  /* green edge light-line on columns/enclosure */
+}
+
+/* NOTES FOR THE BUILD
+   1. Brand red and machine blue are close in value but different families — never place
+      --km-red directly on --machine-blue. Separate them with --km-ink or --km-offwhite.
+   2. The logo's blue (#64A9DA) and the machine's blue-grey (#657199) are NOT the same.
+      Keep UI blue for interface, livery blue for geometry.
+   3. The machine's green LED strips are a real product feature, not decoration — they are the
+      natural source for the site's "light line" motif (loader, section rules, hotspot rings).
+   4. Logo usage: place on --km-black, --km-charcoal or --km-paper only. Minimum clear space
+      equal to the height of the 'KAOMING' wordmark on all sides. Never place the full-color
+      mark on the machine's blue-grey livery — the logo's red and the livery blue clash.
+   5. Confirm with KAO MING marketing whether an official Pantone/RAL exists for the machine
+      livery before finalizing 3D materials; those values are sampled from a render, which may
+      have been color-graded. The LOGO colors need no confirmation — they are exact.
+*/

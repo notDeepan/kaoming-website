@@ -1,0 +1,50 @@
+# Dependencies and build output
+node_modules/
+.next/
+out/
+next-env.d.ts
+
+# Secrets and local state. `.env.example` is committed and documents every key.
+.env
+.env.local
+*.db
+*.db-journal
+.uploads/
+
+# ---------------------------------------------------------------- generated
+#
+# Everything below is produced from `kaoming-website-kit-FINAL/` by a script and
+# is reproducible from it. None of it is edited by hand, so none of it belongs
+# in history — see DEPLOYMENT.md for the three commands that rebuild it.
+#
+#   node scripts/prepare-images.mjs        -> public/img, public/docs
+#   python scripts/rasterize-catalogues.py -> public/catalogue
+#   npm run qr                             -> public/qr
+#
+# The two small `content/**/generated.json` manifests are NOT ignored: they are
+# imported by the module graph, so the app does not typecheck without them.
+kaoming-web/public/img/
+kaoming-web/public/docs/
+kaoming-web/public/catalogue/
+kaoming-web/public/qr/
+
+# ------------------------------------------------------------- source archive
+#
+# The kit is 135 MB of catalogue PDFs, print-resolution renders and blueprints —
+# the authority for every specification on the site (CLAUDE.md), but input
+# material rather than source code, and too heavy for git.
+#
+# The transcribed data the site actually renders IS committed, under
+# `kaoming-web/content/`. The kit stays on disk and belongs in asset storage,
+# not here.
+kaoming-website-kit-FINAL/
+kaoming-website-kit-FINAL.zip
+
+# Editor and OS
+.DS_Store
+Thumbs.db
+*.swp
+
+# Lighthouse reports written next to the app during performance work
+kaoming-web/lh*.json
+kaoming-web/final-*.json

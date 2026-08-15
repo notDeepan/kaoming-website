@@ -1,0 +1,95 @@
+{
+  "series": {
+    "id": "kmc-gn",
+    "name": "KMC-GN Series",
+    "epithet": "Gantry Neptunus",
+    "positioning": "Box-Way Gantry Type Machining Center",
+    "category": "gantry-machining-center",
+    "architecture": "Gantry construction with FIXED table and TRAVELING crossbeam \u2014 the portal moves over the workpiece along X. Note for 3D: exploded-view and scroll choreography differ from table-moving machines.",
+    "source": {
+      "document": "GN_GM_Series_Catalogue_ENG_.pdf",
+      "pages": "08\u201315, 18\u201319 (catalogue pagination)",
+      "verified": true,
+      "note": "All values transcribed from the printed catalogue. Nothing in this file is AI-estimated."
+    },
+    "specs_series": {
+      "travel": {
+        "z_mm": 1200,
+        "vertical_spindle_nose_to_table_mm": "409-1609",
+        "horizontal_spindle_center_to_table_mm": "363-1563"
+      },
+      "table": {
+        "max_load_capacity": { "value": 3000, "unit": "kg/m2" },
+        "t_slot": "28H8x200"
+      },
+      "spindle": {
+        "taper": "ISO50",
+        "speed_rpm_vertical": "6000 (*8000)",
+        "speed_rpm_horizontal": 3500,
+        "speed_conversion": "Two-speed gear shifting",
+        "motor": "AC 22/26 kW (30/35HP) (continuous / 30 minutes)",
+        "max_torque_nm": 670,
+        "heavy_cutting_low_speed_rpm": 375
+      },
+      "feed": { "rapid_traverse_m_min": "30/30/24", "cutting_feed_m_min": 8 },
+      "atc_v_h": {
+        "capacity": "30 (*40, *60)",
+        "capacity_note": "Distance between columns of 3.3 meters is not suitable for 40 tools",
+        "drive": "Hydraulic index motor; tool-changing arm rotated by hydraulic swing motor",
+        "shank": "MAS403-BT50",
+        "pull_stud": "MAS-P50T-1",
+        "max_tool_diameter_mm": "\u00d8130 (\u00d8200 adjacent pockets empty)",
+        "max_tool_length_mm": 350,
+        "max_tool_weight_kg": 20
+      },
+      "electrical_power_kva": 90,
+      "compressed_air_kg_cm2": "5-7",
+      "accuracy": {
+        "positioning_mm": "\u00b10.01/4000 (linear scales on X & Y)",
+        "repeatability_mm": "\u00b10.005"
+      },
+      "horizontal_head_indexing": { "indexing": "90\u00b0 x 4 (*5\u00b0 x 72)", "indexing_repeatability_sec": "\u00b13" },
+      "machine_height_mm": 5420,
+      "controller": "FANUC, *HEIDENHAIN, *SIEMENS",
+      "aac": "Standard 2-position AAC (Automatic Attachment head Changer); optional 3\u20134 position"
+    },
+    "head_attachments": [
+      { "name": "Vertical Head",                    "max_speed_rpm": "6000 / *8000", "application": "Powerful vertical cutting",            "optional": false },
+      { "name": "Horizontal Head",                  "max_speed_rpm": "3500",         "application": "Powerful horizontal cutting",          "optional": false },
+      { "name": "Extension Head",                   "max_speed_rpm": "4000",         "application": "Narrow processing with deep cutting",  "optional": true },
+      { "name": "Automatic Indexing Universal Head","max_speed_rpm": "3500",         "application": "Tilting surface cutting",              "optional": true }
+    ],
+    "models": [
+      { "model": "KMC-433GN",  "x_travel_mm": 4500,  "columns_mm": 3300, "y_travel_mm": 2500, "table_mm": "4500x2400",  "floor_space_mm": "9600x6440",  "net_weight_kg": 35000 },
+      { "model": "KMC-439GN",  "x_travel_mm": 4500,  "columns_mm": 3900, "y_travel_mm": 3100, "table_mm": "4500x3000",  "floor_space_mm": "9600x7040",  "net_weight_kg": 41000 },
+      { "model": "KMC-445GN",  "x_travel_mm": 4500,  "columns_mm": 4500, "y_travel_mm": 3700, "table_mm": "4500x3600",  "floor_space_mm": "9600x7640",  "net_weight_kg": 48000 },
+      { "model": "KMC-633GN",  "x_travel_mm": 6500,  "columns_mm": 3300, "y_travel_mm": 2500, "table_mm": "6500x2400",  "floor_space_mm": "11600x6440", "net_weight_kg": 56000 },
+      { "model": "KMC-639GN",  "x_travel_mm": 6500,  "columns_mm": 3900, "y_travel_mm": 3100, "table_mm": "6500x3000",  "floor_space_mm": "11600x7040", "net_weight_kg": 65000 },
+      { "model": "KMC-645GN",  "x_travel_mm": 6500,  "columns_mm": 4500, "y_travel_mm": 3700, "table_mm": "6500x3600",  "floor_space_mm": "11600x7640", "net_weight_kg": 73000 },
+      { "model": "KMC-833GN",  "x_travel_mm": 8500,  "columns_mm": 3300, "y_travel_mm": 2500, "table_mm": "8500x2400",  "floor_space_mm": "13600x6440", "net_weight_kg": 80000 },
+      { "model": "KMC-839GN",  "x_travel_mm": 8500,  "columns_mm": 3900, "y_travel_mm": 3100, "table_mm": "8500x3000",  "floor_space_mm": "13600x7040", "net_weight_kg": 89000 },
+      { "model": "KMC-845GN",  "x_travel_mm": 8500,  "columns_mm": 4500, "y_travel_mm": 3700, "table_mm": "8500x3600",  "floor_space_mm": "13600x7640", "net_weight_kg": 97000 },
+      { "model": "KMC-1033GN", "x_travel_mm": 10500, "columns_mm": 3300, "y_travel_mm": 2500, "table_mm": "10500x2400", "floor_space_mm": "15600x6440", "net_weight_kg": 105000 },
+      { "model": "KMC-1039GN", "x_travel_mm": 10500, "columns_mm": 3900, "y_travel_mm": 3100, "table_mm": "10500x3000", "floor_space_mm": "15600x7040", "net_weight_kg": 114000 },
+      { "model": "KMC-1045GN", "x_travel_mm": 10500, "columns_mm": 4500, "y_travel_mm": 3700, "table_mm": "10500x3600", "floor_space_mm": "15600x7640", "net_weight_kg": 123000 },
+      { "model": "KMC-1233GN", "x_travel_mm": 12500, "columns_mm": 3300, "y_travel_mm": 2500, "table_mm": "12500x2400", "floor_space_mm": "17600x6440", "net_weight_kg": 132000 },
+      { "model": "KMC-1239GN", "x_travel_mm": 12500, "columns_mm": 3900, "y_travel_mm": 3100, "table_mm": "12500x3000", "floor_space_mm": "17600x7040", "net_weight_kg": 142000 },
+      { "model": "KMC-1245GN", "x_travel_mm": 12500, "columns_mm": 4500, "y_travel_mm": 3700, "table_mm": "12500x3600", "floor_space_mm": "17600x7640", "net_weight_kg": 153000 },
+      { "model": "KMC-1433GN", "x_travel_mm": 14500, "columns_mm": 3300, "y_travel_mm": 2500, "table_mm": "14500x2400", "floor_space_mm": "19600x6440", "net_weight_kg": 164000 },
+      { "model": "KMC-1439GN", "x_travel_mm": 14500, "columns_mm": 3900, "y_travel_mm": 3100, "table_mm": "14500x3000", "floor_space_mm": "19600x7040", "net_weight_kg": 176000 },
+      { "model": "KMC-1445GN", "x_travel_mm": 14500, "columns_mm": 4500, "y_travel_mm": 3700, "table_mm": "14500x3600", "floor_space_mm": "19600x7640", "net_weight_kg": 187000 }
+    ],
+    "model_code_rule": "Leading digit(s) = X travel (4\u21924500, 6\u21926500, 8\u21928500, 10\u219210500, 12\u219212500, 14\u219214500 mm); last two digits = distance between columns (33\u21923300, 39\u21923900, 45\u21924500 mm), which fixes Y travel (2500/3100/3700) and table width (2400/3000/3600).",
+    "features": [
+      { "id": "gantry",      "order": 1, "title": "Fixed Table, Traveling Crossbeam", "copy": "Gantry type construction with fixed table and traveling crossbeam \u2014 high rigidity, most suitable for ultra-long and oversized workpieces with extremely stable machining accuracy. 25% floor-space saving compared to a conventional machining center." },
+      { "id": "travel",      "order": 2, "title": "Extra-Large Three-Axis Travel", "copy": "X-axis 4.5\u201314.5 metres, Y-axis 2.5/3.1/3.7 metres, Z-axis 1.2 metres. Maximum load capacity of the fixed table up to 3000 kg/m\u00b2." },
+      { "id": "rackpinion",  "order": 3, "title": "X & Y Rack-and-Pinion Drive", "copy": "Torsional rigidity up to 504 Nm/arc min and radial rigidity up to 675 N/\u00b5m. Backlash eliminated through mechanical preload: two reducers with preloaded helical gears engage the rack, with a middle pinion absorbing rebound \u2014 nearly backlash-free." },
+      { "id": "boxways",     "order": 4, "title": "Steel-Inserted Box Ways", "copy": "Steel-inserted box way and link-chain type roller bearings on all three axes." },
+      { "id": "scales",      "order": 5, "title": "Linear Scales on X & Y", "copy": "Positioning accuracy \u00b10.01/4000 mm, maintaining the highest precision during long-term operations." },
+      { "id": "step",        "order": 6, "title": "X & Y-Axis Step Design", "copy": "Step difference between upper and lower box ways: 120 mm on Y-axis, 70 mm on the X (U) axis." },
+      { "id": "columns",     "order": 7, "title": "Stable Column Structure", "copy": "Specially designed separated column structure combats structural deformation; columns reinforced with stiff interior ribs resist bending and torsional stress. Validated with Finite Element Analysis." },
+      { "id": "spindlehead", "order": 8, "title": "Dual-Speed Gear-Drive Spindle Head", "copy": "Thermally symmetrical in-line design with spindle and motor on the head centerline; coolant flows straight through motor, reducer and spindle. 26 kW (35HP) motor, 6000 rpm, max torque 670 Nm \u2014 heavy cutting down to 375 rpm. Vertical and horizontal machining via automatic indexing head." },
+      { "id": "aac",         "order": 9, "title": "Automatic Attachment Changer", "copy": "Standard 2-position AAC compartment; optional 3-to-4-position AAC. Head attachments exchange automatically for multi-face machining." }
+    ]
+  }
+}

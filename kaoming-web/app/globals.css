@@ -1,0 +1,365 @@
+@import 'tailwindcss';
+
+/* Display face — declared by hand so the layout can preload it with a literal
+   href (see lib/fonts/index.ts for why next/font cannot). The fallback
+   overrides below are the metric adjustments next/font computed for this exact
+   file against Arial; they keep the swap from moving layout. */
+@font-face {
+  font-family: 'KM Display';
+  src: url('/fonts/display/space-grotesk-variable-latin-v5.3.0.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  /* `optional`, not `swap`: this face sets the headings, and swapping it in
+     re-flows them. On a narrow column that changes the line count and moves
+     everything underneath. `optional` takes the metric-matched fallback for
+     that page load instead. The face is preloaded at high priority and 22 KB,
+     so in practice it wins the race and is used.
+     (`block` was tried for the same reason and made no difference, which is how
+     we know the remaining shift on the product hero is not this font.) */
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'KM Body';
+  src: url('/fonts/body/inter-variable-latin-v5.3.0.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Metric adjustments next/font computed for this exact file against Arial. */
+@font-face {
+  font-family: 'KM Body Fallback';
+  src: local('Arial');
+  ascent-override: 89.79%;
+  descent-override: 22.36%;
+  line-gap-override: 0%;
+  size-adjust: 107.89%;
+}
+
+@font-face {
+  font-family: 'KM Display Fallback';
+  src: local('Arial');
+  ascent-override: 88.78%;
+  descent-override: 26.34%;
+  line-gap-override: 0%;
+  size-adjust: 110.84%;
+}
+
+/* ============================================================================
+   KAO MING — design tokens
+   Colour values are the exact sampled brand values from
+   _kit/brand/brand-tokens.css, which supersedes the placeholder red in the
+   master spec. Type scale is Part B.3. Nothing here is a guess.
+   ========================================================================= */
+
+@theme {
+  /* Wipe Tailwind's stock palette. The art direction (Part B.2) commits to one
+     narrow palette; leaving `bg-blue-500` reachable is how that erodes over
+     nine milestones. Everything the site is allowed to use is listed below. */
+  --color-*: initial;
+
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Dominant dark field — warm-shifted toward the wordmark black */
+  --color-km-black: #0c0b0a;
+  --color-km-charcoal: #161513;
+  --color-km-steel-800: #201e1b;
+  --color-km-steel-600: #3c3936;
+  --color-km-steel-400: #837e77;
+
+  /* Light system — specifications, documentation, resources */
+  --color-km-offwhite: #f3f1ec;
+  --color-km-paper: #faf9f6;
+  --color-km-white: #ffffff;
+
+  /* Official brand marks, sampled from the CIS logo */
+  --color-km-ink: #2b2925;
+  --color-km-red: #b61b31;
+  --color-km-blue: #64a9da;
+  --color-km-red-glow: #e8465c;
+  --color-km-blue-glow: #8fc7ee;
+
+  /* Semantic */
+  --color-km-success: #2e9e6b;
+  --color-km-warning: #d9a21b;
+
+  /* --- Type scale (Part B.3) ------------------------------------------- */
+  /* CJK order is deliberate — see lib/fonts/index.ts. The platform face is
+     preferred and the self-hosted webfont is the per-glyph safety net. */
+  --font-display:
+    'KM Display', 'KM Display Fallback', 'PingFang TC', 'Noto Sans CJK TC',
+    'Microsoft JhengHei', 'Noto Sans TC Variable', system-ui, sans-serif;
+  --font-sans:
+    'KM Body', 'KM Body Fallback', 'PingFang TC', 'Noto Sans CJK TC',
+    'Microsoft JhengHei', 'Noto Sans TC Variable', system-ui, sans-serif;
+  /* The next/font variable already ends in its metric-matched Latin fallback;
+     the CJK faces come after it so they answer only for glyphs Plex Mono has
+     none of. Ahead of it they answered for the Latin too, and the swap moved
+     the page (see lib/fonts). */
+  --font-mono:
+    var(--font-mono-face), 'PingFang TC', 'Noto Sans CJK TC', 'Microsoft JhengHei',
+    'Noto Sans TC Variable', ui-monospace, monospace;
+
+  --text-hero: clamp(3.5rem, 9vw, 8.5rem);
+  --text-hero--line-height: 0.95;
+  --text-hero--letter-spacing: -0.02em;
+
+  --text-h1: clamp(2.5rem, 6vw, 5rem);
+  --text-h1--line-height: 1;
+  --text-h1--letter-spacing: -0.02em;
+
+  --text-h2: clamp(2rem, 4vw, 3.25rem);
+  --text-h2--line-height: 1.05;
+  --text-h2--letter-spacing: -0.015em;
+
+  --text-h3: clamp(1.4rem, 2.5vw, 1.9rem);
+  --text-h3--line-height: 1.15;
+  --text-h3--letter-spacing: -0.01em;
+
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+
+  --text-spec-xl: clamp(2rem, 5vw, 4rem);
+  --text-spec-xl--line-height: 1;
+
+  --text-spec: 0.9375rem;
+  --text-spec--line-height: 1.5;
+
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.12em;
+
+  /* --- Motion ----------------------------------------------------------- */
+  /* Part D: 150–250ms weighted easing on interactive elements. */
+  --ease-km: cubic-bezier(0.16, 0.84, 0.44, 1);
+  --duration-km-fast: 150ms;
+  --duration-km: 250ms;
+  --duration-km-slow: 420ms;
+}
+
+/* Machine livery — 3D PBR material values only, never UI.
+   Kept out of @theme deliberately: brand note 2 in brand-tokens.css requires
+   interface blue and livery blue to stay in different families, and the surest
+   way to enforce that is to make the livery unreachable from a utility class. */
+:root {
+  --machine-blue: #657199;
+  --machine-blue-light: #8e9ac2;
+  --machine-blue-dark: #4d5981;
+  --machine-grey: #c5c5c5;
+  --machine-grey-light: #e0e0e0;
+  --machine-base: #383838;
+  --machine-accent: #f08a24;
+  --machine-led: #4ce0a0;
+}
+
+/* ============================================================================
+   Base layer
+   ========================================================================= */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    min-width: 0;
+  }
+
+  html {
+    /* Hard rule: Lenis owns scroll. Never `scroll-behavior: smooth` — it fights
+       Lenis and ScrollTrigger. Anchor jumps go through Lenis.scrollTo(). */
+    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-km-black);
+    color: var(--color-km-offwhite);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Part P: visible focus everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--color-km-red);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-km-red);
+    color: var(--color-km-paper);
+  }
+
+  /* Lenis runtime classes (lenis 1.1.x). Inlined rather than importing the
+     package stylesheet so the "no scroll-behavior: smooth" rule stays visible
+     in this file. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  /* Broader than Lenis ships it on purpose: the mobile menu locks scroll the
+     same way whether or not Lenis is running (reduced motion has no instance). */
+  .lenis-stopped {
+    overflow: hidden;
+  }
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
+
+  /* Part P — the calm variant. Not optional. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ============================================================================
+   Atmosphere — Part B.2: "Backgrounds are never flat: subtle radial gradient +
+   film grain + vignette always present." Two fixed, static, pointer-transparent
+   layers. No animation, no per-frame cost.
+   ========================================================================= */
+
+@utility km-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(131, 126, 119, 0.16), transparent 55%),
+    radial-gradient(100% 100% at 50% 100%, rgba(12, 11, 10, 0.9), transparent 60%);
+}
+
+@utility km-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+/* Wide tracking on uppercase labels is a Latin device. Applied to Traditional
+   Chinese it just pushes the characters apart and reads as a typesetting fault,
+   so the mono label tightens up on CJK locales. */
+[lang^='zh'] .km-label,
+[lang^='ja'] .km-label,
+[lang^='ko'] .km-label {
+  letter-spacing: 0.02em;
+}
+
+/* The dimension rule: a hairline between tick terminators, exactly as the
+   catalogues draw an overall dimension. It draws itself in when its section
+   reveals; with no JavaScript, or under reduced motion, it is simply there. */
+@utility km-dim {
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    width: 1px;
+    height: 7px;
+    background-color: var(--color-km-steel-600);
+  }
+  &::before {
+    left: 0;
+  }
+  &::after {
+    right: 0;
+  }
+}
+
+[data-dim-rule] {
+  transform-origin: left center;
+  transition: transform 700ms var(--ease-km) 120ms;
+}
+
+[data-revealed='false'] [data-dim-rule] {
+  transform: scaleX(0);
+}
+
+/* Section index / eyebrow label — the mono voice used site-wide (Part B.3). */
+@utility km-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* A hairline that reads as a machined edge rather than a border. */
+@utility km-rule {
+  border-color: color-mix(in oklab, var(--color-km-steel-600) 70%, transparent);
+}
+
+/* ---------------------------------------------------------------- catalogue */
+
+/**
+ * The page turn (Part I.3). Two half-page planes would need the spread rendered
+ * twice; rotating the whole plane about its leading edge reads as a page being
+ * lifted and costs one transform. The highlight gradient over the top is what
+ * supplies the curl.
+ */
+@keyframes km-turn-next {
+  from {
+    transform: rotateY(0deg);
+    opacity: 0.35;
+  }
+  40% {
+    transform: rotateY(-24deg);
+  }
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes km-turn-previous {
+  from {
+    transform: rotateY(0deg);
+    opacity: 0.35;
+  }
+  40% {
+    transform: rotateY(24deg);
+  }
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+/** The factory parallax needs headroom inside its frame to travel into. */
+@utility scale-115 {
+  scale: 1.15;
+}

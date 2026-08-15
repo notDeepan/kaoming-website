@@ -1,0 +1,86 @@
+// RFQ lead store.
+//
+// SQLite for the pilot, Postgres when the site is hosted (Part C.1) — changing
+// that is a provider swap here plus a migration, because nothing below uses a
+// SQLite-only type.
+//
+// The shape deliberately mirrors the enquiry model in the KAO MING CRM so leads
+// can later be posted straight into it by webhook (Part M.1). Field names follow
+// the CRM's vocabulary rather than this form's field order.
+//
+// No IP address is stored. Rate limiting needs one for a few minutes, not
+// forever, so it lives in memory and never reaches the database.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  /// Locale the enquiry was written in — sales replies in the same language.
+  locale String
+  /// Where the visitor started: product | compare | contact | header | rfq.
+  source String
+  /// new | contacted | quoted | closed. Mirrors the CRM's quotation states.
+  status String @default("new")
+
+  company String
+  name    String
+  email   String
+  phone   String?
+  country String
+
+  industry           String?
+  application        String?
+  material           String?
+  workpieceSize      String?
+  expectedProduction String?
+  message            String?
+
+  /// When the visitor accepted the privacy notice. Required to hold this record.
+  consentAt DateTime
+
+  machines LeadMachine[]
+  files    LeadFile[]
+
+  @@index([createdAt])
+  @@index([status])
+}
+
+/// The machines an enquiry is about. Series slug and catalogue name are stored
+/// together so a lead stays readable even if a route is renamed later.
+model LeadMachine {
+  id         String @id @default(cuid())
+  leadId     String
+  seriesSlug String
+  seriesName String
+  /// Catalogue model code where the visitor picked one, e.g. KMC-425GM.
+  model      String?
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+}
+
+/// Drawings and CAD files. Stored outside the web root; only the path is here.
+model LeadFile {
+  id           String @id @default(cuid())
+  leadId       String
+  originalName String
+  storedPath   String
+  byteSize     Int
+  mimeType     String
+  /// Lets an operator confirm the file on disk is the one that was uploaded.
+  sha256       String
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+}

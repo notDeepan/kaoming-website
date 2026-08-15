@@ -1,0 +1,91 @@
+{
+  "series": {
+    "id": "kmc-gm",
+    "name": "KMC-GM Series",
+    "epithet": "Gantry Mercury",
+    "positioning": "Intelligent Five-Axis Gantry Machining Center",
+    "category": "gantry-machining-center",
+    "source": {
+      "document": "GN_GM_Series_Catalogue_ENG_.pdf",
+      "pages": "02\u201307, 17 (catalogue pagination)",
+      "verified": true,
+      "note": "All values transcribed from the printed catalogue. Nothing in this file is AI-estimated."
+    },
+    "specs_series": {
+      "distance_between_columns_mm": 2500,
+      "travel": {
+        "y_mm": 2500,
+        "z_mm": 1000,
+        "vertical_spindle_nose_to_table_mm": "150-1150",
+        "horizontal_spindle_center_to_table_mm": "490-1490"
+      },
+      "table": {
+        "max_load_capacity": { "value": 3000, "unit": "kg/m2" },
+        "t_slot": "28H8x200"
+      },
+      "spindle": {
+        "taper": "HSK-A100",
+        "speed_rpm": 15000,
+        "speed_conversion": "Built-in style",
+        "motor": "120Nm / 45kW",
+        "max_torque_nm": 120
+      },
+      "feed": { "cutting_feed_mm_min": "1-10000" },
+      "tool_magazine": {
+        "capacity": "32 (*64)",
+        "shank": "HSK-A100 (*A63)",
+        "max_tool_diameter_mm": "100 (130)",
+        "max_tool_length_mm": 300,
+        "max_tool_weight_kg": 7,
+        "note": "Total weight of full blade is less than 160 kg"
+      },
+      "electrical_power_kva": 90,
+      "compressed_air_kg_cm2": "5-7",
+      "accuracy": {
+        "positioning_mm": "\u00b10.004/300, \u00b10.008/full process",
+        "repeatability_mm": "\u00b10.002"
+      },
+      "machine_height_mm": 5800,
+      "controller": "HEIDENHAIN"
+    },
+    "models": [
+      { "model": "KMC-325GM", "x_travel_mm": 3000, "working_table_mm": "3000x2000", "rapid_traverse_m_min": "30/30/24", "floor_space_mm": "6500x9300",  "net_weight_kg": 50000 },
+      { "model": "KMC-425GM", "x_travel_mm": 4000, "working_table_mm": "4000x2000", "rapid_traverse_m_min": "30/30/24", "floor_space_mm": "6500x10300", "net_weight_kg": 60000 },
+      { "model": "KMC-525GM", "x_travel_mm": 5000, "working_table_mm": "5000x2000", "rapid_traverse_m_min": "24/30/24", "floor_space_mm": "6500x11300", "net_weight_kg": 70000 },
+      { "model": "KMC-625GM", "x_travel_mm": 6000, "working_table_mm": "6000x2000", "rapid_traverse_m_min": "20/30/24", "floor_space_mm": "6500x12300", "net_weight_kg": 80000 }
+    ],
+    "model_code_rule": "First digit = X travel in metres (3\u21923000 \u2026 6\u21926000); '25' = distance between columns 2500 mm. Series-constant specs identical across models; only X travel, table length, rapids, floor space and weight vary.",
+    "features": [
+      { "id": "box-in-box",   "order": 1, "title": "Box-in-Box Design", "copy": "Thermal symmetry construction with a fully integrated crossbeam, improving rigidity by 32%." },
+      { "id": "z-dual-motor", "order": 2, "title": "Z-Axis Dual Motor Drive", "copy": "High-speed movement with high precision and fast dynamic response without oil-pressure hysteresis \u2014 no high-pressure hydraulic cylinder. Suitable for high-precision cutting." },
+      { "id": "thk",          "order": 3, "title": "THK Linear Guideways & Ballscrews", "copy": "THK made-in-Japan linear guideways and ballscrews ensure high quality and precision." },
+      { "id": "cooling",      "order": 4, "title": "Three-Axes Cooling System", "copy": "Inner-cooled ballscrews, head-and-tail cooling and a motor board with cooling circuit give optimal control over thermal growth on all three axes. Patented unique design M634822." },
+      { "id": "kessler",      "order": 5, "title": "KESSLER 2-Axis Head", "copy": "Five-axis capability through a KESSLER two-axis milling head with HSK-A100 interface and standard coolant-through-spindle." },
+      { "id": "atc",          "order": 6, "title": "Chain-Type Tool Magazine", "copy": "Standard 32-tool chain magazine, HSK-A100 shank, with a tool-changing arm for greater stability and longevity." },
+      { "id": "table",        "order": 7, "title": "Self-Milling Working Table", "copy": "Working table finish-machined by the machine itself." }
+    ],
+    "components": [
+      {
+        "id": "kessler_head", "glb_object": "KM_spindle_head", "hotspot": "HS_head", "conceptual": false,
+        "title": "KESSLER 2-Axis Head",
+        "specs": {
+          "spindle_taper": "HSK-A100 (opt. HSK-A63)",
+          "cts": "Standard",
+          "spindle_speed_rpm": "12000\u201330000 (KESSLER head product range as printed; machine specification 15000 rpm)",
+          "a_axis": { "rotation": "\u00b1105\u00b0", "motor_torque_nm": "382/575 (S1/Smax)", "clamping_torque_nm": "1200/2160 (P0/Pmax)" },
+          "c_axis": { "rotation": "\u00b1200\u00b0", "motor_torque_nm": "810/1100 (S1/Smax)", "clamping_torque_nm": "930/1680 (P0/Pmax)" },
+          "controller": "Siemens, Heidenhain"
+        }
+      },
+      { "id": "crossbeam", "glb_object": "KM_crossbeam", "hotspot": "HS_crossbeam", "conceptual": false, "title": "Box-in-Box Crossbeam", "specs": { "rigidity_improvement": "+32%", "design": "Thermal symmetry construction, fully integrated crossbeam" } },
+      { "id": "z_ram", "glb_object": "KM_ram", "hotspot": "HS_ram", "conceptual": false, "title": "Z-Axis Dual Motor Drive", "specs": { "drive": "Dual motor, without high-pressure hydraulic cylinder" } },
+      { "id": "atc", "glb_object": "KM_atc", "hotspot": "HS_atc", "conceptual": false, "title": "Chain-Type Tool Magazine", "specs": { "capacity": "32 (*64)", "shank": "HSK-A100 (*A63)" } },
+      { "id": "guideways", "glb_object": "KM_base", "hotspot": "HS_guideways", "conceptual": false, "title": "THK Linear Guideways & Ballscrews", "specs": { "brand": "THK (Japan)" } },
+      { "id": "spindle", "glb_object": "KM_spindle", "hotspot": "HS_spindle", "conceptual": false, "title": "Built-In Spindle", "specs": { "taper": "HSK-A100", "speed_rpm": 15000, "motor": "120Nm / 45kW", "torque_diagram": "KESSLER-SMS 080.40-681.520 (15000rpm): 145 Nm S6-40%, 120 Nm S1, 45 kW" } }
+    ],
+    "flagship_pilot": {
+      "recommended_model": "KMC-325GM",
+      "rationale": "The catalogue's GM floor-space drawing corresponds to the 325GM footprint (9300 mm length); drawings + full spec column verified in hand. GM models differ only in X-length \u2014 the 425/525/625GM 3D variants derive from the 325GM model by stretching X-direction segments (base, table, enclosure), so one build yields four machines."
+    }
+  }
+}

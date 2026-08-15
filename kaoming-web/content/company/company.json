@@ -1,0 +1,103 @@
+{
+  "source": "https://www.kaoming.com (EN pages, fetched August 2026). Verbatim facts only; marketing copy to be rewritten for the new site.",
+  "identity": {
+    "legal_name": "KAO MING Machinery Industrial Co., Ltd.",
+    "chinese_name": "高明精機工業股份有限公司",
+    "tagline": "Make same to different",
+    "brand_marks": ["KMC", "KAO MING", "1968 (in logo)"],
+    "positioning_claims_verbatim": [
+      "leader of Taiwan's gantry type processing center",
+      "first Taiwan vendor to enter the Chinese market",
+      "philosophy of 'Doing it right the first time'"
+    ],
+    "founding": "1968, by Mr. Chang Gao-Ming and Ms. Chang Tsai Mei-Hsia, at Chung Cheng Road, Feng Yuan City, Taichung County",
+    "origin_story": "Started producing rotary arm drilling beds; under Director Chang the company reoriented to end-to-end vertical integration — own development, production, marketing and sales.",
+    "sales_presence": "Sales locations across Europe, the Americas and Asia"
+  },
+  "contact": {
+    "address_en": "CTSP, No. 53, Houke S. Rd., Houli Dist., Taichung City 421012, Taiwan",
+    "tel": "+886-4-2557-7650",
+    "fax": "+886-4-2557-7630",
+    "email": "km@kaoming.com.tw",
+    "social": {
+      "facebook": "https://www.facebook.com/kaomingmachinery",
+      "youtube": "https://www.youtube.com/user/kaoming2011",
+      "instagram": "https://bit.ly/kmcinstagram"
+    }
+  },
+  "history_milestones": {
+    "WARNING": "The current site renders these in a Wix carousel; the year-to-event pairing could not be read reliably from the DOM. Years and events are both verbatim, but the PAIRING MUST BE CONFIRMED with KAO MING before publishing.",
+    "years_listed": [1968, 1972, 1974, 1982, 1983, 1995, 2007, 2008, 2013, 2016],
+    "events_listed": [
+      "KAO MING Machinery Company set up by founder Mr. Chang, Gao-Ming and his wife Ms. Chang, Tsai Mei-Hsia, located on Chung Cheng Road, Feng Yuan City, Taichung County",
+      "Change the company name to Kao Ming Industry Co.",
+      "Reorganized as Kao Ming Machinery Industrial Co., Ltd.",
+      "Relocated to the new headquarters",
+      "Kao Ming is the first company to invest in a production line for assembling double-column machining centers",
+      "First machine tool manufacturer in Taiwan to obtain ISO 9001; KMC-SD series obtained a Good Design award",
+      "Announced gantry type machining center KMC-G series; two-step spindle in-line integrated design obtained Utility Model patent #M316769; Y-axis extension bellow obtained Utility Model patent #M322297",
+      "Application for the plant in the Central Taiwan Science Park approved, area 25,000 square meters; built the constant-temperature plant",
+      "Importing-in Toyota Production System",
+      "Announced five-axis moving crossbeam & moving column KMC-EPG series"
+    ],
+    "corroborated_elsewhere": "2023 = 55th anniversary (consistent with 1968 founding). 2023 EMO Hannover, Sept 18–23, was the last exhibition posted."
+  },
+  "patents_and_awards": [
+    { "type": "patent", "id": "M316769", "subject": "Two-step spindle in-line integrated design", "kind": "Utility Model (TW)" },
+    { "type": "patent", "id": "M322297", "subject": "Y-axis extension bellow", "kind": "Utility Model (TW)" },
+    { "type": "patent", "id": "M634822", "subject": "Three-axes cooling system unique design (from GM catalogue)", "kind": "Utility Model (TW)" },
+    { "type": "certification", "id": "ISO 9001", "note": "Claimed as the first machine tool manufacturer in Taiwan to obtain it" },
+    { "type": "award", "id": "Good Design Award", "subject": "KMC-SD series" }
+  ],
+  "manufacturing_process_pillars": [
+    { "id": "scraping", "title": "Hand Scraping", "verbatim_points": [
+      "Scraping is a skill more difficult than woodcarving",
+      "It is the precise starting point for machine tools; it removes dependence on other machine tools and eliminates deviation from clamping force and thermal energy",
+      "A scraped guideway is not easily worn out because of the excellent lubrication effect",
+      "The standard is a flat surface of 50% high points (load-bearing) and 50% low points (oil pockets); slideway scraping is more than 20 PPI (points per square inch), with a 40% contact ratio in use"
+    ]},
+    { "id": "box-way", "title": "Box Way", "verbatim_points": [
+      "Sliding friction with face-to-face interface; large contact area gives overall machine rigidity, high machining stability, high load capacity and strength",
+      "Large contact area gives good shock absorption, damping and dynamic rigidity — long machine life and stable machining quality",
+      "Advantage: cast steel and other difficult-to-cut materials, heavy-duty and heavy/rough cutting with high removal rate",
+      "Industries: high-hardness steel molds, mold bases, automobile interior parts, small and medium machine parts"
+    ]},
+    { "id": "linear-way", "title": "Linear Way", "verbatim_points": [
+      "Rolling friction with point or line contact; small friction resistance, fast reaction and fast moving speed",
+      "Accurate minimum feed unit — stick-slip rarely occurs; lower driving horsepower demand saves energy",
+      "Less friction heat allows high-speed movement while maintaining accuracy; bears radial, anti-radial and lateral load simultaneously; preload and slider count adjustable to tune rigidity and load ability",
+      "Advantage: reduces machining time on complex work with frequent tool changes and feed changes",
+      "Industries: complex workpieces, high-volume small and medium parts, multi-surface workpieces in marine and aviation industries"
+    ]},
+    { "id": "spindle", "title": "Spindle", "verbatim_points": ["Dedicated section exists on the current site (process-2-en) — content not yet captured; pull when writing the Technology page"] },
+    { "id": "technical-center", "title": "Technical Center", "verbatim_points": ["Dedicated section exists on the current site (process-2-en) — content not yet captured"] },
+    { "id": "quality", "title": "Quality", "verbatim_points": ["Dedicated section exists on the current site (process-3-en) — content not yet captured; likely holds inspection/certification detail for the Technology page"] }
+  ],
+  "sustainability": {
+    "claims_verbatim": [
+      "Environmental impact assessment carried out before building the Central Taiwan Science Park branch",
+      "Factory designed for energy saving to reduce carbon emission",
+      "High-efficiency energy-saving electrical equipment",
+      "LED lighting with automatic sensors — reduces 18,000 kg of CO2 every year",
+      "Water-saving devices with automatic sensors",
+      "Inverter compressor pneumatic equipment",
+      "Ice-storage air-conditioning system — stores ice off-peak and supplies cooling at peak"
+    ],
+    "pillars": ["Safe and Healthy Environment", "Energy-saving Carbon Reduction Equipment", "Performance of Business Operations", "The Concept of Sustainable Management", "Social Care Action"]
+  },
+  "current_site_audit": {
+    "platform": "Wix (meta-generator: Wix.com Website Builder), copyright 2018, design by megaweb",
+    "structure": ["ABOUT", "NEWS", "PRODUCTS", "PROCESS", "APPLICATIONS", "CONTACT"],
+    "languages": ["EN", "繁 (Traditional Chinese)"],
+    "critical_gaps_found": [
+      "APPLICATIONS page is empty — it literally says 'updating'. The industry/materials/multi-angle-machining sections have never been filled. This is the single biggest content gap and the highest-value new section.",
+      "NEWS is stale — the newest item is 2023 EMO Hannover and the 55th anniversary (2023). Nothing from 2024–2026.",
+      "Product pages carry travel ranges only — no full specification tables, no downloads, no CTA beyond a category link. There is no RFQ form anywhere.",
+      "The new Greek-god series names appear only as untranslated Traditional-Chinese parentheticals inside English pages (e.g. '(升級版Hephaestus系列H7)') — an international visitor cannot understand them.",
+      "Website travel range for KMC-G (X 4500–12500) is out of date; the GN catalogue now goes to 14500.",
+      "No distributor/global network page despite claiming sales locations across three continents.",
+      "No certifications page, no case studies, no video library (a YouTube channel exists but is not integrated).",
+      "Copyright notice still reads 2018."
+    ]
+  }
+}

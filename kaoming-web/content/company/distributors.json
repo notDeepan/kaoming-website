@@ -1,0 +1,84 @@
+{
+  "source": "https://www.kaoming.com/location-1-en and /location-2-en, fetched 12 August 2026. Verbatim from KAO MING's official site — the authoritative source for the Global Network page.",
+  "structure_note": "KAO MING's own regional grouping is AMERICAS · EUROPE AREA · MIDDLE EAST / AFRICA · ASIA · OCEANIA. Use these five regions as the map tabs (Part J.4 of the spec).",
+  "count": 41,
+  "verify_before_launch": "Agent lists go stale. Ask sales to confirm every entry — especially the ones with missing URLs or 'X' fields — before publishing. Several Taiwan entries have personal mobile numbers and individual names; decide with sales whether domestic agents appear on the international site at all.",
+  "privacy_note": "Some entries expose an individual's personal email or mobile. For the public site, prefer the company's general address and phone; route everything else through the RFQ form.",
+
+  "regions": {
+    "AMERICAS": [
+      { "country": "U.S.A.", "agent": "YCM Technology (USA) Inc.", "url": "www.ycmcnc.com/index_en.php", "address": "20540 Belshaw Ave., Carson, CA 90746", "tel": "(310) 735-8610", "email": "roger.chen@ycmcnc.com" },
+      { "country": "Canada", "agent": "HEINMAN MACHINERY LTD.", "url": "www.heinmanmachinery.com", "address": "6105 Kestrel Rd., Mississauga, Ontario L5T 1Y8", "tel": "905-564-9479", "fax": "905-564-1052", "email": "sales@heinmanmachinery.com" },
+      { "country": "Canada", "agent": "THOMAS SKINNER & SON LTD.", "url": "www.thomasskinner.com", "address": "13880 Vulcan Way, Richmond, BC V6V 1K6", "tel": "604-207-3132 / 1-800-567-2131 (toll free)", "fax": "604-276-8545", "email": "JCox@tskinner.com" },
+      { "country": "Mexico", "agent": "ALTTEK — Alta Tecnologia CNC", "url": "www.alttek.com", "address": "Avenida Martel, Parque #202, Industrial Martel de Santa Catarina, 66367 Santa Catarina, N.L.", "tel": "(52) 81-8375-3385 / (52) 81-18001003", "email": "contacto@alttek.com" },
+      { "country": "Brazil", "agent": "PANMACHINE", "url": "www.panmachine.com.br", "address": "R. Rizieri Negrini, 334-B, CEP 04257-143, São Paulo, SP", "tel": "55-11-2083-4178", "email": "fabio@panmachine.com.br" },
+      { "country": "Argentina", "agent": "CONTROL UNO S.A.", "url": "www.controluno.com.ar", "address": "Av. Sucre 2425 - Of. 10, B1643AQF - Béccar, Pcia. de Buenos Aires", "tel": "54-11-4723-0911", "email": "controluno@controluno.com.ar" },
+      { "country": "Peru", "agent": "HARTMETALL SAC", "url": "www.hartmetallgroup.com", "address": "Calle Los Antares Mz A5 Urb La Alborada Of 203, Torre A, Nuevo Centro Empresarial El Trigal, Surco, Lima", "tel": "511-6612699", "email": "otorres@hartmetallgroup.com" }
+    ],
+    "EUROPE AREA": [
+      { "country": "Germany", "agent": "IBERIMEX-Maschinen Vertrieb Rheinland GmbH", "url": "www.iberimex.de", "address": "Heinrich-Hertz-Str. 7, 40699 Erkrath, Germany", "tel": "+49 (0)211-92071-0", "fax": "+49 (0)211-92071-50", "email": "info@iberimex.de" },
+      { "country": "Italy", "agent": "TECNOR MACCHINE SPA", "url": "www.tecnormacchine.it", "address": "Via Gravellone 19, 27100 Pavia, Italy", "tel": "+39 0382-304506", "fax": "+39 0382-34214", "email": "andrea.broglia@tecnormacchine.it" },
+      { "country": "Switzerland", "agent": "Josef Binkert AG", "url": "www.binkert.com", "address": "Grabenstrasse 1, CH-8304 Wallisellen", "tel": "+41 44 832 55 55", "fax": "+41 44 832 55 66", "email": "service@binkert.com" },
+      { "country": "Austria", "agent": "TECNO. team GmbH", "url": "www.tecnoteam.at", "address": "Industriestrasse 7, 2542 Kottingbrunn, Austria", "tel": "+43 (0) 2252 890029-15", "fax": "+43 (0) 2252 890029-30", "email": "w.ernst@tecnoteam.at" },
+      { "country": "Netherlands", "agent": "Bendertechniek", "url": "www.bendertechniek.nl", "address": "Plesmanstraat 32, 3905 KZ Veenendaal, Netherlands", "tel": "+31 (0)318 550 200", "email": "verkoop@bendertechniek.nl" },
+      { "country": "Belgium", "agent": "Bendertechniek Bvba", "url": "www.bendertechniek.be", "address": "Remise 7, 3930 Hamont-Achel, Belgium", "tel": "+32 115 74816", "email": "service@bendertechniek.be" },
+      { "country": "Belgium", "agent": "van Waasdijk n.v./s.a.", "url": "http://www.vanwaasdijk.com", "address": "Waardbeekdreef 3, 1850 Grimbergen, Belgium", "tel": "+32 (2) 4272151", "fax": "+32 (2) 4272196", "email": "machines.dpt@vanwaasdijk.com" },
+      { "country": "Northern France", "agent": "TECNOVA Industrie / Groupe REPMO", "url": "www.tecnova-industrie.com", "address": "27 Avenue Mantelet, 61000 Alençon", "tel": "02.33.31.28.70", "fax": "02.33.28.91.70", "email": "s.lemonnier@tecnova-industrie.com" },
+      { "country": "Southern France", "agent": "G2M / MACHINES OUTILS", "url": "http://www.g2m-machines.fr/", "address": "12 B, rue Professeur Deperet, 69160 Tassin la Demi Lune", "tel": "04.81.13.04.50", "email": "g2mdirection@orange.fr" },
+      { "country": "Sweden", "agent": "Maskin AB A. Fransson", "url": "www.maskinfransson.se", "address": "Hälleby 19, Sjövik, 153 92 Hölö, Sweden", "tel": "08-554-309-30", "fax": "08-55-15-73-71", "email": "henrik@maskinfransson.se" },
+      { "country": "Denmark", "agent": "JCV MachineTools ApS", "url": "www.jcv-machine.dk", "address": "Fynsvej 9-11, DK-6000 Kolding", "tel": "45-75-50-43-22", "fax": "45-75-50-87-66", "email": "jcv@jcv-machine.dk" },
+      { "country": "Finland", "agent": "Insinööritoimisto Ismo Lindberg Oy (Ltd)", "url": "http://www.il-machinery.com/", "address": "Punasillantie 4, 40950 Muurame", "tel": "(014) 443 2100", "fax": "(014) 443 2101", "email": "antti.lindberg@il-machinery.com" },
+      { "country": "Czech Republic", "agent": "CNC-INAXES s.r.o.", "url": "www.cnc-inaxes.cz", "address": "Nadrazni 219, Nove Mesto nad Metuji, Czech Republic", "tel": "+420 737 243 817", "fax": "+420 494 530 967", "email": "info@cnc-inaxes.cz" },
+      { "country": "Turkey", "agent": "TEZMAKSAN MAKINA SAN. VE TIC. A.S.", "url": "www.tezmaksan.com.tr", "address": "Abdi Ipekci Caddesi No:129, 34040 Bayrampasa, Istanbul", "tel": "+90 212 674 6010", "fax": "+90 212 577 76 99", "email": "erdinc@tezmaksan.com" },
+      { "country": "Russia", "agent": "POLITEK LLC", "url": "www.politek-service.ru", "address": "192238 Russia, Saint Petersburg, Slavy prospect, 40/2", "tel": "+7 812 335 4805", "fax": "+7 800 511 4805", "email": "info@politek-service.ru" },
+      { "country": "Russia", "agent": "Gefest Ltd.", "url": "www.gefest-engineering.ru", "address": "Russia, 390027, Ryazan, Firsova 27", "tel": "+7 (4912) 51-50-72", "fax": "+7 (4912) 51-50-72", "email": "director@gefest-engineering.ru" }
+    ],
+    "MIDDLE EAST / AFRICA": [
+      { "country": "U.A.E.", "agent": "EURO GULF Machines and Tools", "url": "www.eurogulfuae.com", "address": "C2104, 21st Floor, Al Marzooqi Towers, Al Nad, King Faisal Road, P.O. Box 73495, Sharjah, U.A.E.", "tel": "971-6-5738739", "fax": "971-6-5732354", "email": "purchase.odc@eurogulfuae.com" },
+      { "country": "Israel", "agent": "ROBCOOR MACHINERY LTD", "url": null, "address": "66 Hameshor, Rachel, Rishon LeZion 7573433", "tel": "+972 54 535 2782", "email": "pazyd2122@gmail.com" },
+      { "country": "Egypt", "agent": "Winner Technology Company", "url": "http://www.winner-eg.com/", "address": "36 Milsa Buildings, Golf Land, Nasr City, Cairo, Egypt", "tel": "+20 2 2414 6925 / 2419 2343", "fax": "+20 2 2418 7680", "email": "Marwa.Kamal@winner-technology.com" },
+      { "country": "South Africa", "agent": "Victor Fortune (Pty) Ltd.", "url": "www.victor.co.za", "address": "1619 Victor House, 41 Loper Avenue, Aeroport Spartan, Gauteng, South Africa", "tel": "+27 11 392-3800", "fax": "+27 11 392 3899", "email": "sales@victor.co.za" }
+    ],
+    "ASIA": [
+      { "country": "Northern India", "agent": "Fatty Tuna India Pvt. Ltd. (Femco)", "url": "www.femcoindia.com", "address": "Global Raisoni Ind. Park, Gat No. 182-184, Nr. Lonikand, Phulgaon, Pune-412216, Maharashtra", "tel": "+91-20-66787605", "email": "sales@femcoindia.com" },
+      { "country": "Southern India", "agent": "EMPIRE MACHINE TOOLS", "url": "www.empiremt.com", "address": "Empire House, 414, Senapati Bapat Marg, Lower Parel, Mumbai 400 013", "tel": "+91-22-66534900 / +91 9960609928", "fax": "+91-22-24935363", "email": "pravin.patekari@empiremt.com / sales@empiremt.com" },
+      { "country": "Southern India", "agent": "C P AGENCIES", "url": "http://cpagencies.co/", "address": "112, 1st Floor, Opp. Mount Carmel School, Ideal Homes, Rajarajeshwari Nagar, Bangalore 560098", "tel": "+91 97411 20522 (Mr. Murali)", "email": "km@cpagencies.co.in" },
+      { "country": "Japan", "agent": "PLUS CORPORATION", "url": "www.plus.co.jp", "address": "2-29-25 Minamiteshiro-cho, Fukuyama City, Hiroshima 721-0963, Japan", "tel": "+81-84-959-5330", "fax": "+81-84-959-5340", "email": "makihiram@yahoo.co.jp" },
+      { "country": "Japan", "agent": "米澤株式會社 (Yonezawa Co., Ltd.)", "url": "www.yonek.co.jp", "address": "〒158-0082 東京都世田谷区等々力1丁目33番16号", "tel": "+81-3-3703-2131", "fax": "+81-3-3703-2130", "email": "info_yzk@yonek.co.jp" },
+      { "country": "Korea", "agent": "HAN SEONG TECH", "url": "www.kaomingkorea.com", "address": "180, Chilgokjungangdae-ro, Buk-gu, Daegu, Korea", "tel": "+82-53-585-8862", "fax": "+82-53-585-8863", "email": "hhgkms@hotmail.com" },
+      { "country": "China", "agent": "上海服務中心 (上海宏派精密机械有限公司) — Shanghai Service Center", "url": null, "address": "上海市静安区柳营路205弄20号兴展大厦1-206室", "tel": "13023238818", "email": "shanghai686@163.com" },
+      { "country": "China", "agent": "北京中亿瑞德机械有限公司 — Beijing", "url": null, "address": "北京市朝阳区建国路88号现代成C座507室", "tel": "+86 10 8580 2825", "fax": "+86 10 8580 2827", "email": "jonyi8@vip.sina.com" },
+      { "country": "Thailand", "agent": "FEMCO (THAILAND) LIMITED", "url": "www.femco.com.tw", "address": "No. 57, Level 18 Unit 1807, Park Ventures Ecoplex, Wireless Road, Lumpini, Patumwan, Bangkok 10330, Thailand", "tel": "+66 (0) 2 309 3612", "fax": "+66 (0) 81 936 5321", "email": "kevinyang@fstshafts.com" },
+      { "country": "Malaysia", "agent": "Maxture Technology Sdn Bhd", "url": "www.maxture.com.my", "address": "No. 25, Jalan Bulan U5/166, Bandar Pinggiran Subang, 40150 Shah Alam, Selangor, Malaysia", "tel": "+603-7846 6166", "fax": "+603-7846 6160", "email": "service@maxture.com.my" },
+      { "country": "Indonesia", "agent": "FIRST MACHINERY TRADE CO", "url": "www.fmtc.co.id", "address": "Jl. Krekot Dalam Blok i No.10, Jakarta 10710, Indonesia", "tel": "+62 21 380 3074", "fax": "+62 21 385 8904", "email": "service@fmtc.co.id" },
+      { "country": "Taiwan", "agent": "鑫鋼企業股份有限公司", "domestic": true, "address": "桃園市中壢市吉林路45號1樓", "tel": "03-452-9239", "fax": "03-452-9269", "email": "hsinkin.hsinkin@gmail.com" },
+      { "country": "Taiwan", "agent": "鑫鐵企業股份有限公司", "domestic": true, "address": "新北市新莊區五權一路7號4樓之8", "tel": "02-2299-5537", "fax": "02-2299-6021", "email": "shin.iron@msa.hinet.net" },
+      { "country": "Taiwan", "agent": "正典機械企業有限公司", "domestic": true, "address": "台中市豐原區中山路220號", "tel": "04-2524-4556", "email": "abw@tmt.com.tw" },
+      { "country": "Taiwan", "agent": "龍奕機械有限公司", "domestic": true, "address": "台南市永康區永康里永福街21巷15號4樓之1", "email": "jeff102401@gmail.com" },
+      { "country": "Taiwan", "agent": "宇正機械股份有限公司", "domestic": true, "address": "台南市佳里區佳北路198號", "tel": "06-788-7386", "fax": "06-721-7411", "email": "r121148528@yahoo.com.tw" },
+      { "country": "Taiwan", "agent": "裕尚機械股份有限公司", "domestic": true, "address": "台南市永康區中正南路404巷16號", "tel": "06-253-3530", "fax": "06-253-2944", "email": "r2537828@mail2000.com.tw" },
+      { "country": "Taiwan", "agent": "聚鎰科技有限公司", "domestic": true, "address": "新北市泰山區明志路一段108號-1-9樓", "tel": "02-2296-3288", "fax": "02-8531-2524", "email": "juyi.tech@msa.hinet.net" },
+      { "country": "Taiwan", "agent": "鈺上實業股份有限公司", "domestic": true, "address": "台中市大雅區中山北路452號", "note": "專門維修 — service and repair specialist" },
+      { "country": "Taiwan", "agent": "鑫大國際股份有限公司", "domestic": true, "address": "高雄市仁武區鳳仁路135之3號", "tel": "07-375-2050", "fax": "07-389-9350", "email": "shin.dae@msa.hinet.net" }
+    ],
+    "OCEANIA": [
+      { "country": "Australia", "agent": "TOWNSEND MACHINE TOOLS PTY LTD.", "url": "www.gotownsend.com", "address": "16 Precision Street, Salisbury, Brisbane, Qld 4107, Australia", "tel": "+61 7 3275 2799", "fax": "+61 7 3277 3618", "email": "Greg@townsendmachinetools.com.au" },
+      { "country": "New Zealand", "agent": "TOTAL CNC PRODUCTS LTD.", "url": "www.totalcnc.co.nz", "address": "9A Smales Road, East Tamaki, Manukau 2013, New Zealand", "tel": "+64 9 274-5890", "fax": "+64 9 274 5867", "email": "rob@totalcnc.co.nz" }
+    ]
+  },
+
+  "coverage_summary": {
+    "international_agents": 32,
+    "taiwan_domestic_agents": 9,
+    "countries_or_territories": ["U.S.A.", "Canada", "Mexico", "Brazil", "Argentina", "Peru", "Germany", "Italy", "Switzerland", "Austria", "Netherlands", "Belgium", "France (North + South)", "Sweden", "Denmark", "Finland", "Czech Republic", "Turkey", "Russia", "U.A.E.", "Israel", "Egypt", "South Africa", "India (North + South)", "Japan", "Korea", "China", "Thailand", "Malaysia", "Indonesia", "Taiwan", "Australia", "New Zealand"],
+    "note_vs_older_material": "The website list adds Czech Republic, Austria, Finland, Israel, Egypt and the Taiwan domestic network compared with the 2022 deck map, and drops the UK and Qingdao. The website is the authority."
+  },
+
+  "build_notes": {
+    "map_regions": "Five tabs: AMERICAS · EUROPE AREA · MIDDLE EAST / AFRICA · ASIA · OCEANIA — KAO MING's own grouping.",
+    "multi_agent_countries": "Canada, Belgium, France, Russia, India, Japan, China and Taiwan each have more than one agent. The map marker must expand to a list, not a single card.",
+    "domestic_flag": "Taiwan entries carry \"domestic\": true. Decide with sales whether they appear on the international site; default to hiding them on /en and showing them on /zh-tw.",
+    "rfq_link": "Every agent card gets a 'Request a quote through this representative' action that pre-fills the RFQ with country and agent.",
+    "crm_alignment": "This structure matches the agent registry in the KAO MING CRM project — the same records should eventually feed both."
+  }
+}

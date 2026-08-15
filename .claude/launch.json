@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "kaoming-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "kaoming-web", "run", "dev"],
+      "port": 3000
+    },
+    {
+      "name": "kaoming-prod",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "kaoming-web", "run", "start"],
+      "port": 3000
+    }
+  ]
+}

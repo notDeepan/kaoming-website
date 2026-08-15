@@ -1,0 +1,588 @@
+{
+  "note": "Every image in /images is named by its 2026 CATALOGUE model code, not by its original filename. Use these codes; do not re-derive names from source filenames.",
+  "series": {
+    "KMC-GM (Gantry Mercury)": {
+      "folder": "images/gm",
+      "warning": null,
+      "images": [
+        {
+          "model": "KMC-325GM",
+          "view": "front elevation, white bg",
+          "bestFor": "product hero, comparison card, 3D front blueprint",
+          "plate": {
+            "src": "/img/machines/KMC-325GM-01-front-elevation.jpg",
+            "width": 2000,
+            "height": 1333
+          },
+          "cut": {
+            "src": "/img/machines/KMC-325GM-01-front-elevation-cut.webp",
+            "width": 2000,
+            "height": 1333
+          }
+        },
+        {
+          "model": "KMC-325GM",
+          "view": "front-right three-quarter, top open, table and KESSLER head visible",
+          "bestFor": "primary product card, 3D form reference",
+          "plate": {
+            "src": "/img/machines/KMC-325GM-02-three-quarter-open.jpg",
+            "width": 2000,
+            "height": 1333
+          },
+          "cut": {
+            "src": "/img/machines/KMC-325GM-02-three-quarter-open-cut.webp",
+            "width": 2000,
+            "height": 1333
+          }
+        },
+        {
+          "model": "KMC-325GM",
+          "view": "front, doors open, work zone visible",
+          "bestFor": "work-zone section, interior reference",
+          "plate": {
+            "src": "/img/machines/KMC-325GM-03-front-doors-open.jpg",
+            "width": 1100,
+            "height": 737
+          },
+          "cut": {
+            "src": "/img/machines/KMC-325GM-03-front-doors-open-cut.webp",
+            "width": 1100,
+            "height": 737
+          }
+        }
+      ]
+    },
+    "KMC-GN (Gantry Neptunus)": {
+      "folder": "images/gn",
+      "warning": null,
+      "images": [
+        {
+          "model": "KMC-1445GN",
+          "view": "full three-quarter, print master",
+          "bestFor": "HOMEPAGE HERO — the strongest image in the archive",
+          "plate": {
+            "src": "/img/machines/KMC-1445GN-01-three-quarter-master.jpg",
+            "width": 2000,
+            "height": 1354
+          },
+          "cut": {
+            "src": "/img/machines/KMC-1445GN-01-three-quarter-master-cut.webp",
+            "width": 2000,
+            "height": 1354
+          }
+        },
+        {
+          "model": "KMC-1445GN",
+          "view": "low-angle tool magazine and spindle detail",
+          "bestFor": "technology section, ATC feature block",
+          "plate": {
+            "src": "/img/machines/KMC-1445GN-02-atc-magazine-detail.jpg",
+            "width": 2000,
+            "height": 1333
+          },
+          "cut": {
+            "src": "/img/machines/KMC-1445GN-02-atc-magazine-detail-cut.webp",
+            "width": 2000,
+            "height": 1333
+          }
+        },
+        {
+          "model": "KMC-1445GN",
+          "view": "full machine on black",
+          "bestFor": "dark section hero, series card",
+          "plate": {
+            "src": "/img/machines/KMC-1445GN-03-hero-dark.jpg",
+            "width": 1700,
+            "height": 645
+          },
+          "cut": {
+            "src": "/img/machines/KMC-1445GN-03-hero-dark-cut.webp",
+            "width": 1700,
+            "height": 645
+          }
+        },
+        {
+          "model": "KMC-1445GN",
+          "view": "box way / linear guide macro",
+          "bestFor": "guideway feature block (low resolution — inline only)",
+          "plate": {
+            "src": "/img/machines/KMC-1445GN-04-linear-guide-detail.jpg",
+            "width": 715,
+            "height": 540
+          },
+          "cut": {
+            "src": "/img/machines/KMC-1445GN-04-linear-guide-detail-cut.webp",
+            "width": 715,
+            "height": 540
+          }
+        }
+      ]
+    },
+    "Hephaestus (H7 / H8 / HA11)": {
+      "folder": "images/hephaestus",
+      "warning": null,
+      "images": [
+        {
+          "model": "KMC-425HA11",
+          "view": "three-quarter, doors open",
+          "bestFor": "HA11 product hero",
+          "plate": {
+            "src": "/img/machines/KMC-425HA11-01.jpg",
+            "width": 2000,
+            "height": 1210
+          },
+          "cut": {
+            "src": "/img/machines/KMC-425HA11-01-cut.webp",
+            "width": 2000,
+            "height": 1210
+          }
+        },
+        {
+          "model": "KMC-425HA11",
+          "view": "alternate three-quarter",
+          "bestFor": "gallery",
+          "plate": {
+            "src": "/img/machines/KMC-425HA11-02.jpg",
+            "width": 2000,
+            "height": 1444
+          },
+          "cut": {
+            "src": "/img/machines/KMC-425HA11-02-cut.webp",
+            "width": 2000,
+            "height": 1444
+          }
+        },
+        {
+          "model": "KMC-215H7",
+          "view": "three-quarter",
+          "bestFor": "H7 product hero",
+          "plate": {
+            "src": "/img/machines/KMC-215H7-01.jpg",
+            "width": 2000,
+            "height": 1300
+          },
+          "cut": {
+            "src": "/img/machines/KMC-215H7-01-cut.webp",
+            "width": 2000,
+            "height": 1300
+          }
+        },
+        {
+          "model": "KMC-215H7",
+          "view": "alternate angle",
+          "bestFor": "gallery",
+          "plate": {
+            "src": "/img/machines/KMC-215H7-02.jpg",
+            "width": 2000,
+            "height": 1299
+          },
+          "cut": {
+            "src": "/img/machines/KMC-215H7-02-cut.webp",
+            "width": 2000,
+            "height": 1299
+          }
+        },
+        {
+          "model": "KMC-318H7",
+          "view": "three-quarter",
+          "bestFor": "H7 series card",
+          "plate": {
+            "src": "/img/machines/KMC-318H7-01.jpg",
+            "width": 2000,
+            "height": 1070
+          },
+          "cut": {
+            "src": "/img/machines/KMC-318H7-01-cut.webp",
+            "width": 2000,
+            "height": 1070
+          }
+        },
+        {
+          "model": "KMC-318H7",
+          "view": "portrait, machine nameplate detail",
+          "bestFor": "mobile hero, detail block",
+          "plate": {
+            "src": "/img/machines/KMC-318H7-02-portrait.jpg",
+            "width": 2000,
+            "height": 3000
+          },
+          "cut": {
+            "src": "/img/machines/KMC-318H7-02-portrait-cut.webp",
+            "width": 2000,
+            "height": 3000
+          }
+        }
+      ]
+    },
+    "Minerva (HMA)": {
+      "folder": "images/minerva",
+      "warning": null,
+      "images": [
+        {
+          "model": "KMC-436HMA",
+          "view": "three-quarter",
+          "bestFor": "Minerva product hero — the only Minerva image available",
+          "plate": {
+            "src": "/img/machines/KMC-436HMA-01.jpg",
+            "width": 2000,
+            "height": 1070
+          },
+          "cut": {
+            "src": "/img/machines/KMC-436HMA-01-cut.webp",
+            "width": 2000,
+            "height": 1070
+          }
+        }
+      ]
+    },
+    "Clymene (CE / CH)": {
+      "folder": "images/clymene",
+      "warning": null,
+      "images": [
+        {
+          "model": "KMC-136CE",
+          "view": "three-quarter, enclosed",
+          "bestFor": "CE product hero",
+          "plate": {
+            "src": "/img/machines/KMC-136CE-01.jpg",
+            "width": 2000,
+            "height": 1065
+          },
+          "cut": {
+            "src": "/img/machines/KMC-136CE-01-cut.webp",
+            "width": 2000,
+            "height": 1065
+          }
+        },
+        {
+          "model": "KMC-136CE",
+          "view": "alternate angle",
+          "bestFor": "gallery",
+          "plate": {
+            "src": "/img/machines/KMC-136CE-02.jpg",
+            "width": 2000,
+            "height": 1248
+          },
+          "cut": {
+            "src": "/img/machines/KMC-136CE-02-cut.webp",
+            "width": 2000,
+            "height": 1248
+          }
+        },
+        {
+          "model": "KMC-168CE",
+          "view": "three-quarter",
+          "bestFor": "168CE product hero (moderate resolution)",
+          "plate": {
+            "src": "/img/machines/KMC-168CE-01.jpg",
+            "width": 1477,
+            "height": 1108
+          },
+          "cut": {
+            "src": "/img/machines/KMC-168CE-01-cut.webp",
+            "width": 1477,
+            "height": 1108
+          }
+        },
+        {
+          "model": "KMC-168CE",
+          "view": "alternate angle",
+          "bestFor": "gallery",
+          "plate": {
+            "src": "/img/machines/KMC-168CE-02.jpg",
+            "width": 1705,
+            "height": 960
+          },
+          "cut": {
+            "src": "/img/machines/KMC-168CE-02-cut.webp",
+            "width": 1705,
+            "height": 960
+          }
+        },
+        {
+          "model": "KMC-158CH",
+          "view": "front, dark background",
+          "bestFor": "CH product hero",
+          "plate": {
+            "src": "/img/machines/KMC-158CH-01.jpg",
+            "width": 1523,
+            "height": 812
+          },
+          "cut": {
+            "src": "/img/machines/KMC-158CH-01-cut.webp",
+            "width": 1523,
+            "height": 812
+          }
+        }
+      ]
+    },
+    "Epeius (E7 / E8 / EU) — NO 2026 CATALOGUE": {
+      "folder": "images/epeius",
+      "warning": "Excellent imagery, but this series has NO 2026 catalogue. Publish only the series name, type and travel ranges as stated on the current kaoming.com. Do not build a specification table.",
+      "images": [
+        {
+          "model": "KMC-123E7",
+          "view": "three-quarter",
+          "bestFor": "series card",
+          "plate": {
+            "src": "/img/machines/KMC-123E7-01.jpg",
+            "width": 2000,
+            "height": 1536
+          },
+          "cut": {
+            "src": "/img/machines/KMC-123E7-01-cut.webp",
+            "width": 2000,
+            "height": 1536
+          }
+        },
+        {
+          "model": "KMC-123E7",
+          "view": "alternate angle",
+          "bestFor": "gallery",
+          "plate": {
+            "src": "/img/machines/KMC-123E7-02.jpg",
+            "width": 2000,
+            "height": 1536
+          },
+          "cut": {
+            "src": "/img/machines/KMC-123E7-02-cut.webp",
+            "width": 2000,
+            "height": 1536
+          }
+        },
+        {
+          "model": "KMC-123EU",
+          "view": "three-quarter",
+          "bestFor": "series card",
+          "plate": {
+            "src": "/img/machines/KMC-123EU-01.jpg",
+            "width": 2000,
+            "height": 2874
+          },
+          "cut": {
+            "src": "/img/machines/KMC-123EU-01-cut.webp",
+            "width": 2000,
+            "height": 2874
+          }
+        },
+        {
+          "model": "KMC-123EU",
+          "view": "alternate angle",
+          "bestFor": "gallery",
+          "plate": {
+            "src": "/img/machines/KMC-123EU-02.jpg",
+            "width": 2000,
+            "height": 2410
+          },
+          "cut": {
+            "src": "/img/machines/KMC-123EU-02-cut.webp",
+            "width": 2000,
+            "height": 2410
+          }
+        },
+        {
+          "model": "KMC-318E8",
+          "view": "three-quarter",
+          "bestFor": "series card",
+          "plate": {
+            "src": "/img/machines/KMC-318E8-01.jpg",
+            "width": 2000,
+            "height": 1420
+          },
+          "cut": {
+            "src": "/img/machines/KMC-318E8-01-cut.webp",
+            "width": 2000,
+            "height": 1420
+          }
+        },
+        {
+          "model": "KMC-318E8",
+          "view": "enclosure cut away, interior work zone visible",
+          "bestFor": "striking interior visual",
+          "plate": {
+            "src": "/img/machines/KMC-318E8-02-cutaway.jpg",
+            "width": 1920,
+            "height": 882
+          },
+          "cut": {
+            "src": "/img/machines/KMC-318E8-02-cutaway-cut.webp",
+            "width": 1920,
+            "height": 882
+          }
+        }
+      ]
+    },
+    "Armstrong (KMR radial drills) — NO 2026 CATALOGUE": {
+      "folder": "images/armstrong",
+      "warning": "No 2026 catalogue. Publish only what the current kaoming.com states.",
+      "images": [
+        {
+          "model": "KMR-1600DH",
+          "view": "full machine, black background",
+          "bestFor": "category hero",
+          "plate": {
+            "src": "/img/machines/KMR-1600DH-01.jpg",
+            "width": 2000,
+            "height": 3000
+          },
+          "cut": {
+            "src": "/img/machines/KMR-1600DH-01-cut.webp",
+            "width": 2000,
+            "height": 3000
+          }
+        },
+        {
+          "model": "KMR",
+          "view": "photograph — operator at the drilling head",
+          "bestFor": "human-scale detail",
+          "plate": {
+            "src": "/img/machines/KMR-detail-01.jpg",
+            "width": 945,
+            "height": 942
+          },
+          "cut": {
+            "src": "/img/machines/KMR-detail-01-cut.webp",
+            "width": 945,
+            "height": 942
+          }
+        },
+        {
+          "model": "KMR",
+          "view": "photograph — spindle head controls",
+          "bestFor": "detail block",
+          "plate": {
+            "src": "/img/machines/KMR-detail-02.jpg",
+            "width": 629,
+            "height": 472
+          },
+          "cut": {
+            "src": "/img/machines/KMR-detail-02-cut.webp",
+            "width": 629,
+            "height": 472
+          }
+        },
+        {
+          "model": "KMR",
+          "view": "photograph — quill and table",
+          "bestFor": "detail block",
+          "plate": {
+            "src": "/img/machines/KMR-detail-03.jpg",
+            "width": 630,
+            "height": 472
+          },
+          "cut": {
+            "src": "/img/machines/KMR-detail-03-cut.webp",
+            "width": 630,
+            "height": 472
+          }
+        }
+      ]
+    }
+  },
+  "factory": [
+    {
+      "src": "/img/factory/kaoming-factory-01-machining-hall-overhead-crane.jpg",
+      "width": 1236,
+      "height": 924
+    },
+    {
+      "src": "/img/factory/kaoming-factory-02-ctsp-plant-exterior.jpg",
+      "width": 2000,
+      "height": 1295
+    },
+    {
+      "src": "/img/factory/kaoming-factory-03-original-hq-fengyuan.jpg",
+      "width": 927,
+      "height": 626
+    },
+    {
+      "src": "/img/factory/kaoming-factory-04-heritage-kaoming-gate.jpg",
+      "width": 1840,
+      "height": 1232
+    },
+    {
+      "src": "/img/factory/kaoming-factory-05-lobby-showroom-interior.jpg",
+      "width": 1536,
+      "height": 1034
+    },
+    {
+      "src": "/img/factory/kaoming-factory-06-parts-inventory-racks.jpg",
+      "width": 934,
+      "height": 692
+    },
+    {
+      "src": "/img/factory/kaoming-factory-07-inventory-warehouse.jpg",
+      "width": 1296,
+      "height": 865
+    },
+    {
+      "src": "/img/factory/kaoming-factory-08-warehouse-aisle.jpg",
+      "width": 930,
+      "height": 558
+    },
+    {
+      "src": "/img/factory/kaoming-factory-09-worktable-detail-a.jpg",
+      "width": 1479,
+      "height": 1109
+    },
+    {
+      "src": "/img/factory/kaoming-factory-10-worktable-detail-b.jpg",
+      "width": 1479,
+      "height": 1109
+    },
+    {
+      "src": "/img/factory/shopfloor-168CE-assembly.jpg",
+      "width": 960,
+      "height": 1705
+    },
+    {
+      "src": "/img/factory/shopfloor-168CE-packed-for-shipping.jpg",
+      "width": 960,
+      "height": 1705
+    }
+  ],
+  "documents": [
+    {
+      "id": "cat-gn-gm-2026-en",
+      "path": "/docs/KMC-GN-GM-Gantry-Series-2026-EN.pdf",
+      "fileType": "PDF",
+      "sizeBytes": 8101710,
+      "language": "en",
+      "version": "2026",
+      "covers": [
+        "kmc-gm",
+        "kmc-gn"
+      ],
+      "sha256": "468de7d0b3f33005"
+    },
+    {
+      "id": "cat-bow-way-2026-en",
+      "path": "/docs/KMC-Bow-Way-Hephaestus-Minerva-2026-EN.pdf",
+      "fileType": "PDF",
+      "sizeBytes": 70623814,
+      "language": "en",
+      "version": "2026",
+      "covers": [
+        "kmc-h7-h8",
+        "kmc-h11",
+        "kmc-ha11",
+        "kmc-ha14",
+        "kmc-hma"
+      ],
+      "sha256": "1b6ba8e6a67f6165"
+    },
+    {
+      "id": "cat-clymene-2026-en",
+      "path": "/docs/KMC-CE-CH-Clymene-Vertical-2026-EN.pdf",
+      "fileType": "PDF",
+      "sizeBytes": 24588103,
+      "language": "en",
+      "version": "2026",
+      "covers": [
+        "kmc-ce",
+        "kmc-ch"
+      ],
+      "sha256": "2dea524c4b90ae6e"
+    }
+  ]
+}

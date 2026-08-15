@@ -1,0 +1,111 @@
+{
+  "series_group": {
+    "id": "bow-way",
+    "catalogue": "KMC Bow Way Series Catalog (2026)",
+    "authority": "2026 catalogue — sole source. Nothing in this file comes from sales decks or legacy sources.",
+    "families": ["HEPHAESTUS", "MINERVA"],
+    "model_code_rule": "First digit = working table LENGTH in metres (2→2000, 3→3000, 4→4000, 5→5000, 6→6000, 8→8000 mm). Next two digits = distance between columns in hundreds of mm (15→1500 … 36→3600). Suffix = model family (H7 / H8 / H11 / HA11 / HA14 / HMA). Table width is fixed per column distance.",
+    "transcription_status": "PARTIAL — model ranges, table geometry, load capacity and spindle motor captured. The remaining spec rows (axis travels, spindle speeds, ATC, accuracy, machine weights, floor space) are still to be transcribed from the scanned catalogue; it has no text layer, so each table must be read visually. Flagged as a dedicated follow-up pass."
+  },
+
+  "HEPHAESTUS": {
+    "positioning_verbatim_from_catalogue": "Year by year, our product has become a spirited folk, which is connected with quality, steadfastness, and excellence, simple but perfect craftsmanship.",
+    "sub_series": {
+      "H7_H8": {
+        "catalogue_page_title": "H8/H7 Machine Specifications",
+        "type": "Double-column machining center, box way",
+        "models": [
+          { "model": "KMC-215H7/H8", "table_length_mm": 2000, "columns_mm": 1500, "table_width_mm": 1250 },
+          { "model": "KMC-218H7/H8", "table_length_mm": 2000, "columns_mm": 1800, "table_width_mm": 1650 },
+          { "model": "KMC-221H7/H8", "table_length_mm": 2000, "columns_mm": 2100, "table_width_mm": 1650 },
+          { "model": "KMC-315H7/H8", "table_length_mm": 3000, "columns_mm": 1500, "table_width_mm": 1250 },
+          { "model": "KMC-318H7/H8", "table_length_mm": 3000, "columns_mm": 1800, "table_width_mm": 1650 },
+          { "model": "KMC-321H7/H8", "table_length_mm": 3000, "columns_mm": 2100, "table_width_mm": 1650 },
+          { "model": "KMC-323H7/H8", "table_length_mm": 3000, "columns_mm": 2300, "table_width_mm": 2000 },
+          { "model": "KMC-325H7/H8", "table_length_mm": 3000, "columns_mm": 2500, "table_width_mm": 2000 },
+          { "model": "KMC-328H7/H8", "table_length_mm": 3000, "columns_mm": 2800, "table_width_mm": 2400 },
+          { "model": "KMC-415H7/H8", "table_length_mm": 4000, "columns_mm": 1500, "table_width_mm": 1250 },
+          { "model": "KMC-418H7/H8", "table_length_mm": 4000, "columns_mm": 1800, "table_width_mm": 1650 },
+          { "model": "KMC-421H7/H8", "table_length_mm": 4000, "columns_mm": 2100, "table_width_mm": 1650 },
+          { "model": "KMC-423H7/H8", "table_length_mm": 4000, "columns_mm": 2300, "table_width_mm": 2000 },
+          { "model": "KMC-425H7/H8", "table_length_mm": 4000, "columns_mm": 2500, "table_width_mm": 2000 },
+          { "model": "KMC-428H7/H8", "table_length_mm": 4000, "columns_mm": 2800, "table_width_mm": 2400 }
+        ],
+        "photos_supplied": ["KMC-215H7-16", "KMC-215H7-17", "KMC-318H7-01", "KMC-318H7-02"]
+      },
+      "H11": {
+        "catalogue_page_title": "KMC-H11 (own specification and torque pages)",
+        "type": "Double-column machining center, box way, extended Z",
+        "spindle_motor": "FANUC α22i, 22/26 kW (30/35 HP); max torque 1018 Nm (per KMC-H11 spindle torque diagram)",
+        "models": "TO TRANSCRIBE from the H11 specification page",
+        "photos_supplied": []
+      },
+      "HA11": {
+        "catalogue_page_title": "HA11 Machine Specifications",
+        "type": "Multi-face double-column machining center",
+        "models": "TO TRANSCRIBE from the HA11 specification page",
+        "photos_supplied": ["425HA11-01", "425HA11-03"]
+      },
+      "HA14": {
+        "catalogue_page_title": "HMA15/HMA11 & HA14 Machine Specifications",
+        "type": "Multi-face double-column machining center, large format",
+        "catalogue_note_verbatim": "Specifically designed for large and tall workpieces, the extended Z-axis travel and increased spindle power provide greater flexibility and efficiency in machining.",
+        "models": [
+          { "model": "KMC-628HA14", "table_length_mm": 6000, "columns_mm": 2800, "table_width_mm": 2400, "max_load_t": "15 (*25)" },
+          { "model": "KMC-632HA14", "table_length_mm": 6000, "columns_mm": 3200, "table_width_mm": 2600, "max_load_t": "15 (*25)" },
+          { "model": "KMC-636HA14", "table_length_mm": 6000, "columns_mm": 3600, "table_width_mm": 3000, "max_load_t": "15 (*25)" },
+          { "model": "KMC-828HA14", "table_length_mm": 8000, "columns_mm": 2800, "table_width_mm": 2400, "max_load_t": "22 (*25)" },
+          { "model": "KMC-832HA14", "table_length_mm": 8000, "columns_mm": 3200, "table_width_mm": 2600, "max_load_t": "22 (*25)" },
+          { "model": "KMC-836HA14", "table_length_mm": 8000, "columns_mm": 3600, "table_width_mm": 3000, "max_load_t": "22 (*25)" }
+        ]
+      }
+    },
+    "catalogue_features_named": [
+      "High-Rigidity Structure & High Positioning Accuracy",
+      "Hand Scraping Technology",
+      "Automatic Indexing Universal Head",
+      "Full Support Roller",
+      "Attachment Head Application (Overview): Horizontal Head, *Extension Head",
+      "CNC Remote Diagnostic Function (optional)",
+      "Conveyor options by chip type: iron chip, metal chip, non-rolled chip, cast-iron chip, aluminum chip"
+    ]
+  },
+
+  "MINERVA": {
+    "catalogue_page_title": "HMA15/HMA11 Machine Specifications",
+    "type": "Multi-face / 5-face double-column machining center",
+    "positioning_verbatim_from_catalogue": "Rigorous Craftsmanship, Unshakable Quality — Inheriting a Pure Lineage, The Art of Scraping",
+    "variants": ["HMA15", "HMA11"],
+    "models": [
+      { "model": "KMC-318HMA", "table_length_mm": 3000, "columns_mm": 1800, "table_width_mm": 1650 },
+      { "model": "KMC-321HMA", "table_length_mm": 3000, "columns_mm": 2100, "table_width_mm": 1650 },
+      { "model": "KMC-323HMA", "table_length_mm": 3000, "columns_mm": 2300, "table_width_mm": 2000 },
+      { "model": "KMC-325HMA", "table_length_mm": 3000, "columns_mm": 2500, "table_width_mm": 2000 },
+      { "model": "KMC-328HMA", "table_length_mm": 3000, "columns_mm": 2800, "table_width_mm": 2400 },
+      { "model": "KMC-332HMA", "table_length_mm": 3000, "columns_mm": 3200, "table_width_mm": 2600 },
+      { "model": "KMC-418HMA", "table_length_mm": 4000, "columns_mm": 1800, "table_width_mm": 1650 },
+      { "model": "KMC-421HMA", "table_length_mm": 4000, "columns_mm": 2100, "table_width_mm": 1650 },
+      { "model": "KMC-423HMA", "table_length_mm": 4000, "columns_mm": 2300, "table_width_mm": 2000 },
+      { "model": "KMC-425HMA", "table_length_mm": 4000, "columns_mm": 2500, "table_width_mm": 2000 },
+      { "model": "KMC-428HMA", "table_length_mm": 4000, "columns_mm": 2800, "table_width_mm": 2400 },
+      { "model": "KMC-432HMA", "table_length_mm": 4000, "columns_mm": 3200, "table_width_mm": 2600 },
+      { "model": "KMC-436HMA", "table_length_mm": 4000, "columns_mm": 3600, "table_width_mm": 3000 },
+      { "model": "KMC-518HMA", "table_length_mm": 5000, "columns_mm": 1800, "table_width_mm": 1650 },
+      { "model": "KMC-521HMA", "table_length_mm": 5000, "columns_mm": 2100, "table_width_mm": 1650 },
+      { "model": "KMC-523HMA", "table_length_mm": 5000, "columns_mm": 2300, "table_width_mm": 2000 },
+      { "model": "KMC-525HMA", "table_length_mm": 5000, "columns_mm": 2500, "table_width_mm": 2000 },
+      { "model": "KMC-528HMA", "table_length_mm": 5000, "columns_mm": 2800, "table_width_mm": 2400 },
+      { "model": "KMC-532HMA", "table_length_mm": 5000, "columns_mm": 3200, "table_width_mm": 2600 },
+      { "model": "KMC-536HMA", "table_length_mm": 5000, "columns_mm": 3600, "table_width_mm": 3000 }
+    ],
+    "photos_supplied": ["KMC-436HAX.E (003) — filename uses HAX; catalogue names this family HMA. Treat the file as a Minerva image and use the catalogue code KMC-436HMA."],
+    "catalogue_features_named": [
+      "Rigorous craftsmanship / hand scraping heritage",
+      "Upgraded spindle interface enhances compatibility with multiple attachment heads, delivering greater flexibility and efficiency in multi-face machining of large-scale components",
+      "KMC-HMA/HA14/HA11 Machining Range and Spindle Torque diagrams",
+      "Optional AI Smart Features, Online Spindle Monitoring and Anomaly Diagnosis, Guidance Technology",
+      "Multi-Axial Analysis, Machining Center Development",
+      "Customized Function Options: High-Precision FIR Geometric Standard, Gear Tooth Surface Machining Mind Winding, Friction Stir Cutting Feature, Precision Additive Welding (WPS)"
+    ]
+  }
+}

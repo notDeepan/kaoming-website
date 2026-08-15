@@ -1,0 +1,82 @@
+import type { Metadata } from 'next';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { NetworkMap } from '@/components/company/network-map';
+import { PageHeader, Provenance, SHELL } from '@/components/ui/page-shell';
+import { routing } from '@/i18n/routing';
+import { networkCounts, VERIFY_BEFORE_LAUNCH } from '@/lib/distributors';
+import { alternatesFor } from '@/lib/site';
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Network' });
+  return {
+    title: t('title'),
+    description: t('lede', {
+      agents: networkCounts.international,
+      countries: networkCounts.countries,
+    }),
+    alternates: alternatesFor(locale, '/company/network'),
+  };
+}
+
+/**
+ * Global network (Part J.4) — the one page the spec says can be built complete
+ * on day one, and it is: 41 agents, five regions, every field KAO MING
+ * published.
+ *
+ * Taiwan's nine domestic agents default to hidden on `/en` and shown on
+ * `/zh-tw`, which is the spec's instruction pending sales' decision. It is a
+ * default, not a rule: the toggle is right there, because a Taiwanese buyer
+ * reading the English site should not have to switch language to find their
+ * nearest representative.
+ */
+export default async function NetworkPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations('Network');
+
+  return (
+    <>
+      <PageHeader
+        label={t('label')}
+        title={t('title')}
+        lede={t('lede', {
+          agents: networkCounts.international,
+          countries: networkCounts.countries,
+        })}
+        aside={
+          <dl className="flex gap-10">
+            <div>
+              <dd className="font-mono text-spec-xl text-km-paper">
+                {networkCounts.international}
+              </dd>
+              <dt className="km-label mt-2 text-km-steel-400">{t('figures.agents')}</dt>
+            </div>
+            <div>
+              <dd className="font-mono text-spec-xl text-km-paper">{networkCounts.countries}</dd>
+              <dt className="km-label mt-2 text-km-steel-400">{t('figures.countries')}</dt>
+            </div>
+          </dl>
+        }
+      />
+
+      <section className={`${SHELL} pb-24`}>
+        <NetworkMap domesticDefault={locale === 'zh-tw'} />
+
+        <p className="km-label mt-12 max-w-[80ch] border-s-2 border-km-warning ps-6 text-km-warning">
+          {VERIFY_BEFORE_LAUNCH}
+        </p>
+        <Provenance>{t('provenance')}</Provenance>
+      </section>
+    </>
+  );
+}

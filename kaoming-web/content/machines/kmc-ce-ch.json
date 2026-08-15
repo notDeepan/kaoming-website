@@ -1,0 +1,86 @@
+{
+  "series": {
+    "id": "kmc-ce-ch",
+    "name": "KMC-CE & CH Series",
+    "epithet": "Clymene",
+    "positioning": "Vertical Machining Center",
+    "category": "vertical-machining-center",
+    "source": {
+      "document": "KMC-CE_CH_-_Vertical_Machine_Catalog.pdf (CAT30-EN-B-2026)",
+      "verified": true,
+      "note": "All values transcribed from the printed catalogue specification table. Nothing in this file is AI-estimated."
+    },
+    "sub_series": {
+      "CE": {
+        "description": "Direct-drive spindle vertical machining centers. Meehanite castings with keel-type structure (bending rigidity +42%, torsional rigidity +17% vs hollow rib design); 1900 mm four-guideway base with full-stroke Y-axis saddle support; roller-type linear guides on all axes; three-step transmission cooling (motor board oil circuit, bearing-seat cooling, inner-cooled ballscrew); \u00d850 mm double-anchored pre-tensioned ballscrews.",
+        "notable": "KMC-168CE: nitrogen-hydraulic counterbalance and air-to-oil tool release for energy saving; 6/8/6 slider configuration."
+      },
+      "CH": {
+        "description": "Box-way vertical machining centers for heavy / mold cutting. Extra-wide four-way slide base (hard guideway span 1420 mm on 158CH / 1200 mm on 116CH); Meehanite castings; all three axes fully supported by square box ways within effective stroke; hardened and ground guideways lined with TURCITE-B; two-speed geared spindle for heavy-duty low-rpm cutting; hand-scraped geometry."
+      }
+    },
+    "options_series": "IPROS MX Intelligent Operation Platform (19 smart functions) and Intelligent Temperature Control System (spindle temperature auxiliary) are optional across all five models. Chip conveyors: link-type (iron/metal chip), scraper-type (non-rolled/cast-iron/aluminum chip), dual-type (all).",
+    "models": [
+      {
+        "model": "KMC-115CE",
+        "travel": { "x_mm": 1100, "y_mm": 550, "z_mm": 610, "spindle_nose_to_table_mm": "100-710", "spindle_center_to_column_mm": 650 },
+        "table": { "working_surface_mm": "1300x610", "max_load_kg": 1200, "t_slot": "18x5x100" },
+        "spindle": { "taper": "BT-40", "speed_rpm": "12000", "conversion": "Direct-Type", "motor": "AC 11/15kW (15/20HP) (cont./30min)" },
+        "feed_rate_m_min": "(18,18,15)",
+        "tool_magazine": { "capacity": "24", "tool_taper": "BBT-40 (*BT-40)", "max_tool_dia_mm": "\u00f875 / \u00f8150", "max_tool_length_mm": 350, "max_tool_weight_kg": 7, "selection": "Two-way shortcut tool selection", "tool_change_time_sec": "1.8" },
+        "dimensions": { "machine_height_mm": 3119, "machine_weight_kg": 10000, "floor_space_mm": "3745x3819" },
+        "accuracy": { "positioning_mm": "\u00b10.005/ full travel", "repeatability_mm": "\u00b10.003" },
+        "power_kva": 35,
+        "controller": "FANUC series (*HEIDENHAIN *SIEMENS series)"
+      },
+      {
+        "model": "KMC-136CE",
+        "travel": { "x_mm": 1300, "y_mm": 650, "z_mm": 650, "spindle_nose_to_table_mm": "100-750", "spindle_center_to_column_mm": 800 },
+        "table": { "working_surface_mm": "1400x650", "max_load_kg": 1300, "t_slot": "18x5x100" },
+        "spindle": { "taper": "BBT-40", "speed_rpm": "12000", "conversion": "Direct-Type", "motor": "AC 11/15kW (15/20HP) (cont./30min)" },
+        "feed_rate_m_min": "(36,36,36)",
+        "tool_magazine": { "capacity": "24 (*36)", "tool_taper": "BBT-40 (*BT-40)", "max_tool_dia_mm": "\u00f875 / \u00f8150 (\u00f865 / \u00f8130 with *36)", "max_tool_length_mm": 300, "max_tool_weight_kg": 7, "selection": "Two-way shortcut tool selection", "tool_change_time_sec": "1.8" },
+        "dimensions": { "machine_height_mm": 3042, "machine_weight_kg": 8000, "floor_space_mm": "3500x4284" },
+        "accuracy": { "positioning_mm": "\u00b10.003/ full travel", "repeatability_mm": "\u00b10.003" },
+        "power_kva": 45,
+        "controller": "FANUC series (*HEIDENHAIN *SIEMENS series)"
+      },
+      {
+        "model": "KMC-168CE",
+        "travel": { "x_mm": 1600, "y_mm": 800, "z_mm": 800, "spindle_nose_to_table_mm": "100-900", "spindle_center_to_column_mm": 950 },
+        "table": { "working_surface_mm": "1700x800", "max_load_kg": 1700, "t_slot": "18x7x100" },
+        "spindle": { "taper": "BBT-50", "speed_rpm": "10000 (*12000)", "conversion": "Direct-Type", "motor": "AC 15/18kW (20/25HP) (cont./30min)" },
+        "feed_rate_m_min": "(32,32,32)",
+        "tool_magazine": { "capacity": "24 (*32, *40)", "tool_taper": "BBT-50 (*BT-50)", "max_tool_dia_mm": "\u00f8105 / \u00f8210 (24T); \u00f8125 / \u00f8229 (*32/*40)", "max_tool_length_mm": 350, "max_tool_weight_kg": 15, "selection": "Two-way shortcut tool selection", "tool_change_time_sec": "1.8" },
+        "dimensions": { "machine_height_mm": 3507, "machine_weight_kg": 15000, "floor_space_mm": "4206x4314" },
+        "accuracy": { "positioning_mm": "\u00b10.003/ full travel", "repeatability_mm": "\u00b10.003" },
+        "power_kva": 50,
+        "controller": "FANUC series (*HEIDENHAIN *SIEMENS series)"
+      },
+      {
+        "model": "KMC-116CH",
+        "travel": { "x_mm": 1100, "y_mm": 610, "z_mm": 610, "spindle_nose_to_table_mm": "150-760", "spindle_center_to_column_mm": 650 },
+        "table": { "working_surface_mm": "1300x610", "max_load_kg": 1200, "t_slot": "18x5x100" },
+        "spindle": { "taper": "BT-50", "speed_rpm": "4400 (*6000, *7000, *8000)", "conversion": "Gear-type, two-gear, non-stage variable speed", "motor": "AC 11/15kW (15/20HP) (cont./15min)" },
+        "feed_rate_m_min": "(15,15,12)",
+        "tool_magazine": { "capacity": "24", "tool_taper": "BT-50", "max_tool_dia_mm": "\u00f8105 / \u00f8210", "max_tool_length_mm": 300, "max_tool_weight_kg": 15, "selection": "Two-way shortcut tool selection", "tool_change_time_sec": "3.7", "atc_detail": "24-tool disc magazine, cam-driven; tool-to-tool 1 sec (ATC page)" },
+        "dimensions": { "machine_height_mm": 3224, "machine_weight_kg": 10000, "floor_space_mm": "3750x4005" },
+        "accuracy": { "positioning_mm": "\u00b10.005/300mm", "repeatability_mm": "\u00b10.003" },
+        "power_kva": 35,
+        "controller": "FANUC series (*HEIDENHAIN *SIEMENS series)"
+      },
+      {
+        "model": "KMC-158CH",
+        "travel": { "x_mm": 1530, "y_mm": 850, "z_mm": 800, "spindle_nose_to_table_mm": "200-1000", "spindle_center_to_column_mm": 850 },
+        "table": { "working_surface_mm": "1700x850", "max_load_kg": 2200, "t_slot": "18x7x125" },
+        "spindle": { "taper": "BT-50", "speed_rpm": "4400 (*6000, *7000, *8000)", "conversion": "Gear-type, two-gear, non-stage variable speed", "motor": "AC 11/15kW (15/20HP) (cont./30min) (*AC 15/18.5kW (20/25HP) (cont./30min))" },
+        "feed_rate_m_min": "(15,15,12)",
+        "tool_magazine": { "capacity": "32 (*40)", "tool_taper": "BT-50", "max_tool_dia_mm": "\u00f8125 / \u00f8229", "max_tool_length_mm": 350, "max_tool_weight_kg": 15, "selection": "Two-way shortcut tool selection", "tool_change_time_sec": "3.7", "atc_detail": "32-tool chain magazine (40-tool selectable), electric-motor driven, pneumatic tool release; tool-to-tool 1.8 sec (ATC page)" },
+        "dimensions": { "machine_height_mm": 3806, "machine_weight_kg": 14000, "floor_space_mm": "4170x4610" },
+        "accuracy": { "positioning_mm": "\u00b10.005/300mm", "repeatability_mm": "\u00b10.003" },
+        "power_kva": 45,
+        "controller": "FANUC series (*HEIDENHAIN *SIEMENS series)"
+      }
+    ]
+  }
+}
