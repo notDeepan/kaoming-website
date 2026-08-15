@@ -12,7 +12,9 @@
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
-    "qr": "node scripts/generate-qr.mjs"
+    "qr": "node scripts/generate-qr.mjs",
+    "check": "node scripts/preflight.mjs",
+    "demo": "node scripts/preflight.mjs && next build && next start"
   },
   "dependencies": {
     "@gsap/react": "2.1.2",

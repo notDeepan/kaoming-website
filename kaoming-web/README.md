@@ -3,6 +3,40 @@
 Implementation of `KAOMING_WEBSITE_MASTER_SPEC.md`. **Milestones M0–M8 complete.**
 Not deployed — see [DEPLOYMENT.md](DEPLOYMENT.md) for what that is waiting on.
 
+## Showing it to people
+
+```bash
+npm run demo
+```
+
+Checks, builds, and serves on **http://localhost:3000/en**. Takes about a minute
+from cold. Run `npm run check` on its own the day before — it verifies the parts
+that are not in git and tells you the exact command to fix anything missing.
+
+Nothing here needs the internet. That is deliberate: a meeting room's wifi is the
+least reliable thing in the building, and this runs entirely from the laptop.
+
+**The walk-through, in the order the site is built to be read** — this is Part
+A.2, the journey the whole thing is designed around:
+
+| | |
+|---|---|
+| `/en` | The hall. Scroll to the machines, the industries, the factory. |
+| `/en/products` | Nine series across four catalogue categories. |
+| `/en/products/gantry-machining-center/kmc-gm` | **The one to spend time on.** Scroll slowly: the camera orbits the machine, it comes apart into named components, each one reads its catalogue figures, and it reassembles. Then the specification, the catalogue, and an enquiry already filled in. |
+| `/en/catalogue/clymene-2026-en` | The 2026 catalogue, readable in the browser, searchable. |
+| `/en/company/network` | 40 agents across 32 countries, from KAO MING's own registry. |
+| `/zh-tw` | The same site in Traditional Chinese. |
+
+**Two things worth saying before anyone asks.** The machine in the 3D scenes is a
+grey blockout labelled *"Scale placeholder — not the machine"*: it is built to
+the KMC-325GM's real dimensions, and it is there because no 3D model of the
+machine exists yet. Everything around it is finished and waiting for one. And
+where a section says content is missing — workpiece photography, the application
+pages, the case studies — that is KAO MING's gap being stated rather than filled
+in with something invented. The [open items table](#open-items-for-kao-ming) is
+the list to hand them.
+
 ```bash
 npm install
 npm run dev          # http://localhost:3000 -> /en
