@@ -16,6 +16,21 @@ that are not in git and tells you the exact command to fix anything missing.
 Nothing here needs the internet. That is deliberate: a meeting room's wifi is the
 least reliable thing in the building, and this runs entirely from the laptop.
 
+### Sending it to someone
+
+```bash
+npm run share
+```
+
+Puts the running site on a temporary public URL, so a colleague can open it in
+their own browser. No account, no deployment, nothing published — the site is
+still served by this machine, so everything works exactly as it does locally,
+including the enquiry form writing a real lead.
+
+The URL lives as long as that terminal does, and is different every time. Anyone
+with the link can open it; `robots.txt` keeps it out of search engines. For a
+link that outlives the terminal, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
 **The walk-through, in the order the site is built to be read** — this is Part
 A.2, the journey the whole thing is designed around:
 
