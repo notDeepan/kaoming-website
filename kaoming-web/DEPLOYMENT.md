@@ -1,7 +1,38 @@
 # Deployment
 
-The build is ready to deploy. **It has not been deployed**, and should not be
-until two things outside the code are settled.
+## A link to show people
+
+Two commands, from this directory:
+
+```bash
+npx vercel login
+npx vercel --prod
+```
+
+Vercel prints a URL like `https://kaoming-website-xxxx.vercel.app`. That is the
+link to send.
+
+`vercel.json` already sets the three things that matter for a preview:
+indexing off, the ephemeral lead store on, and the region in Tokyo (closest of
+Vercel's free regions to Taiwan). Nothing else needs configuring.
+
+**What "private" means here.** On Vercel's free tier the URL is unlisted, not
+password-protected: anybody with the link can open it, nobody can find it
+otherwise. `robots.txt` serves `Disallow: /` while `NEXT_PUBLIC_ALLOW_INDEXING`
+is false, so it stays out of search engines. If you need an actual password on
+it, that is Vercel's Deployment Protection, and it is a paid feature.
+
+**The enquiry form works on the preview, but the leads do not last.** There is no
+database on a preview, so `RFQ_EPHEMERAL_DB=1` has it copy an empty SQLite file
+to the instance's temp directory. A submitted enquiry is genuinely written and
+read back — the success page is telling the truth — but it is gone when the
+instance recycles. Before this is anything other than a demo, set a real
+`DATABASE_URL` and remove that flag.
+
+---
+
+The build is production-ready. **It has not been deployed to anything permanent**,
+and should not be until two things outside the code are settled.
 
 ## Blocked on
 
