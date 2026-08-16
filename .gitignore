@@ -9,24 +9,27 @@ next-env.d.ts
 .env.local
 *.db
 *.db-journal
+# ...except the migrated, empty seed a preview copies to /tmp on cold start, so
+# the enquiry path works on a host with no Postgres (lib/db.ts). Contains schema
+# only — no leads.
+!kaoming-web/prisma/preview.db
 .uploads/
 
 # ---------------------------------------------------------------- generated
 #
-# Everything below is produced from `kaoming-website-kit-FINAL/` by a script and
-# is reproducible from it. None of it is edited by hand, so none of it belongs
-# in history — see DEPLOYMENT.md for the three commands that rebuild it.
+# `public/img`, `public/docs`, `public/catalogue` and `public/qr` are produced
+# from `kaoming-website-kit-FINAL/` by the scripts in DEPLOYMENT.md, and were
+# ignored here on the reasoning that anything reproducible does not belong in
+# history.
 #
-#   node scripts/prepare-images.mjs        -> public/img, public/docs
-#   python scripts/rasterize-catalogues.py -> public/catalogue
-#   npm run qr                             -> public/qr
+# They are committed now, and the reason is worth writing down: a build host has
+# no kit. Ignoring them meant any deployment — Vercel, a colleague's clone,
+# anything that is not this laptop — built and served successfully while
+# rendering a site with no machines on it, an empty catalogue, and a 404 behind
+# every download. Reproducible is not the same as present.
 #
-# The two small `content/**/generated.json` manifests are NOT ignored: they are
-# imported by the module graph, so the app does not typecheck without them.
-kaoming-web/public/img/
-kaoming-web/public/docs/
-kaoming-web/public/catalogue/
-kaoming-web/public/qr/
+# 117 MB, of which 99 MB is the three catalogue PDFs. That is the cost of the
+# site being complete anywhere it is checked out.
 
 # ------------------------------------------------------------- source archive
 #
