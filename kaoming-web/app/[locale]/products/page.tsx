@@ -12,6 +12,9 @@ import { productCategories } from '@/lib/taxonomy';
 
 const SHELL = 'mx-auto max-w-[1600px] px-5 sm:px-6 xl:px-10';
 
+/** This page runs three across from `xl`; the card's default is the home page's four. */
+const THREE_UP = '(min-width: 1280px) 33vw, (min-width: 640px) 46vw, 90vw';
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -80,6 +83,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
                   <li key={entry.slug}>
                     <ProductCard
                       series={entry}
+                      sizes={THREE_UP}
                       headline={
                         headline ? { label: tSpec(headline.labelKey), value: headline.value } : null
                       }

@@ -29,10 +29,22 @@ export async function ProductCard({
   series,
   headline,
   priority = false,
+  /**
+   * How wide this card's slot is, per breakpoint.
+   *
+   * It has to come from the page, because only the page knows its grid. The
+   * value was hardcoded here for the homepage's four columns, and the products
+   * index and the category pages run three — so on those two the browser was
+   * told the slot was 24vw when it was 33vw, and on a retina screen served an
+   * 828px image into a 982px slot. That is 0.84x on the machine photography,
+   * which is the one thing this card exists to show.
+   */
+  sizes = '(min-width: 1280px) 24vw, (min-width: 640px) 46vw, 90vw',
 }: {
   series: Series;
   headline?: { label: string; value: string } | null;
   priority?: boolean;
+  sizes?: string;
 }) {
   const t = await getTranslations('Products');
   const image = series.images[0];
@@ -52,7 +64,7 @@ export async function ProductCard({
             glow="sm"
             priority={priority}
             transitionName={`machine-${series.slug}`}
-            sizes="(min-width: 1280px) 24vw, (min-width: 640px) 46vw, 90vw"
+            sizes={sizes}
             className="transition-transform duration-(--duration-km-slow) ease-(--ease-km) group-hover:-translate-y-2"
           />
         ) : (

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { CtaBlock } from '@/components/ui/cta-block';
 import { ProductCard } from '@/components/ui/product-card';
+
 import { Reveal } from '@/components/ui/reveal';
 import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
@@ -12,6 +13,9 @@ import { seriesInCategory } from '@/lib/machines';
 import { productCategories } from '@/lib/taxonomy';
 
 const SHELL = 'mx-auto max-w-[1600px] px-5 sm:px-6 xl:px-10';
+
+/** Three across from `xl`; the card's default describes the home page's four. */
+const THREE_UP = '(min-width: 1280px) 33vw, (min-width: 640px) 46vw, 90vw';
 
 export const dynamicParams = false;
 
@@ -73,6 +77,7 @@ export default async function CategoryPage({
             <li key={item.slug} className="contents">
               <ProductCard
                 series={item}
+                sizes={THREE_UP}
                 headline={
                   headline ? { label: tSpec(headline.labelKey), value: headline.value } : null
                 }
