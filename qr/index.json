@@ -1,0 +1,59 @@
+{
+  "generatedFrom": "https://www.kaoming.com",
+  "codes": [
+    {
+      "code": "gm",
+      "slug": "kmc-gm",
+      "name": "KMC-GM — Gantry Mercury",
+      "url": "https://www.kaoming.com/m/gm"
+    },
+    {
+      "code": "gn",
+      "slug": "kmc-gn",
+      "name": "KMC-GN — Gantry Neptunus",
+      "url": "https://www.kaoming.com/m/gn"
+    },
+    {
+      "code": "h7-h8",
+      "slug": "kmc-h7-h8",
+      "name": "KMC-H7 / KMC-H8 — Hephaestus",
+      "url": "https://www.kaoming.com/m/h7-h8"
+    },
+    {
+      "code": "h11",
+      "slug": "kmc-h11",
+      "name": "KMC-H11 — Hephaestus",
+      "url": "https://www.kaoming.com/m/h11"
+    },
+    {
+      "code": "ha11",
+      "slug": "kmc-ha11",
+      "name": "KMC-HA11 — Hephaestus",
+      "url": "https://www.kaoming.com/m/ha11"
+    },
+    {
+      "code": "ha14",
+      "slug": "kmc-ha14",
+      "name": "KMC-HA14 — Hephaestus",
+      "url": "https://www.kaoming.com/m/ha14"
+    },
+    {
+      "code": "hma",
+      "slug": "kmc-hma",
+      "name": "KMC-HMA — Minerva",
+      "url": "https://www.kaoming.com/m/hma"
+    },
+    {
+      "code": "ce",
+      "slug": "kmc-ce",
+      "name": "KMC-CE — Clymene",
+      "url": "https://www.kaoming.com/m/ce"
+    },
+    {
+      "code": "ch",
+      "slug": "kmc-ch",
+      "name": "KMC-CH — Clymene",
+      "url": "https://www.kaoming.com/m/ch"
+    }
+  ]
+}
