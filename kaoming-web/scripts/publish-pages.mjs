@@ -14,7 +14,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -46,8 +46,17 @@ if (capture('git', ['status', '--porcelain', '--', 'kaoming-web'])) {
   process.exit(1);
 }
 
-/** Must match `basePath` in next.config.ts. */
+/**
+ * Must match `basePath` in next.config.ts, and is checked against it rather
+ * than trusted: the two drifting apart would publish a site whose every image
+ * and font 404s, which is exactly the failure that is invisible until someone
+ * opens the link.
+ */
 const BASE_PATH = '/kaoming-website';
+if (!readFileSync(join(app, 'next.config.ts'), 'utf8').includes(`'${BASE_PATH}'`)) {
+  console.error(`next.config.ts no longer sets basePath to ${BASE_PATH}.`);
+  process.exit(1);
+}
 
 /** Nothing here may run without a server. */
 const SERVER_ONLY = ['app/api', 'app/m', 'app/[locale]/[...slug]', 'middleware.ts'];

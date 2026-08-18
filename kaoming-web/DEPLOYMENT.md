@@ -1,6 +1,42 @@
 # Deployment
 
-## A link to show people
+## The link that is live now
+
+**https://notdeepan.github.io/kaoming-website/**
+
+Public, no login, works on a phone. Rebuild and republish it with one command:
+
+```bash
+npm run pages
+```
+
+That builds a static export and force-pushes it to the `gh-pages` branch, which
+GitHub Pages serves. It refuses to run with uncommitted changes, because it
+restores the working tree with `git checkout` afterwards.
+
+**It is a reduced site, and the reductions are not cosmetic.** Pages runs no
+Node, so:
+
+| Gone | Why |
+|---|---|
+| Submitting an enquiry | `/api/rfq` is a POST handler. The form renders, validates and says plainly that it cannot be sent from here. |
+| The printed QR short links (`/m/<code>`) | A redirect handler. |
+| The legacy KMC 301s | `redirects()` needs a server. |
+| Image optimisation | The optimiser is a server. Source WebP is served as-is. |
+
+Everything a visitor looks at is intact: the 3D scenes, the catalogue reader,
+both locales, the whole specification. `python tests/pages-live.py` checks the
+deployed URL rather than a local build.
+
+Two things about that build are worth knowing before changing them. `basePath`
+is `/kaoming-website`, and Next does **not** apply it to anything referenced out
+of `/public` — `scripts/publish-pages.mjs` prefixes those paths in the emitted
+artifact instead, so the application source keeps one truth about where its
+assets live. And there is no Actions workflow: pushing one needs a token with
+`workflow` scope. `gh auth refresh -h github.com -s workflow` if you want Pages
+to rebuild on push instead of on command.
+
+## A link where the whole site works
 
 Two commands, from this directory:
 
@@ -31,8 +67,9 @@ instance recycles. Before this is anything other than a demo, set a real
 
 ---
 
-The build is production-ready. **It has not been deployed to anything permanent**,
-and should not be until two things outside the code are settled.
+The build is production-ready. The Pages link above is a preview, not a home:
+**nothing has been deployed to anything permanent**, and nothing should be until
+two things outside the code are settled.
 
 ## Blocked on
 
@@ -106,4 +143,10 @@ python tests/m5-smoke.py   # the exploded system
 python tests/m6-smoke.py   # the canonical journey, end to end
 python tests/m7-smoke.py   # every route in the site map
 python tests/m8-smoke.py   # accessibility, SEO, redirects, analytics
+```
+
+`tests/pages-live.py` is the exception — it takes no local server, because it
+checks the deployed Pages URL for the things only a deploy can get wrong.
+```bash
+python tests/pages-live.py
 ```

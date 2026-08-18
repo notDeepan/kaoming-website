@@ -1,7 +1,13 @@
 # KAO MING International — website
 
 Implementation of `KAOMING_WEBSITE_MASTER_SPEC.md`. **Milestones M0–M8 complete.**
-Not deployed — see [DEPLOYMENT.md](DEPLOYMENT.md) for what that is waiting on.
+
+**Live preview: https://notdeepan.github.io/kaoming-website/**
+
+That link is a static export, so the enquiry cannot be submitted from it and the
+printed QR codes do not resolve — everything a visitor looks at is there. See
+[DEPLOYMENT.md](DEPLOYMENT.md) for the full list and for what a real deployment
+is still waiting on.
 
 ## Showing it to people
 
@@ -28,8 +34,12 @@ still served by this machine, so everything works exactly as it does locally,
 including the enquiry form writing a real lead.
 
 The URL lives as long as that terminal does, and is different every time. Anyone
-with the link can open it; `robots.txt` keeps it out of search engines. For a
-link that outlives the terminal, see [DEPLOYMENT.md](DEPLOYMENT.md).
+with the link can open it; `robots.txt` keeps it out of search engines.
+
+For a link that outlives the terminal, `npm run pages` republishes the GitHub
+Pages preview at the top of this file. That one is always up, and always a
+reduced site — read the table in [DEPLOYMENT.md](DEPLOYMENT.md) before showing
+it to anyone who will ask about the enquiry form.
 
 **The walk-through, in the order the site is built to be read** — this is Part
 A.2, the journey the whole thing is designed around:
