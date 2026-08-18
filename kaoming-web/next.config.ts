@@ -5,9 +5,44 @@ import { redirectRules } from './lib/legacy-redirects';
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
+/**
+ * The GitHub Pages build.
+ *
+ * Pages serves static files and runs no Node, so this is a genuinely reduced
+ * build of the site, not the site. Set by `npm run pages` and by nothing else —
+ * every local and hosted build is unaffected.
+ *
+ * What it costs, stated here because it is easy to forget once the URL works:
+ *
+ *   * **The enquiry cannot be submitted.** `/api/rfq` is a POST handler and
+ *     there is nothing to run it. The form renders and validates, and says so
+ *     rather than failing silently (see `NEXT_PUBLIC_STATIC_EXPORT` in the RFQ
+ *     form).
+ *   * **The printed QR short links do not resolve.** `/m/<code>` is a redirect
+ *     handler; same reason.
+ *   * **The legacy KMC 301s are gone.** `redirects()` needs a server.
+ *   * **Images are served unoptimised**, because the optimiser is a server too.
+ *
+ * Everything a visitor looks at — the 3D scenes, the catalogue reader, both
+ * locales, the specification — is intact.
+ */
+const staticExport = process.env.STATIC_EXPORT === '1';
+
+/** Pages serves a project site from a subdirectory named after the repo. */
+const basePath = staticExport ? '/kaoming-website' : undefined;
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  ...(staticExport
+    ? {
+        output: 'export' as const,
+        basePath,
+        // Pages has no trailing-slash rewriting, so every route is a directory
+        // with its own index.html.
+        trailingSlash: true,
+      }
+    : {}),
   // An unrelated lockfile sits above this project; pin the trace root so the
   // build does not walk out of the app directory.
   outputFileTracingRoot: path.join(import.meta.dirname, '.'),
@@ -15,6 +50,8 @@ const nextConfig: NextConfig = {
   // defaults — sixteen candidate widths for a 48px logo is markup weight for
   // nothing, and these cover the real breakpoints the layout uses.
   images: {
+    // No optimiser on Pages; the source WebP knockouts are served as they are.
+    ...(staticExport ? { unoptimized: true } : {}),
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 828, 1080, 1440, 1920, 2560],
     imageSizes: [16, 32, 48, 96, 128, 256],
@@ -27,7 +64,7 @@ const nextConfig: NextConfig = {
     // page's hero across the navigation.
     viewTransition: true,
   },
-  async headers() {
+  ...(staticExport ? {} : { async headers() {
     return [
       {
         // Every path under /fonts carries a version in its name, so the URL
@@ -54,7 +91,7 @@ const nextConfig: NextConfig = {
    */
   async redirects() {
     return redirectRules();
-  },
+  } }),
 };
 
 export default withNextIntl(nextConfig);

@@ -15,7 +15,8 @@
     "qr": "node scripts/generate-qr.mjs",
     "check": "node scripts/preflight.mjs",
     "demo": "node scripts/preflight.mjs && next build && next start",
-    "share": "node scripts/share.mjs"
+    "share": "node scripts/share.mjs",
+    "pages": "node scripts/publish-pages.mjs"
   },
   "dependencies": {
     "@gsap/react": "2.1.2",

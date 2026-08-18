@@ -43,6 +43,13 @@ const STATIC_PATHS = [
   '/support/representatives',
 ];
 
+/**
+ * Both of these are computed from committed content and never vary per
+ * request. Saying so explicitly is required by `output: export` (the Pages
+ * build) and is simply true of every other build.
+ */
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   if (!ALLOW_INDEXING) return [];
 

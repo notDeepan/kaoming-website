@@ -70,6 +70,14 @@ export function RfqForm({
 
   const [step, setStep] = useState<1 | 2>(1);
   const [status, setStatus] = useState<Status>('editing');
+
+  /**
+   * The GitHub Pages build has no server, so `/api/rfq` does not exist there.
+   * Say so on the form rather than letting a buyer fill it in and meet a 404 —
+   * a demo that pretends to take an enquiry is worse than one that admits it
+   * cannot (see STATIC_EXPORT in next.config).
+   */
+  const submissionDisabled = process.env.NEXT_PUBLIC_STATIC_EXPORT === '1';
   const [errors, setErrors] = useState<RfqFieldErrors>({});
   const [selected, setSelected] = useState<string[]>(
     () => preselect?.filter((slug) => machines.some((machine) => machine.slug === slug)) ?? [],
@@ -186,6 +194,7 @@ export function RfqForm({
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submissionDisabled) return;
     const form = event.currentTarget;
     const values = readForm(form);
 
@@ -246,6 +255,14 @@ export function RfqForm({
 
   return (
     <form ref={formRef} onSubmit={onSubmit} noValidate className="max-w-[46rem]">
+      {submissionDisabled ? (
+        <p
+          data-static-notice
+          className="mb-10 border-s-2 border-km-warning ps-6 text-body text-km-offwhite"
+        >
+          {t('staticNotice')}
+        </p>
+      ) : null}
       {/* Honeypot. Hidden from sight and from assistive technology; only a bot
           that fills every input it finds will put anything in it. */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
@@ -441,7 +458,7 @@ export function RfqForm({
           </button>
           <button
             type="submit"
-            disabled={status === 'submitting'}
+            disabled={status === 'submitting' || submissionDisabled}
             className="km-label inline-flex min-h-11 items-center gap-2.5 border border-km-red bg-km-red px-5 py-3 text-km-paper transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow disabled:opacity-60"
           >
             {status === 'submitting' ? t('sending') : t('submit')}

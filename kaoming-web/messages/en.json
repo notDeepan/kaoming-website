@@ -330,7 +330,8 @@
       "body": "A KAO MING engineer will reply within two working days, usually sooner. If your enquiry is urgent, call the number in the footer and quote your company name."
     },
     "productTitle": "Ready to discuss your project?",
-    "productLede": "Tell us what you need to machine. The {machine} is already selected — add your part, your material and your tolerances, and KAO MING's sales engineers will come back with a specification and a price."
+    "productLede": "Tell us what you need to machine. The {machine} is already selected — add your part, your material and your tolerances, and KAO MING's sales engineers will come back with a specification and a price.",
+    "staticNotice": "This is a static preview hosted on GitHub Pages, which runs no server — enquiries cannot be submitted from it. The form below is complete and is shown as it works on the real site."
   },
   "Compare": {
     "label": "Compare",
