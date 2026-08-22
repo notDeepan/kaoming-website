@@ -26,6 +26,10 @@ ROUTES = [
     "/en/products/gantry-machining-center/kmc-gm/",
     "/en/catalogue/clymene-2026-en/",
     "/en/company/network/",
+    "/en/news/",
+    "/en/news/emo-hannover-2023/",
+    "/en/company/history/",
+    "/en/company/sustainability/",
 ]
 
 results = []
