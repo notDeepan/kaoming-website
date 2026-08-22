@@ -95,7 +95,7 @@ export function CompareTray() {
           <Link
             href={href}
             onClick={() => track({ name: 'compare_created', machines: entries.map((e) => e.slug) })}
-            className="km-label inline-flex min-h-11 items-center gap-2.5 border border-km-red bg-km-red px-5 py-3 text-km-paper transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow"
+            className="km-label inline-flex min-h-11 items-center gap-2.5 border border-km-red bg-km-red px-5 py-3 text-km-on-brand transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow"
           >
             {t('open')} ({entries.length})
           </Link>

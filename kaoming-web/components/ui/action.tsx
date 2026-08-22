@@ -19,9 +19,9 @@ const BASE =
 
 const VARIANTS: Record<ActionVariant, string> = {
   primary:
-    'border border-km-red bg-km-red px-5 py-3 text-km-paper hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow',
+    'border border-km-red bg-km-red px-5 py-3 text-km-on-brand hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow',
   secondary:
-    'border border-km-steel-600 px-5 py-3 text-km-offwhite hover:border-km-offwhite hover:bg-km-offwhite hover:text-km-ink',
+    'border border-km-steel-600 px-5 py-3 text-km-offwhite hover:border-km-offwhite hover:bg-km-offwhite hover:text-km-black',
   text: 'text-km-offwhite hover:text-km-red-glow',
 };
 

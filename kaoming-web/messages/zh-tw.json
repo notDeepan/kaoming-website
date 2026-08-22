@@ -33,15 +33,14 @@
       "history": "發展沿革",
       "factory": "走進高明",
       "network": "全球據點",
-      "sustainability": "永續經營"
+      "csr": "企業社會責任"
     },
     "resourceItems": {
       "catalogues": "型錄",
       "brochures": "產品簡介",
       "specifications": "規格資料",
       "videos": "影片",
-      "caseStudies": "客戶案例",
-      "news": "最新消息"
+      "caseStudies": "客戶案例"
     },
     "supportItems": {
       "service": "售後服務",
@@ -49,6 +48,12 @@
       "faq": "常見問題",
       "contact": "聯絡我們",
       "representatives": "全球代理商"
+    },
+    "news": "最新消息",
+    "newsItems": {
+      "exhibition": "展覽資訊",
+      "product": "產品發表",
+      "company": "最新動態"
     }
   },
   "Header": {
@@ -64,7 +69,12 @@
     "language": "語言",
     "changeLanguage": "切換語言",
     "closePanel": "關閉面板",
-    "viewAll": "查看全部"
+    "viewAll": "查看全部",
+    "theme": {
+      "action": "切換佈景",
+      "light": "淺色",
+      "dark": "深色"
+    }
   },
   "Footer": {
     "headquarters": "總公司",
@@ -262,7 +272,13 @@
     "quoteAction": "立即詢價",
     "representativeTitle": "透過當地代理商",
     "representativeBody": "遍布 {countries} 個國家與地區的 {agents} 家代理商，提供在地報價、安裝與售後服務。",
-    "representativeAction": "尋找當地代理商"
+    "representativeAction": "尋找當地代理商",
+    "locationsTitle": "據點",
+    "plantTitle": "中科分公司",
+    "plantNote": "機台生產與出貨所在地，也是高明對外文件所載之地址。",
+    "headOfficeTitle": "總公司 — 豐原",
+    "headOfficeNote": "登記地址，位於高明自 1974 年起所在的豐原區。此為合約所載地址，非收貨地點。",
+    "uniformNumber": "統一編號"
   },
   "Cta": {
     "title": "準備好討論您的專案了嗎？",
@@ -527,14 +543,15 @@
   "History": {
     "label": "公司",
     "title": "始於 1968",
-    "lede": "十個里程碑：從中正路上的搖臂鑽床工廠，到中部科學園區 25,000 平方公尺的廠房。",
-    "timelineLabel": "高明里程碑年份",
-    "milestonesLabel": "里程碑",
+    "lede": "十個里程碑：從中正路上的搖臂鑽床工廠，到中部科學園區 40,000 平方公尺的恆溫廠房。",
+    "timelineLabel": "高明里程碑，1968 至 2016",
+    "milestonesLabel": "紀錄",
     "milestonesTitle": "高明所述的十項紀事",
-    "pairing": {
-      "body": "高明公佈了十個年份與十項紀事，但其現行網站的輪播元件打亂了兩者的對應關係。十個年份與十項紀事並列，看起來就像十組配對——正因如此，此處不以配對方式呈現。日期正與高明確認中；一旦確認，時間軸即會配對。"
-    },
-    "provenance": "年份與紀事逐字轉錄自 kaoming.com，2026 年 8 月。"
+    "scrollHint": "滾動以瀏覽時間軸",
+    "founded": "創立",
+    "latest": "最近的里程碑",
+    "yearsLabel": "年",
+    "provenance": "年份與紀事逐字轉錄自 kaoming.com，2026 年 8 月，對應關係依來源頁面自身的版面位置復原，且英、中文頁各自得出相同結果。兩個語言版本有一項數字不一致：2008 年的廠房，英文為 25,000 平方公尺，中文為 40,000 平方公尺。此處各依原文呈現，待高明確認。"
   },
   "Factory": {
     "label": "公司",
@@ -588,13 +605,18 @@
   },
   "Sustainability": {
     "label": "公司",
-    "title": "高明衡量的事",
-    "lede": "高明公開的七項承諾，其中一項附有數據。",
-    "claimsLabel": "承諾",
-    "claimsTitle": "載於 kaoming.com",
+    "title": "企業社會責任",
+    "lede": "高明將這件事列入責任，而非行銷。以下為其原文，以及其唯一量化的數字。",
+    "statementLabel": "承諾",
+    "statementTitle": "載於 kaoming.com",
+    "claimsLabel": "設備",
+    "claimsTitle": "廠房如何節下來",
     "pillarsLabel": "架構",
     "pillarsTitle": "五大支柱",
-    "provenance": "逐字轉錄自 kaoming.com，2026 年 8 月。原文未附數據者，此處亦不補。"
+    "policyLabel": "政策",
+    "co2Caption": "二氧化碳，僅來自感測式 LED 照明一項——也是高明唯一附上數字的項目。",
+    "co2Unit": "公斤",
+    "provenance": "逐字轉錄自 kaoming.com 企業社會責任章節，2026 年 8 月；各語言版本均取自該語言的原頁。原文未附數據者，此處亦不補。"
   },
   "Network": {
     "label": "公司",
@@ -667,5 +689,45 @@
     "seeMachines": "查看機種",
     "cta": "索取實績佐證",
     "provenance": "本頁將依所提供之案例建置。在案例到位之前，頁上不會預先寫下任何內容。"
+  },
+  "News": {
+    "label": "最新消息",
+    "title": "高明的足跡",
+    "lede": "展覽、新機發表與公司紀事，皆依高明公開之內容。",
+    "stat": {
+      "entries": "篇數",
+      "latest": "最新年份"
+    },
+    "stale": "高明最新公開的一則消息為 {year} 年，此後尚無可轉錄的內容。{year} 年以後的展出、新機或獎項，一經提供即會在此發布。",
+    "kind": {
+      "exhibition": "展覽",
+      "product": "產品發表",
+      "company": "公司動態"
+    },
+    "group": {
+      "exhibition": {
+        "title": "展覽資訊",
+        "lede": "可現場看機台運轉的場合，以及該找的攞位。"
+      },
+      "product": {
+        "title": "新機發表",
+        "lede": "依高明原文發布，並連至其對應的系列頁面。"
+      },
+      "company": {
+        "title": "公司動態",
+        "lede": "紀事，以及支撐紀事的日常。"
+      }
+    },
+    "field": {
+      "date": "日期",
+      "when": "展期",
+      "booth": "攞位"
+    },
+    "noBody": "高明僅以標題與日期發布此則消息，未附內文，此處亦不另行增補。",
+    "relatedSeries": "相關機種",
+    "viewSeries": "完整規格",
+    "more": "其他消息",
+    "all": "全部消息",
+    "provenance": "逐字轉錄自 kaoming.com 最新消息頁，2026 年 8 月。產品發表以機種類型為標題，並連至 2026 年型錄系列；原文使用的舊機型代號僅作搜尋之用。含識別員工的照片不予轉載。"
   }
 }

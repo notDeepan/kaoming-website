@@ -182,14 +182,29 @@ with sync_playwright() as p:
         f"{len(published)} of {len(international)} published",
     )
 
-    # --- History: the pairing must not be asserted.
+    # --- History: the pairing was withheld while it was a guess. It has since
+    # been recovered from the source page's own stored layout, so what this now
+    # asserts is that every year carries its milestone, that the record is also
+    # available as a plain list, and that the one figure the two locales still
+    # disagree on is disclosed rather than quietly averaged.
     page.goto(f"{BASE}/en/company/history")
     page.wait_for_load_state("networkidle")
     check("ten milestone years", page.locator("[data-year]").count() == 10)
-    check("ten milestone events", page.locator("[data-milestone]").count() == 10)
+    check("ten milestones", page.locator("[data-milestone]").count() == 10)
+    check("ten records in the list", page.locator("[data-record]").count() == 10)
+
+    paired = page.evaluate(
+        """() => [...document.querySelectorAll('[data-milestone]')]
+             .filter((el) => el.textContent.trim().replace(/^\d{4}/, '').trim().length > 8)
+             .length"""
+    )
+    check("every year carries its milestone", paired == 10, str(paired))
+
+    body = page.inner_text("body")
+    check("1968 is the founding", "1968" in body and "founder" in body.lower())
     check(
-        "the unconfirmed pairing is stated, not printed as fact",
-        "scrambled" in page.inner_text("body").lower(),
+        "the locales' disagreement on the plant area is disclosed",
+        "40,000" in body and "25,000" in body,
     )
 
     # --- Technology: the way selector is a comparison, not prose.

@@ -277,7 +277,7 @@ export function RfqForm({
               aria-current={step === index ? 'step' : undefined}
               className={`km-label flex size-8 items-center justify-center border ${
                 step === index
-                  ? 'border-km-red bg-km-red text-km-paper'
+                  ? 'border-km-red bg-km-red text-km-on-brand'
                   : 'border-km-steel-600 text-km-steel-400'
               }`}
             >
@@ -324,7 +324,7 @@ export function RfqForm({
           <button
             type="button"
             onClick={goToStep2}
-            className="km-label inline-flex min-h-11 items-center gap-2.5 border border-km-red bg-km-red px-5 py-3 text-km-paper transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow"
+            className="km-label inline-flex min-h-11 items-center gap-2.5 border border-km-red bg-km-red px-5 py-3 text-km-on-brand transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow"
           >
             {t('next')}
           </button>
@@ -354,7 +354,7 @@ export function RfqForm({
                     }
                     className={`km-label min-h-11 border px-3 py-2 transition-colors duration-(--duration-km) ease-(--ease-km) ${
                       on
-                        ? 'border-km-red bg-km-red text-km-paper'
+                        ? 'border-km-red bg-km-red text-km-on-brand'
                         : 'border-km-steel-600 text-km-offwhite hover:border-km-offwhite'
                     }`}
                   >
@@ -459,7 +459,7 @@ export function RfqForm({
           <button
             type="submit"
             disabled={status === 'submitting' || submissionDisabled}
-            className="km-label inline-flex min-h-11 items-center gap-2.5 border border-km-red bg-km-red px-5 py-3 text-km-paper transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow disabled:opacity-60"
+            className="km-label inline-flex min-h-11 items-center gap-2.5 border border-km-red bg-km-red px-5 py-3 text-km-on-brand transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow disabled:opacity-60"
           >
             {status === 'submitting' ? t('sending') : t('submit')}
           </button>

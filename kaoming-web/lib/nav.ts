@@ -1,3 +1,4 @@
+import { newsSlugs } from './news';
 import { productCategories } from './taxonomy';
 
 /**
@@ -61,6 +62,21 @@ export const navSections: NavSection[] = [
     ],
   },
   {
+    /**
+     * kaoming.com puts NEWS second in its own navigation, and a visitor
+     * checking whether this company is still moving looks for it by that name.
+     * Its children are the three groupings the source itself uses, linked as
+     * anchors because eight entries is one page, not three.
+     */
+    key: 'news',
+    href: '/news',
+    children: [
+      { kind: 'message', key: 'newsItems.exhibition', href: '/news#exhibition' },
+      { kind: 'message', key: 'newsItems.product', href: '/news#product' },
+      { kind: 'message', key: 'newsItems.company', href: '/news#company' },
+    ],
+  },
+  {
     key: 'company',
     href: '/company/about',
     children: [
@@ -68,7 +84,7 @@ export const navSections: NavSection[] = [
       { kind: 'message', key: 'companyItems.history', href: '/company/history' },
       { kind: 'message', key: 'companyItems.factory', href: '/company/factory' },
       { kind: 'message', key: 'companyItems.network', href: '/company/network' },
-      { kind: 'message', key: 'companyItems.sustainability', href: '/company/sustainability' },
+      { kind: 'message', key: 'companyItems.csr', href: '/company/sustainability' },
     ],
   },
   {
@@ -80,7 +96,6 @@ export const navSections: NavSection[] = [
       { kind: 'message', key: 'resourceItems.specifications', href: '/resources?type=specification' },
       { kind: 'message', key: 'resourceItems.videos', href: '/resources?type=video' },
       { kind: 'message', key: 'resourceItems.caseStudies', href: '/case-studies' },
-      { kind: 'message', key: 'resourceItems.news', href: '/resources?type=news' },
     ],
   },
   {
@@ -126,6 +141,8 @@ const BUILT_ROUTES = new Set<string>([
   '/company/factory',
   '/company/network',
   '/company/sustainability',
+  '/news',
+  ...newsSlugs.map((slug) => `/news/${slug}`),
   '/support/service',
   '/support/parts',
   '/support/faq',

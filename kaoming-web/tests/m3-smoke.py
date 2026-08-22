@@ -178,7 +178,25 @@ with sync_playwright() as p:
       const canvas = document.querySelector('canvas');
       if (!canvas) { clearInterval(id); resolve(0); }
     })""")
-    check("canvas survives being scrolled away", idle.locator("canvas").count() == 1)
+    # Software rasterisation misses the floor by a wide margin, and since the
+    # watchdog gained its collapse lane it can reach `static` before this point
+    # — which is the ladder doing its job, not the canvas being lost to a
+    # scroll. So the assertion is conditional on the ladder not having given up:
+    # either the canvas is still there, or the page has correctly handed itself
+    # back to photography.
+    idle_step = idle.locator("section[data-quality-step]").first.get_attribute("data-quality-step")
+    if idle_step == "static":
+        check(
+            "scrolled away, the static fallback stands in for the canvas",
+            idle.locator("section[data-quality-step] img").count() >= 1,
+            idle_step,
+        )
+    else:
+        check(
+            "canvas survives being scrolled away",
+            idle.locator("canvas").count() == 1,
+            idle_step or "",
+        )
     idle.close()
 
     # --- Reduced motion: the calm variant, still rendered.

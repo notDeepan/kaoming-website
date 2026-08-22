@@ -45,7 +45,7 @@ export function WaySelector({ box, linear }: { box: Way; linear: Way }) {
             onClick={() => setShown(key)}
             className={`km-label min-h-11 flex-1 border px-4 py-3 transition-colors duration-(--duration-km) ease-(--ease-km) ${
               shown === key
-                ? 'border-km-red bg-km-red text-km-paper'
+                ? 'border-km-red bg-km-red text-km-on-brand'
                 : 'border-km-steel-600 text-km-offwhite'
             }`}
           >

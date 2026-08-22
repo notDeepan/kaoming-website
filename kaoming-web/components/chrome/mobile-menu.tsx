@@ -7,6 +7,7 @@ import { useGSAP, gsap } from '@/lib/motion/gsap';
 import { useSmoothScroll } from '@/lib/motion/smooth-scroll';
 import type { NavSection } from '@/lib/nav';
 import { LanguageSwitcher } from './language-switcher';
+import { ThemeToggle } from './theme-toggle';
 import { QuoteCta } from './quote-cta';
 
 /**
@@ -114,6 +115,7 @@ export function MobileMenu({ sections }: { sections: NavSection[] }) {
       >
         <div className="flex items-center justify-between border-b border-km-steel-600/60 px-5 py-3">
           <LanguageSwitcher />
+          <ThemeToggle />
           <button
             ref={closeButtonRef}
             type="button"

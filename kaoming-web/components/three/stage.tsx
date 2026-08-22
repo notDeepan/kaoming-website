@@ -16,7 +16,17 @@ import { Environment, Lightformer } from '@react-three/drei';
  * panels in a real hall are strip lights overhead, which is exactly what these
  * Lightformers are.
  */
-export function Stage({ showFloor = true }: { showFloor?: boolean }) {
+export function Stage({
+  showFloor = true,
+  field = '#0c0b0a',
+  light = false,
+}: {
+  showFloor?: boolean;
+  /** The hall's own colour — the theme's page field. Also the floor. */
+  field?: string;
+  /** True on the light theme. */
+  light?: boolean;
+}) {
   return (
     <>
       {/* Key: high and to the front-right, the catalogue's own lighting angle. */}
@@ -34,9 +44,16 @@ export function Stage({ showFloor = true }: { showFloor?: boolean }) {
       />
       {/* Fill: cool, low, opposite the key, so the shadow side still reads. */}
       <directionalLight position={[-8, 4, -3]} intensity={0.5} color="#8fb4d8" />
-      {/* Rim: behind and above, separating the machine from the black field. */}
-      <directionalLight position={[-2, 7, -9]} intensity={1.1} color="#cfd8e6" />
-      <ambientLight intensity={0.18} />
+      {/* Rim: behind and above, separating the machine from the field.
+          On paper the machine is already darker than what is behind it, so a rim
+          light does nothing there but blow out the top edge — it is dropped to a
+          quarter rather than removed, because it is also what puts a highlight
+          along the crossbeam. */}
+      <directionalLight position={[-2, 7, -9]} intensity={light ? 0.3 : 1.1} color="#cfd8e6" />
+      {/* Ambient carries the bounce a bright room has and a dark hall does not.
+          Raised, not doubled: past this the cast shadow washes out and the
+          machine stops sitting on the floor. */}
+      <ambientLight intensity={light ? 0.55 : 0.18} />
 
       <Environment resolution={256} frames={1}>
         {/* Overhead strips — the hall's own lighting, and what the painted
@@ -51,7 +68,7 @@ export function Stage({ showFloor = true }: { showFloor?: boolean }) {
         <Lightformer form="rect" intensity={0.5} position={[0, -1, 0]} scale={[12, 1, 12]} rotation-x={-Math.PI / 2} />
       </Environment>
 
-      {showFloor ? <Floor /> : null}
+      {showFloor ? <Floor color={field} /> : null}
     </>
   );
 }
@@ -61,11 +78,11 @@ export function Stage({ showFloor = true }: { showFloor?: boolean }) {
  * mirror, because a polished-floor reflection is the single fastest way to make
  * an industrial render look like a video game.
  */
-function Floor() {
+function Floor({ color }: { color: string }) {
   return (
     <mesh receiveShadow rotation-x={-Math.PI / 2} position-y={0}>
       <planeGeometry args={[60, 60]} />
-      <meshStandardMaterial color="#0c0b0a" roughness={0.95} metalness={0} />
+      <meshStandardMaterial color={color} roughness={0.95} metalness={0} />
     </mesh>
   );
 }

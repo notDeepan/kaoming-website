@@ -4,7 +4,11 @@
     "legal_name": "KAO MING Machinery Industrial Co., Ltd.",
     "chinese_name": "高明精機工業股份有限公司",
     "tagline": "Make same to different",
-    "brand_marks": ["KMC", "KAO MING", "1968 (in logo)"],
+    "brand_marks": [
+      "KMC",
+      "KAO MING",
+      "1968 (in logo)"
+    ],
     "positioning_claims_verbatim": [
       "leader of Taiwan's gantry type processing center",
       "first Taiwan vendor to enter the Chinese market",
@@ -23,55 +27,159 @@
       "facebook": "https://www.facebook.com/kaomingmachinery",
       "youtube": "https://www.youtube.com/user/kaoming2011",
       "instagram": "https://bit.ly/kmcinstagram"
-    }
+    },
+    "head_office_en": "No. 67, Ln. 209, Sec. 2, Sanfong Rd., Fongyuan Dist., Taichung City 42073, Taiwan",
+    "head_office_zh": "台中市豐原區三豐路二段209巷67號",
+    "plant_en": "CTSP, No. 53, Houke S. Rd., Houli Dist., Taichung City 421012, Taiwan",
+    "plant_zh": "421012 台中市后里區中部科學園區后科南路53號",
+    "uniform_number": "55932463",
+    "source_note": "Head office, plant address and uniform number from https://www.kaoming.com/contact-en. Social links from the site footer."
   },
   "history_milestones": {
-    "WARNING": "The current site renders these in a Wix carousel; the year-to-event pairing could not be read reliably from the DOM. Years and events are both verbatim, but the PAIRING MUST BE CONFIRMED with KAO MING before publishing.",
-    "years_listed": [1968, 1972, 1974, 1982, 1983, 1995, 2007, 2008, 2013, 2016],
-    "events_listed": [
-      "KAO MING Machinery Company set up by founder Mr. Chang, Gao-Ming and his wife Ms. Chang, Tsai Mei-Hsia, located on Chung Cheng Road, Feng Yuan City, Taichung County",
-      "Change the company name to Kao Ming Industry Co.",
-      "Reorganized as Kao Ming Machinery Industrial Co., Ltd.",
-      "Relocated to the new headquarters",
-      "Kao Ming is the first company to invest in a production line for assembling double-column machining centers",
-      "First machine tool manufacturer in Taiwan to obtain ISO 9001; KMC-SD series obtained a Good Design award",
-      "Announced gantry type machining center KMC-G series; two-step spindle in-line integrated design obtained Utility Model patent #M316769; Y-axis extension bellow obtained Utility Model patent #M322297",
-      "Application for the plant in the Central Taiwan Science Park approved, area 25,000 square meters; built the constant-temperature plant",
-      "Importing-in Toyota Production System",
-      "Announced five-axis moving crossbeam & moving column KMC-EPG series"
+    "PAIRING_RESOLVED": "Superseded the earlier warning. The Wix DOM scrambles reading order, but the page's stored layout does not: every year label and every milestone body is a positioned box in the page JSON at static.wixstatic.com/sites/<pageJsonFileName>.json.z. Sorting those boxes by y and grouping by x recovers a two-column timeline that alternates left/right as the years descend, with no ambiguity. The Traditional-Chinese page (about-us-tw) was decoded the same way and produces the identical pairing, independently. Both are recorded below.",
+    "sources": [
+      "https://www.kaoming.com/about-us-en",
+      "https://www.kaoming.com/about-us-tw"
+    ],
+    "pairing_confirmed": true,
+    "DISCREPANCY_CTSP_AREA": "The 2008 milestone states 25,000 square meters in English and 40,000 square meters in Traditional Chinese. Both are verbatim from KAO MING. Neither has been reconciled; each locale renders its own figure and the site never averages them. Confirm with KAO MING.",
+    "timeline": [
+      {
+        "year": 1968,
+        "en": "KAO MING Machinery Company set up by the founder Mr. Chang, Gao-Ming and his wife Ms. Chang, Tsai Mei-Hsia and located in Chung Cheng Road of Feng Yuan City, Taichung County.",
+        "zh": "創辦人故張鎬洺先生及夫人故張蔡梅霞女士於台中市豐原區中正路巷內成立高明機械公司。"
+      },
+      {
+        "year": 1972,
+        "en": "Change the company named to be Kao Ming Industry Co.",
+        "zh": "更名為高明工業有限公司。"
+      },
+      {
+        "year": 1974,
+        "en": "Relocated to the new headquarter.",
+        "zh": "遷廠至台中市豐原區三豐路二段。(總公司)"
+      },
+      {
+        "year": 1982,
+        "en": "Reorganized as Kao Ming machinery Industrial Co., Ltd.",
+        "zh": "二次更名為高明精機工業股份有限公司。"
+      },
+      {
+        "year": 1983,
+        "en": "Kao Ming is the first company to invest the production line to assembling the double column machining center.",
+        "zh": "自行研發台灣第一台龍門加工中心機。"
+      },
+      {
+        "year": 1995,
+        "en": "First machine tool manufacturer in Taiwan got ISO9001. KMC-SD series obtained Good Design award.",
+        "zh": "通過國際ISO9001認證，為台灣機械業第一家。榮獲優良設計產品獎，門型加工中心機KMC-SD系列。"
+      },
+      {
+        "year": 2007,
+        "en": "Announced gantry type machining center KMC-G series. Two-step spindle inline integrated design obtained Utility Model patent #M316769. Y-axis extension bellow obtained Utility Model patent #M322297.",
+        "zh": "研發大型高架式動樑門型加工中心機KMC-G系列。榮獲專利，綜合加工中心機二段變速主軸頭一直線式整合裝置(第M316769號)。"
+      },
+      {
+        "year": 2008,
+        "en": "Application of the plant in the Central Taiwan Science Park was approved, with the area 25,000 square meters. Built the constant temperature plant and make efforts to develop the high quality machines.",
+        "zh": "分公司進駐中部科學園區完工，佔地 40,000 平方公尺，興建恆溫空調廠房，積極投入，致力研發生產更高品質工具機種。"
+      },
+      {
+        "year": 2013,
+        "en": "Announced five axis moving crossbeam & moving column KMC-EPG series.",
+        "zh": "研發動樑動柱龍門加工中心機 KMC-EPG系列。"
+      },
+      {
+        "year": 2016,
+        "en": "Importing-in Toyota Production System.",
+        "zh": "導入TPS豐田式生產系統。"
+      }
     ],
     "corroborated_elsewhere": "2023 = 55th anniversary (consistent with 1968 founding). 2023 EMO Hannover, Sept 18–23, was the last exhibition posted."
   },
   "patents_and_awards": [
-    { "type": "patent", "id": "M316769", "subject": "Two-step spindle in-line integrated design", "kind": "Utility Model (TW)" },
-    { "type": "patent", "id": "M322297", "subject": "Y-axis extension bellow", "kind": "Utility Model (TW)" },
-    { "type": "patent", "id": "M634822", "subject": "Three-axes cooling system unique design (from GM catalogue)", "kind": "Utility Model (TW)" },
-    { "type": "certification", "id": "ISO 9001", "note": "Claimed as the first machine tool manufacturer in Taiwan to obtain it" },
-    { "type": "award", "id": "Good Design Award", "subject": "KMC-SD series" }
+    {
+      "type": "patent",
+      "id": "M316769",
+      "subject": "Two-step spindle in-line integrated design",
+      "kind": "Utility Model (TW)"
+    },
+    {
+      "type": "patent",
+      "id": "M322297",
+      "subject": "Y-axis extension bellow",
+      "kind": "Utility Model (TW)"
+    },
+    {
+      "type": "patent",
+      "id": "M634822",
+      "subject": "Three-axes cooling system unique design (from GM catalogue)",
+      "kind": "Utility Model (TW)"
+    },
+    {
+      "type": "certification",
+      "id": "ISO 9001",
+      "note": "Claimed as the first machine tool manufacturer in Taiwan to obtain it"
+    },
+    {
+      "type": "award",
+      "id": "Good Design Award",
+      "subject": "KMC-SD series"
+    }
   ],
   "manufacturing_process_pillars": [
-    { "id": "scraping", "title": "Hand Scraping", "verbatim_points": [
-      "Scraping is a skill more difficult than woodcarving",
-      "It is the precise starting point for machine tools; it removes dependence on other machine tools and eliminates deviation from clamping force and thermal energy",
-      "A scraped guideway is not easily worn out because of the excellent lubrication effect",
-      "The standard is a flat surface of 50% high points (load-bearing) and 50% low points (oil pockets); slideway scraping is more than 20 PPI (points per square inch), with a 40% contact ratio in use"
-    ]},
-    { "id": "box-way", "title": "Box Way", "verbatim_points": [
-      "Sliding friction with face-to-face interface; large contact area gives overall machine rigidity, high machining stability, high load capacity and strength",
-      "Large contact area gives good shock absorption, damping and dynamic rigidity — long machine life and stable machining quality",
-      "Advantage: cast steel and other difficult-to-cut materials, heavy-duty and heavy/rough cutting with high removal rate",
-      "Industries: high-hardness steel molds, mold bases, automobile interior parts, small and medium machine parts"
-    ]},
-    { "id": "linear-way", "title": "Linear Way", "verbatim_points": [
-      "Rolling friction with point or line contact; small friction resistance, fast reaction and fast moving speed",
-      "Accurate minimum feed unit — stick-slip rarely occurs; lower driving horsepower demand saves energy",
-      "Less friction heat allows high-speed movement while maintaining accuracy; bears radial, anti-radial and lateral load simultaneously; preload and slider count adjustable to tune rigidity and load ability",
-      "Advantage: reduces machining time on complex work with frequent tool changes and feed changes",
-      "Industries: complex workpieces, high-volume small and medium parts, multi-surface workpieces in marine and aviation industries"
-    ]},
-    { "id": "spindle", "title": "Spindle", "verbatim_points": ["Dedicated section exists on the current site (process-2-en) — content not yet captured; pull when writing the Technology page"] },
-    { "id": "technical-center", "title": "Technical Center", "verbatim_points": ["Dedicated section exists on the current site (process-2-en) — content not yet captured"] },
-    { "id": "quality", "title": "Quality", "verbatim_points": ["Dedicated section exists on the current site (process-3-en) — content not yet captured; likely holds inspection/certification detail for the Technology page"] }
+    {
+      "id": "scraping",
+      "title": "Hand Scraping",
+      "verbatim_points": [
+        "Scraping is a skill more difficult than woodcarving",
+        "It is the precise starting point for machine tools; it removes dependence on other machine tools and eliminates deviation from clamping force and thermal energy",
+        "A scraped guideway is not easily worn out because of the excellent lubrication effect",
+        "The standard is a flat surface of 50% high points (load-bearing) and 50% low points (oil pockets); slideway scraping is more than 20 PPI (points per square inch), with a 40% contact ratio in use"
+      ]
+    },
+    {
+      "id": "box-way",
+      "title": "Box Way",
+      "verbatim_points": [
+        "Sliding friction with face-to-face interface; large contact area gives overall machine rigidity, high machining stability, high load capacity and strength",
+        "Large contact area gives good shock absorption, damping and dynamic rigidity — long machine life and stable machining quality",
+        "Advantage: cast steel and other difficult-to-cut materials, heavy-duty and heavy/rough cutting with high removal rate",
+        "Industries: high-hardness steel molds, mold bases, automobile interior parts, small and medium machine parts"
+      ]
+    },
+    {
+      "id": "linear-way",
+      "title": "Linear Way",
+      "verbatim_points": [
+        "Rolling friction with point or line contact; small friction resistance, fast reaction and fast moving speed",
+        "Accurate minimum feed unit — stick-slip rarely occurs; lower driving horsepower demand saves energy",
+        "Less friction heat allows high-speed movement while maintaining accuracy; bears radial, anti-radial and lateral load simultaneously; preload and slider count adjustable to tune rigidity and load ability",
+        "Advantage: reduces machining time on complex work with frequent tool changes and feed changes",
+        "Industries: complex workpieces, high-volume small and medium parts, multi-surface workpieces in marine and aviation industries"
+      ]
+    },
+    {
+      "id": "spindle",
+      "title": "Spindle",
+      "verbatim_points": [
+        "Dedicated section exists on the current site (process-2-en) — content not yet captured; pull when writing the Technology page"
+      ]
+    },
+    {
+      "id": "technical-center",
+      "title": "Technical Center",
+      "verbatim_points": [
+        "Dedicated section exists on the current site (process-2-en) — content not yet captured"
+      ]
+    },
+    {
+      "id": "quality",
+      "title": "Quality",
+      "verbatim_points": [
+        "Dedicated section exists on the current site (process-3-en) — content not yet captured; likely holds inspection/certification detail for the Technology page"
+      ]
+    }
   ],
   "sustainability": {
     "claims_verbatim": [
@@ -83,12 +191,29 @@
       "Inverter compressor pneumatic equipment",
       "Ice-storage air-conditioning system — stores ice off-peak and supplies cooling at peak"
     ],
-    "pillars": ["Safe and Healthy Environment", "Energy-saving Carbon Reduction Equipment", "Performance of Business Operations", "The Concept of Sustainable Management", "Social Care Action"]
+    "pillars": [
+      "Safe and Healthy Environment",
+      "Energy-saving Carbon Reduction Equipment",
+      "Performance of Business Operations",
+      "The Concept of Sustainable Management",
+      "Social Care Action"
+    ],
+    "superseded_by": "social_responsibility — same claims, full verbatim text, both locales."
   },
   "current_site_audit": {
     "platform": "Wix (meta-generator: Wix.com Website Builder), copyright 2018, design by megaweb",
-    "structure": ["ABOUT", "NEWS", "PRODUCTS", "PROCESS", "APPLICATIONS", "CONTACT"],
-    "languages": ["EN", "繁 (Traditional Chinese)"],
+    "structure": [
+      "ABOUT",
+      "NEWS",
+      "PRODUCTS",
+      "PROCESS",
+      "APPLICATIONS",
+      "CONTACT"
+    ],
+    "languages": [
+      "EN",
+      "繁 (Traditional Chinese)"
+    ],
     "critical_gaps_found": [
       "APPLICATIONS page is empty — it literally says 'updating'. The industry/materials/multi-angle-machining sections have never been filled. This is the single biggest content gap and the highest-value new section.",
       "NEWS is stale — the newest item is 2023 EMO Hannover and the 55th anniversary (2023). Nothing from 2024–2026.",
@@ -98,6 +223,72 @@
       "No distributor/global network page despite claiming sales locations across three continents.",
       "No certifications page, no case studies, no video library (a YouTube channel exists but is not integrated).",
       "Copyright notice still reads 2018."
+    ]
+  },
+  "social_responsibility": {
+    "source": [
+      "https://www.kaoming.com/about-us-en",
+      "https://www.kaoming.com/about-us-tw"
+    ],
+    "heading": {
+      "en": "SOCIAL RESPONSIBILITY",
+      "zh": "企業社會責任"
+    },
+    "statement": {
+      "en": "KAO MING never gives up taking social responsibility and we invest more resources to involve in environment protection, social welfare and consumer rights. Before we built in branch office in Central Taiwan Science Park, we evaluate environment impact report. After building, we continue to do environment protection. Facing Green House effect clause climate change, it is very obvious to influence in the world. Thus, we design our factory’s construction with saving energy, it can reduce carbon emission and decrease the global greenhouse effect.",
+      "zh": "高明精機對於負起社會責任，從未懈怠，積極投入在環境保護、社會公益，甚至是消費者權益保障等各方面，皆善盡企業責任，投入多項資源。位於中部科學園區內的高明分公司，在開發前即做好環境影響評估，開發後亦按照環境影響評估之承諾事項，持續做好環境保護工作。面對溫室效應造成的氣候變遷，對全球所帶來的影響已十分明顯，然而高明廠房的全面節約能源規劃與設計，可減少碳排放量並減緩溫室效應。"
+    },
+    "equipment_heading": {
+      "en": "Energy Saving and Carbon Reduction equipment:",
+      "zh": "其節能減碳設備部份包括："
+    },
+    "equipment": [
+      {
+        "en": "Electrical Equipment — High efficiency energy saving.",
+        "zh": "機電設備–省能源高效率型。"
+      },
+      {
+        "en": "Lighting Equipment — Adopt LED light with automatic sensor design, it can reduce 18,000KG of CO2 every year.",
+        "zh": "照明設備–全區燈具採LED和三波長節能燈管搭配自動感測器，照明節能減碳設計，每年減碳總估計量可達18,000Kg以上。"
+      },
+      {
+        "en": "Water Saving Equipment — using the automatic sensor, water-saving devices.",
+        "zh": "節水設備–採用自動感應式，節水式設備。"
+      },
+      {
+        "en": "Pneumatic Equipment — Inverter compressor, reducing the energy consumption and unnecessary.",
+        "zh": "空壓設備–變頻式空壓機，降低不必要之耗能。"
+      },
+      {
+        "en": "Air-conditioned System — Adopt ice storage system. We had store up ice off peak time and supply air condition in peak time. It’s effective to control air condition electric system.",
+        "zh": "空調採儲冰式系統–離峰電力製冰儲存冷能，尖峰時間融冰供應空調使用，有效空調電力節能管理系統。"
+      }
+    ],
+    "policy": {
+      "en": "KAO MING declares and enforces environmental policy by means of the environmental propaganda. Each of employee know importance of individual saving energy. It make a contribution to do for Earth sustainable development.",
+      "zh": "高明精機搭配各項環保文宣並確實宣導與落實，員工深知個人節約能源的重要性，齊心熱烈參與，並同對地球的永續與環境愛護盡一份心力與責任。"
+    },
+    "pillars": [
+      {
+        "en": "Safe and Healthy Environment",
+        "zh": "安全衛生的環境"
+      },
+      {
+        "en": "Energy-saving Carbon Reduction Equipment",
+        "zh": "節能減碳的設備"
+      },
+      {
+        "en": "Performance of Business Operations",
+        "zh": "企業營運的績效"
+      },
+      {
+        "en": "The Concept of Sustainable Management",
+        "zh": "永續經營的理念"
+      },
+      {
+        "en": "Social Care Action",
+        "zh": "社會關懷的行動"
+      }
     ]
   }
 }

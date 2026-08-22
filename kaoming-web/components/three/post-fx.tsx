@@ -12,7 +12,16 @@ import { BlendFunction } from 'postprocessing';
  * the degradation ladder in Part O — the QualityManager turns them off before it
  * touches resolution, because grade is the cheapest thing to lose.
  */
-export function PostFx({ bloom, grain }: { bloom: boolean; grain: boolean }) {
+export function PostFx({
+  bloom,
+  grain,
+  light = false,
+}: {
+  bloom: boolean;
+  grain: boolean;
+  /** True on the light theme, where a heavy vignette reads as a dirty lens. */
+  light?: boolean;
+}) {
   // With everything switched off the composer is pure overhead; skip it.
   if (!bloom && !grain) return null;
 
@@ -23,7 +32,14 @@ export function PostFx({ bloom, grain }: { bloom: boolean; grain: boolean }) {
       ) : (
         <></>
       )}
-      <Vignette offset={0.32} darkness={0.72} blendFunction={BlendFunction.NORMAL} />
+      {/* The vignette's job is to sink the frame edge into the field. On black
+          that wants 0.72; on paper the same figure paints a grey ring around a
+          white room, so it drops to just enough to hold the corners. */}
+      <Vignette
+        offset={light ? 0.5 : 0.32}
+        darkness={light ? 0.28 : 0.72}
+        blendFunction={BlendFunction.NORMAL}
+      />
       {grain ? <Noise premultiply opacity={0.05} blendFunction={BlendFunction.OVERLAY} /> : <></>}
     </EffectComposer>
   );

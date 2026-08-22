@@ -67,7 +67,10 @@
   --color-km-charcoal: #161513;
   --color-km-steel-800: #201e1b;
   --color-km-steel-600: #3c3936;
-  --color-km-steel-400: #837e77;
+  /* Muted type. Measured against the darkest surface it is ever set on — the
+     km-steel-800 card, not the page field — because that is where it is worst
+     and where tests/theme-audit.py caught it at 4.13:1. 4.98:1 there. */
+  --color-km-steel-400: #918c85;
 
   /* Light system — specifications, documentation, resources */
   --color-km-offwhite: #f3f1ec;
@@ -84,6 +87,25 @@
   /* Semantic */
   --color-km-success: #2e9e6b;
   --color-km-warning: #d9a21b;
+
+  /* --- Theme-invariant pair (see the light theme block below) -----------
+     Every other colour above swaps role between the light and dark themes.
+     These two must not, because what they sit on does not swap either:
+
+       km-on-brand  label on a red or blue fill. The fill is brand red in both
+                    themes, so its label is light in both themes.
+       km-plate     the light backing a dark-ink artwork needs: the CIS logo,
+                    which is supplied as dark ink on transparent and must never
+                    be recoloured, and the catalogue dimension drawings, which
+                    are black line on white.
+
+     Using km-paper for either is the mistake this pair exists to prevent — it
+     inverts, and the logo disappears the moment the theme flips. */
+  --color-km-on-brand: #faf9f6;
+  --color-km-plate: #faf9f6;
+  /* The plate's hover state. Pure white in both themes for the same reason the
+     plate itself is: it is under the logo, not behind the page. */
+  --color-km-plate-bright: #ffffff;
 
   /* --- Type scale (Part B.3) ------------------------------------------- */
   /* CJK order is deliberate — see lib/fonts/index.ts. The platform face is
@@ -140,6 +162,62 @@
   --duration-km-fast: 150ms;
   --duration-km: 250ms;
   --duration-km-slow: 420ms;
+}
+
+/* ============================================================================
+   Light theme — the default the site ships in
+   ============================================================================
+
+   The palette above stays the authored one: it is the dark field the art
+   direction was designed against, and it is still what `[data-theme='dark']`
+   serves. This block re-points the same tokens at a paper field.
+
+   Why re-point rather than add a second set of names: every one of the ~100
+   components on this site already spells its colours `km-black`, `km-offwhite`,
+   `km-steel-600`. Those names describe a ROLE — page field, body text, hairline
+   — and the role is what survives the flip. A parallel `km-surface-*` set would
+   mean touching every component and would leave two ways to say the same thing,
+   which is how a palette drifts.
+
+   Read the names as roles, then, not as colours: under this block `km-black` is
+   the page field and it is nearly white. The two tokens for which that reading
+   does NOT hold are `km-on-brand` and `km-plate`, declared above, and they are
+   deliberately absent from this block.
+
+   Selector, not media query: the visitor's choice wins over the operating
+   system's, `data-theme` is stamped on <html> by the server so there is no
+   flash and no-JS still gets the light field, and this block is unlayered so it
+   beats Tailwind's `@layer theme` regardless of specificity.
+
+   Contrast is checked by tests/theme-audit.py, in both themes, on every kind of
+   page, against the surface each string is actually painted on rather than
+   against the page field — which is how the muted tone was caught failing at
+   4.13:1 on a card in the *dark* theme, where it had been since M1. */
+:root[data-theme='light'] {
+  /* Dominant paper field — warm, the same warmth the dark field is shifted by */
+  --color-km-black: #f2f0ea;
+  --color-km-charcoal: #e8e5dd;
+  --color-km-steel-800: #dedad0;
+  --color-km-steel-600: #b3ada1;
+  /* Same rule as the dark theme's: measured on the card, not the page. */
+  --color-km-steel-400: #605a50;
+
+  /* Ink system — what was the light system, inverted into type colours */
+  --color-km-offwhite: #24221e;
+  --color-km-paper: #121110;
+  --color-km-white: #000000;
+
+  /* Brand marks, darkened only as far as the paper field requires. The hue is
+     the sampled brand hue in both themes; only the value moves. */
+  --color-km-red: #b0182d;
+  --color-km-red-glow: #8f1026;
+  /* Deep enough to be read as small type on the raised surface, and to letter a
+     marker in km-on-brand: 5.1:1 as text on the card, 6.1:1 under white. */
+  --color-km-blue: #1a6398;
+  --color-km-blue-glow: #14577f;
+
+  --color-km-success: #1f7a52;
+  --color-km-warning: #8a6410;
 }
 
 /* Machine livery — 3D PBR material values only, never UI.
@@ -219,7 +297,18 @@
 
   ::selection {
     background-color: var(--color-km-red);
-    color: var(--color-km-paper);
+    /* km-on-brand, not km-paper: the highlight is brand red in both themes, so
+       its text is light in both themes. */
+    color: var(--color-km-on-brand);
+  }
+
+  /* The theme is a visitor preference, so it obeys the same rule as motion: the
+     switch itself must not animate the whole page. Colour transitions are
+     suppressed for one frame while the attribute changes. */
+  html[data-theme-switching] *,
+  html[data-theme-switching] *::before,
+  html[data-theme-switching] *::after {
+    transition: none !important;
   }
 
   /* Lenis runtime classes (lenis 1.1.x). Inlined rather than importing the
@@ -280,6 +369,25 @@
   opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 140px 140px;
+}
+
+/* Both atmosphere layers assume a dark field: the first lifts the top of the
+   page out of black, the second sinks the bottom back into it, and the grain is
+   dark noise laid over darkness. On paper all three read as dirt. Same two
+   layers, same job, inverted.
+
+   The grain switches to `multiply` rather than merely fading: the noise texture
+   is dark pixels, and only multiply lets dark pixels texture a light field
+   without greying it. */
+:root[data-theme='light'] .km-atmosphere {
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(255, 255, 255, 0.85), transparent 58%),
+    radial-gradient(100% 100% at 50% 100%, rgba(120, 112, 98, 0.14), transparent 62%);
+}
+
+:root[data-theme='light'] .km-grain {
+  opacity: 0.03;
+  mix-blend-mode: multiply;
 }
 
 /* Wide tracking on uppercase labels is a Latin device. Applied to Traditional

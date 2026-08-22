@@ -1,6 +1,7 @@
 # KAO MING International — website
 
-Implementation of `KAOMING_WEBSITE_MASTER_SPEC.md`. **Milestones M0–M8 complete.**
+Implementation of `KAOMING_WEBSITE_MASTER_SPEC.md`. **Milestones M0–M8 complete**,
+plus the first round of review feedback (see [What changed in review](#what-changed-in-review)).
 
 **Live preview: https://notdeepan.github.io/kaoming-website/**
 
@@ -76,9 +77,12 @@ python tests/m5-smoke.py   # the exploded system, keyboard and reduced motion
 python tests/m6-smoke.py   # the canonical journey A.2, walked end to end
 python tests/m7-smoke.py   # every route in the Part E.1 site map, both locales
 python tests/m8-smoke.py   # accessibility, SEO, redirects, analytics taxonomy
+python tests/layout-audit.py  # spacing, measure and rhythm
+python tests/theme-audit.py   # both themes, WCAG contrast computed per surface
+python tests/perf-guards.py   # GPU tier cap and the smooth-scroll gate
 ```
 
-**330 checks, all green.** Every one needs the production server running. The M2
+**461 checks, all green.** Every one needs the production server running. The M2
 suite also needs a database (`npm run db:migrate`) and posts enough enquiries to
 trip the rate limiter, so run it with `RFQ_RATE_MAX=40`.
 
@@ -112,11 +116,33 @@ npm run qr                             # printed short-link QR codes
 | Product journey | Scenes 07–11, mm/in toggle, embedded pre-populated RFQ, exit transition, printed QR short links |
 | Catalogue | 48 spreads rasterized from the 2026 PDFs, immersive and standard readers, in-catalogue search, Explore in 3D |
 | Secondary pages | Applications, technology, four company pages, the 41-agent network map, support, case studies |
+| News | KAO MING's own NEWS section — exhibitions, machine launches, company milestones, both locales, from `content/company/news.json` |
+| Theme | Light by default, dark on a switch; one palette, re-pointed per theme |
 | Hardening | Part O budgets met, keyboard and reduced-motion audited, schema.org, hreflang, sitemap, legacy 301s, field vitals |
 
 Every route in the Part E.1 site map is live in both locales. The reserved-route
 placeholder (`app/[locale]/[...slug]`) now only answers for the Phase 4–6 routes
 the spec defers — `/showroom`, `/events`, and the rest.
+
+## What changed in review
+
+Seven things came back from the first read. All seven are in.
+
+| | |
+|---|---|
+| **Too dark** | Light is now the default and dark is the switch, in the header and the footer. The palette is not duplicated — the same token names are re-pointed per theme, so `km-black` means *page field* and is nearly white on light. `tests/theme-audit.py` computes WCAG contrast for every string on ten pages in both themes; it found the muted tone failing at 4.13:1 on cards **in the dark theme**, where it had been since M1. |
+| **CSR was missing** | kaoming.com's ABOUT page has three sections and this site had two. `/company/sustainability` is now the full SOCIAL RESPONSIBILITY section — the commitment, the environmental-impact assessment, the five energy measures, the policy, the five pillars — verbatim, per locale. |
+| **Laggy on an office PC** | Two causes, both fixed. The 3D tier was picked from cores and memory, which are CPU facts, while the 3D budget is spent on the GPU — a desktop with eight cores and Intel integrated graphics scored HIGH. It is now capped by the renderer name. And Lenis, which re-runs ScrollTrigger every frame, is switched off on four cores or less. Neither sets `reducedMotion`: a slow computer is not a request for the calm variant. See [DEPLOYMENT.md](DEPLOYMENT.md#is-it-the-hosting) for what is and is not GitHub's fault. |
+| **Blank history timeline** | The pairing of years to milestones was withheld because KAO MING's carousel scrambled it. It has now been recovered from that page's own stored layout — and independently reproduced from the Chinese page. Ten dated milestones, three illustrated from the factory archive, plus the same record as a plain list. |
+| **No NEWS** | `/news`, both locales: exhibitions, machine launches, company milestones. KAO MING's three tabs become three sections, because eight entries is one page. The section states its own age — the newest entry anyone has published is from 2023. |
+| **The map looked broken** | It was a graticule with dots and no coastline, on the reasoning that inventing one would be dishonest. Correct reasoning, wrong conclusion: it read as a map that failed to load. It now uses Natural Earth's surveyed 1:110m land, projected at authoring time into the same two lines of arithmetic that place the markers, so a marker cannot sit off its own country. |
+| **No social links** | Facebook, YouTube and Instagram, in the footer and on the contact page, `rel="me"`, from KAO MING's own footer and nowhere else. |
+
+Two things for KAO MING that came out of the work: their English and Chinese
+pages disagree on the 2008 plant area (25,000 m² vs 40,000 m²) — each locale
+prints its own, and the provenance line says so — and the registered head office
+in Fongyuan, which only their CONTACT page states, is now on the contact page
+beside the plant.
 
 ## Machine content
 

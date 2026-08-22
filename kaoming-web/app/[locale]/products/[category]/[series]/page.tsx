@@ -284,7 +284,7 @@ export default async function SeriesPage({
           <Reveal as="ul" className="mt-16 grid items-start gap-x-8 gap-y-12 sm:grid-cols-2 xl:grid-cols-3">
             {gallery.map((image) => (
               <li key={image.plate.src} data-reveal>
-                <figure className="border border-km-steel-600/60 bg-km-offwhite p-4">
+                <figure className="border border-km-steel-600/60 bg-km-plate p-4">
                   <Image
                     src={image.plate.src}
                     alt={t('imageAlt', { model: image.model, view: image.view })}
@@ -334,7 +334,7 @@ export default async function SeriesPage({
               data-document-card={catalogue.id}
               className="mt-10 flex flex-wrap items-center gap-6 border border-km-steel-600/60 p-6"
             >
-              <span className="km-label bg-km-red px-2 py-1 text-km-paper">
+              <span className="km-label bg-km-red px-2 py-1 text-km-on-brand">
                 {catalogue.fileType}
               </span>
               <span className="font-display text-km-paper">{tCatalogue(catalogue.id)}</span>

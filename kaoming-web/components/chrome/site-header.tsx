@@ -8,6 +8,7 @@ import { Logo } from './logo';
 import { MobileMenu } from './mobile-menu';
 import { SearchOverlay } from '@/components/search/search-overlay';
 import { LanguageSwitcher } from './language-switcher';
+import { ThemeToggle } from './theme-toggle';
 import { QuoteCta } from './quote-cta';
 
 /**
@@ -45,6 +46,8 @@ export async function SiteHeader() {
 
       <div className="flex items-center gap-1 sm:gap-2">
         <SearchOverlay index={searchIndex} />
+
+        <ThemeToggle className="hidden md:flex" />
 
         <LanguageSwitcher className="hidden lg:block" />
 

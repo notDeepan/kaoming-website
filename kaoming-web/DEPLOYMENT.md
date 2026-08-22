@@ -25,8 +25,8 @@ Node, so:
 | Image optimisation | The optimiser is a server. Source WebP is served as-is. |
 
 Everything a visitor looks at is intact: the 3D scenes, the catalogue reader,
-both locales, the whole specification. `python tests/pages-live.py` checks the
-deployed URL rather than a local build.
+the NEWS section, both locales, the whole specification, and both themes.
+`python tests/pages-live.py` checks the deployed URL rather than a local build.
 
 Two things about that build are worth knowing before changing them. `basePath`
 is `/kaoming-website`, and Next does **not** apply it to anything referenced out
@@ -35,6 +35,32 @@ artifact instead, so the application source keeps one truth about where its
 assets live. And there is no Actions workflow: pushing one needs a token with
 `workflow` scope. `gh auth refresh -h github.com -s workflow` if you want Pages
 to rebuild on push instead of on command.
+
+## Is it the hosting?
+
+Asked after the site felt slow on an office desktop. Mostly no.
+
+GitHub Pages is a CDN and serves everything gzipped, and the pages themselves are
+static HTML — there is no server doing work per request. What is heavy is what
+the browser then has to run. Measured on the local production build, decoded
+(over the wire it is roughly a third of this):
+
+| | Total | Script | Other |
+|---|---|---|---|
+| `/en` | 1.9 MB | 737 KB | 736 KB of route prefetch, 111 KB images, 98 KB fonts |
+| `/en/products/.../kmc-gm` | 3.3 MB | 2.0 MB | three.js, drei and the post-processing stack |
+| `/en/company/network` | 1.9 MB | 819 KB | |
+
+So the 3D pages carry two megabytes of JavaScript to parse before anything moves,
+and then ask the GPU for a bloom pass. On a machine with integrated graphics that
+is the whole problem, and it is the same problem on any host. Both halves of it
+are now capped — see the third row of
+[What changed in review](README.md#what-changed-in-review) — and
+`tests/perf-guards.py` holds the caps in place.
+
+The one thing that *is* the hosting: Pages runs no image optimiser, so source
+WebP is served at full size rather than resized per viewport. On a phone that is
+worth roughly 100 KB a page. A Vercel deployment fixes it for free.
 
 ## A link where the whole site works
 

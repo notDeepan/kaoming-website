@@ -1,0 +1,224 @@
+"""Both themes, on every page kind, measured rather than eyeballed.
+
+    python tests/theme-audit.py
+
+The light theme re-points the palette tokens rather than adding a parallel set,
+so a component that paired a colour with a fixed one — a dark label on a fill
+that only inverts in one theme, a logo plate that flips to black — breaks
+silently and only in one theme. Reading the pages will not find that; computing
+it will.
+
+For every element carrying its own text, this walks up to the first ancestor
+with a non-transparent background, composites the alpha, and applies WCAG 2.1
+contrast. Anything under 4.5:1 (3:1 for large text) is reported with the text
+that failed, in the theme it failed in.
+
+Also checks the two things the flip is most likely to get wrong outside of text:
+the logo plate must stay light in both themes, and the toggle must actually
+persist a choice across a navigation.
+"""
+
+import sys
+
+from playwright.sync_api import sync_playwright
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+BASE = "http://localhost:3000"
+GL_ARGS = ["--use-gl=swiftshader", "--enable-unsafe-swiftshader"]
+
+ROUTES = [
+    "/en",
+    "/en/news",
+    "/en/news/emo-hannover-2023",
+    "/en/company/history",
+    "/en/company/sustainability",
+    "/en/company/network",
+    "/en/support/contact",
+    "/en/products/gantry-machining-center/kmc-gm",
+    "/en/rfq",
+    "/zh-tw/company/sustainability",
+]
+
+results = []
+
+
+def check(name, ok, detail=""):
+    results.append((name, ok, detail))
+
+
+# Runs in the page. Returns the worst offenders rather than every element, so a
+# failure names something specific instead of printing a thousand lines.
+CONTRAST_JS = r"""
+() => {
+  const parse = (value) => {
+    const m = value.match(/rgba?\(([^)]+)\)/);
+    if (!m) return null;
+    const p = m[1].split(/[,\s/]+/).filter(Boolean).map(Number);
+    return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
+  };
+
+  const over = (fg, bg) => ({
+    r: fg.r * fg.a + bg.r * (1 - fg.a),
+    g: fg.g * fg.a + bg.g * (1 - fg.a),
+    b: fg.b * fg.a + bg.b * (1 - fg.a),
+    a: 1,
+  });
+
+  const lum = (c) => {
+    const f = (v) => {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    };
+    return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+  };
+
+  const ratio = (a, b) => {
+    const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  };
+
+  // The painted backdrop behind an element: the first ancestor with a
+  // non-transparent background, compositing anything translucent on the way.
+  const backdrop = (el) => {
+    let stack = [];
+    let node = el;
+    while (node && node !== document.documentElement) {
+      const bg = parse(getComputedStyle(node).backgroundColor);
+      if (bg && bg.a > 0) {
+        stack.push(bg);
+        if (bg.a >= 0.999) break;
+      }
+      node = node.parentElement;
+    }
+    if (!stack.length) stack.push(parse(getComputedStyle(document.body).backgroundColor));
+    let out = stack[stack.length - 1];
+    for (let i = stack.length - 2; i >= 0; i -= 1) out = over(stack[i], out);
+    return out;
+  };
+
+  const bad = [];
+  for (const el of document.querySelectorAll('body *')) {
+    // Only elements that render text of their own.
+    const own = [...el.childNodes]
+      .filter((n) => n.nodeType === 3)
+      .map((n) => n.textContent.trim())
+      .join(' ')
+      .trim();
+    if (!own) continue;
+
+    const style = getComputedStyle(el);
+    if (style.visibility === 'hidden' || style.display === 'none') continue;
+    if (Number(style.opacity) < 0.15) continue;
+    const box = el.getBoundingClientRect();
+    if (box.width < 2 || box.height < 2) continue;
+    // Screen-reader-only text is not painted; measuring it is meaningless.
+    if (box.width <= 1 && box.height <= 1) continue;
+    if (style.clipPath === 'inset(50%)' || style.clip === 'rect(0px, 0px, 0px, 0px)') continue;
+
+    const fg = parse(style.color);
+    if (!fg || fg.a === 0) continue;
+
+    const bg = backdrop(el);
+    const composited = fg.a < 1 ? over(fg, bg) : fg;
+    const r = ratio(composited, bg);
+
+    const size = parseFloat(style.fontSize);
+    const weight = Number(style.fontWeight) || 400;
+    const large = size >= 24 || (size >= 18.66 && weight >= 700);
+    const floor = large ? 3 : 4.5;
+
+    if (r < floor) {
+      bad.push({
+        ratio: Math.round(r * 100) / 100,
+        floor,
+        text: own.slice(0, 42),
+        color: style.color,
+        on: `rgb(${Math.round(bg.r)}, ${Math.round(bg.g)}, ${Math.round(bg.b)})`,
+        tag: el.tagName.toLowerCase(),
+      });
+    }
+  }
+
+  bad.sort((a, b) => a.ratio - b.ratio);
+  return bad.slice(0, 6);
+}
+"""
+
+
+def luminance_of(rgb):
+    values = [int(part) for part in rgb.replace("rgb(", "").replace(")", "").split(",")]
+
+    def channel(v):
+        v /= 255
+        return v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4
+
+    r, g, b = (channel(v) for v in values[:3])
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True, args=GL_ARGS)
+
+    for theme in ("light", "dark"):
+        # A fresh context per theme, not a fresh init script on one page: init
+        # scripts accumulate, so the second theme's page would still be running
+        # the first theme's script and the two would fight.
+        context = browser.new_context(viewport={"width": 1440, "height": 900})
+        # Set before the first navigation so the blocking script picks it up and
+        # the page is never rendered in the other theme first.
+        context.add_init_script(f"try{{localStorage.setItem('km-theme','{theme}')}}catch(e){{}}")
+        page = context.new_page()
+
+        for route in ROUTES:
+            page.goto(BASE + route, wait_until="load", timeout=60_000)
+            page.wait_for_timeout(400)
+
+            applied = page.evaluate("() => document.documentElement.getAttribute('data-theme')")
+            check(f"{theme} {route} applies the theme", applied == theme, applied or "")
+
+            failures = page.evaluate(CONTRAST_JS)
+            check(
+                f"{theme} {route} text meets AA",
+                not failures,
+                "; ".join(f"{f['ratio']}:1 {f['tag']} \"{f['text']}\"" for f in failures[:3]),
+            )
+
+        # The logo sits on a plate because the supplied mark is dark ink on
+        # transparent and may not be recoloured. The plate must not invert.
+        page.goto(BASE + "/en", wait_until="load", timeout=60_000)
+        plate = page.evaluate(
+            "() => { const i = document.querySelector('header img[src*=\"LOGO\"]');"
+            " return i ? getComputedStyle(i.closest('span')).backgroundColor : null; }"
+        )
+        check(
+            f"{theme} logo plate stays light",
+            plate is not None and luminance_of(plate) > 0.7,
+            plate or "no plate found",
+        )
+        context.close()
+
+    # The choice has to outlive a navigation, which is the whole point of it.
+    # Its own context, with nothing stored and no init script.
+    context = browser.new_context(viewport={"width": 1440, "height": 900})
+    page = context.new_page()
+    page.goto(BASE + "/en", wait_until="load", timeout=60_000)
+    before = page.evaluate("() => document.documentElement.getAttribute('data-theme')")
+    check("default theme is light", before == "light", before or "")
+
+    page.click("[data-theme-toggle]")
+    page.wait_for_timeout(150)
+    toggled = page.evaluate("() => document.documentElement.getAttribute('data-theme')")
+    check("toggle flips the theme", toggled == "dark", toggled or "")
+
+    page.goto(BASE + "/en/news", wait_until="load", timeout=60_000)
+    persisted = page.evaluate("() => document.documentElement.getAttribute('data-theme')")
+    check("the choice survives a navigation", persisted == "dark", persisted or "")
+
+    browser.close()
+
+width = max(len(name) for name, _, _ in results)
+for name, ok, detail in results:
+    print(f"{'PASS' if ok else 'FAIL'}  {name.ljust(width)}  {detail}")
+print(f"\n{sum(1 for _, ok, _ in results if ok)}/{len(results)} passed")
+sys.exit(0 if all(ok for _, ok, _ in results) else 1)

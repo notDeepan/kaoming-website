@@ -1,0 +1,134 @@
+{
+  "SOURCE": "Transcribed verbatim from https://www.kaoming.com/news-en and /news-tw — the NEWS page's three tabs (EXHIBITION, NEW PRODUCT, NEWEST). Decoded from the page's stored layout JSON rather than the rendered DOM, so nothing was paraphrased and nothing was lost to the carousel.",
+  "NAMING_RULE": "The source titles its product announcements by legacy code (KMC-321HIS, KMC-RF). CLAUDE.md forbids a legacy code as a displayed name, so each item is titled by the machine TYPE the source itself gives it and carries a `series` reference to the 2026 series page where one exists. The legacy code survives only in `legacyCode`, which is a search synonym and is never rendered.",
+  "STALENESS": "The newest item KAO MING has published is from 2023. Nothing from 2024–2026 exists to transcribe. This file is the whole section's source: adding an entry here publishes it, in both locales, with no page edit.",
+  "IMAGE_POLICY": "The source illustrates its internal items (staff incentive tours, the year-end dinner) with photographs of named employees. Those are not republished. Company items use _kit/factory imagery; product items link to the series page and use its catalogue photography.",
+  "DATE_NOTE": "The source dates only the exhibition. Every other item states a year in its own title and nothing finer, so `date` carries 1 January of that year and `dateIsApproximate` is true — the site prints the year alone for those, never a fabricated day.",
+  "items": [
+    {
+      "slug": "emo-hannover-2023",
+      "kind": "exhibition",
+      "date": "2023-09-18",
+      "endDate": "2023-09-23",
+      "dateIsApproximate": false,
+      "image": null,
+      "series": null,
+      "legacyCode": null,
+      "en": {
+        "title": "2023 EMO Hannover",
+        "dateline": "DATE：September 18-23, 2023",
+        "booth": "Booth No. : HALL 013 C12",
+        "body": ""
+      },
+      "zh": {
+        "title": "2023 漢諾威金屬加工世界EMO",
+        "dateline": "日期：2023年9月18-23日",
+        "booth": "攤位號碼 : HALL 013 C12",
+        "body": ""
+      }
+    },
+    {
+      "slug": "high-speed-vertical-machining-center",
+      "kind": "product",
+      "date": "2021-01-01",
+      "dateIsApproximate": true,
+      "image": null,
+      "series": { "category": "vertical-machining-center", "slug": "kmc-ce" },
+      "legacyCode": "KMC-CE",
+      "en": {
+        "title": "High-speed Vertical Machining Center",
+        "body": "Apply Japan's top brand linear guideway, THK, and increase sliders on all three axes to enhance loading capacity response time for machining. Different from the common box type with internal rib, utilize the keel design with stronger bending resistance. Larger the table base to provide strong full support without overhang problem. The design of the inner cooled ballscrew, coolant system in the bearing seat, and motor board with cooling circuit are to reduce thermal growth."
+      },
+      "zh": {
+        "title": "高速立式加工中心機",
+        "body": "線軌全面採用日本第一品牌THK，增加線軌滑塊，提升反應速度及載重能力。有別於一般立柱箱型肋骨設計，採用龍骨設計提升整體抗彎抗扭能力。床身底座支撐面積加大，提高機台加工支撐剛性。三軸螺桿通孔、馬達板、軸承座冷卻設計，防止熱昇長維持高精度。快送速度提供 32-36 m/min，超越業界平均 30 m/min。"
+      }
+    },
+    {
+      "slug": "high-rigidity-multi-face-machining-center",
+      "kind": "product",
+      "date": "2019-01-01",
+      "dateIsApproximate": true,
+      "image": null,
+      "series": { "category": "multi-face-machining-center", "slug": "kmc-hma" },
+      "legacyCode": "KMC-RF",
+      "en": {
+        "title": "High Rigidity Multi-Face Machining Center",
+        "body": "The combination of a ram-type spindle with a wide range of interchangeable attached heads, and a highly efficient crossbeam-fixed structure make the machine more powerful and versatile. It comes standard with an innovative inline direct-drive spindle inside a ram; speed up to 8000rpm, power up to 22/26KW, torque up to 1000Nm. Thanks to the high rigid structure design, it features more powerful cutting capacity up to 30% than our competitors as the same model."
+      },
+      "zh": {
+        "title": "高剛性多面體加工中心機",
+        "body": "主要特色是結合具有多個附加頭可交換的四角柱主軸頭，以及具有高效率的定樑結構，主軸轉速可達 8000rpm，輸出馬力可達 22/26KW，輸出扭距可達 1000Nm，使機器的切削力更強勁，應用也更廣泛。由於高剛性四角柱主軸頭設計，切削能力比同類型競爭者高出 30%。"
+      }
+    },
+    {
+      "slug": "high-speed-double-column-machining-center",
+      "kind": "product",
+      "date": "2018-01-01",
+      "dateIsApproximate": true,
+      "image": null,
+      "series": null,
+      "legacyCode": "KMC-HIS",
+      "note": "Epeius series E7 / EU / E8 / E10 on the current website. No 2026 catalogue exists for it, so there is no series page to link to and no specification beyond what the announcement itself states.",
+      "en": {
+        "title": "High Speed Double-Column Machining Center",
+        "body": "The main feature is a ram-type casted spindle head which is supported by four LM guides and it ensures high rigidity and stability under heavy-duty cutting when the Z-axis travel moves up and down in the construction of BOX IN BOX. The Z-axis travel is 850mm option 1500mm. X and Y axes use the oversize and maximum-preloaded roller liner guideways with high rigidity. The spindle is the IDD drive including 40 or 50-taper; the built-in drive and geared-head are optionally available and the high speed is provided 10000rpm, 12000rpm and 15000rpm to diversify the choices."
+      },
+      "zh": {
+        "title": "高速龍門加工中心機",
+        "body": "主要特色是配備了 4 支線軌支撐的四角柱主軸頭，使 Z 軸在 BOX IN BOX 的建構中上下移動，確保強力切削之剛性與穩定性。Z 軸 850mm 行程，可客製需求選配超大行程 1050mm。X／Y 軸均配備帶有高剛性最大預壓力之大型滾柱式線性導軌。其主軸為 IDD 直結傳動，BT40／BT50 錐度均可選用；並提供 10000rpm、12000rpm、15000rpm 等多樣化選擇。"
+      }
+    },
+    {
+      "slug": "55-years-anniversary",
+      "kind": "company",
+      "date": "2023-01-01",
+      "dateIsApproximate": true,
+      "image": "/img/factory/kaoming-factory-04-heritage-kaoming-gate.jpg",
+      "series": null,
+      "legacyCode": null,
+      "en": {
+        "title": "Kao Ming 55 Years Anniversary Celebration",
+        "body": "This year we gather our dear customers, suppliers and partners to greatly celebrate Kao Ming 55 Years Anniversary!"
+      },
+      "zh": {
+        "title": "2023 高明精機 55 週年慶",
+        "body": "今年我們將與親愛的客戶、供應商和合作夥伴歡聚一堂，共同慶祝高明 55 週年！"
+      }
+    },
+    {
+      "slug": "lean-manufacturing",
+      "kind": "company",
+      "date": "2019-01-01",
+      "dateIsApproximate": true,
+      "image": "/img/factory/shopfloor-168CE-assembly.jpg",
+      "series": null,
+      "legacyCode": null,
+      "en": {
+        "title": "2019–2020 Lean Manufacturing",
+        "body": "Lean Manufacturing."
+      },
+      "zh": {
+        "title": "2019-2020 精實管理",
+        "body": "精實管理。"
+      }
+    },
+    {
+      "slug": "tmts-2018",
+      "kind": "exhibition",
+      "date": "2018-01-01",
+      "dateIsApproximate": true,
+      "image": null,
+      "series": null,
+      "legacyCode": null,
+      "en": {
+        "title": "Highlights of TMTS 2018",
+        "body": ""
+      },
+      "zh": {
+        "title": "TMTS 2018 展覽花絮",
+        "body": "TMTS 圓滿落幕，感謝幕前與幕後的所有的主管與員工。"
+      }
+    }
+  ]
+}

@@ -32,15 +32,14 @@
       "history": "History",
       "factory": "Inside KAO MING",
       "network": "Global Network",
-      "sustainability": "Sustainability"
+      "csr": "Social Responsibility"
     },
     "resourceItems": {
       "catalogues": "Catalogues",
       "brochures": "Brochures",
       "specifications": "Technical Specifications",
       "videos": "Videos",
-      "caseStudies": "Case Studies",
-      "news": "News"
+      "caseStudies": "Case Studies"
     },
     "supportItems": {
       "service": "Service",
@@ -48,6 +47,12 @@
       "faq": "FAQ",
       "contact": "Contact",
       "representatives": "Global Representatives"
+    },
+    "news": "News",
+    "newsItems": {
+      "exhibition": "Exhibitions",
+      "product": "New Products",
+      "company": "Company"
     }
   },
   "Header": {
@@ -63,7 +68,12 @@
     "language": "Language",
     "changeLanguage": "Change language",
     "closePanel": "Close panel",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "theme": {
+      "action": "Change theme",
+      "light": "Light",
+      "dark": "Dark"
+    }
   },
   "Footer": {
     "headquarters": "Headquarters",
@@ -261,7 +271,13 @@
     "quoteAction": "Request a quote",
     "representativeTitle": "Through your local representative",
     "representativeBody": "{agents} agents across {countries} countries and territories quote, install and service KAO MING machines locally.",
-    "representativeAction": "Find your representative"
+    "representativeAction": "Find your representative",
+    "locationsTitle": "Where KAO MING is",
+    "plantTitle": "Plant — Central Taiwan Science Park",
+    "plantNote": "Where the machines are built and shipped from, and the address on KAO MING's own correspondence.",
+    "headOfficeTitle": "Registered head office — Fongyuan",
+    "headOfficeNote": "The registered address, in the district KAO MING has been in since 1974. It is the address on the contract, not the loading dock.",
+    "uniformNumber": "Uniform no."
   },
   "Cta": {
     "title": "Ready to discuss your project?",
@@ -526,14 +542,15 @@
   "History": {
     "label": "Company",
     "title": "Since 1968",
-    "lede": "Ten milestones, from a rotary arm drilling bed workshop on Chung Cheng Road to a 25,000 m² plant in the Central Taiwan Science Park.",
-    "timelineLabel": "KAO MING milestone years",
-    "milestonesLabel": "The milestones",
+    "lede": "Ten milestones, from a rotary arm drilling bed workshop on Chung Cheng Road to a 25,000 m² constant-temperature plant in the Central Taiwan Science Park.",
+    "timelineLabel": "KAO MING milestones, 1968 to 2016",
+    "milestonesLabel": "The record",
     "milestonesTitle": "Ten events, as KAO MING states them",
-    "pairing": {
-      "body": "KAO MING publishes ten years and ten milestones, but the carousel on their current site scrambled which event belongs to which year. Ten of each in the same order look exactly like ten pairs — which is why they are not printed as pairs here. The dates are being confirmed with KAO MING; the timeline pairs them the day they are."
-    },
-    "provenance": "Years and events transcribed verbatim from kaoming.com, August 2026."
+    "scrollHint": "Scroll to travel the timeline",
+    "founded": "Founded",
+    "latest": "Latest milestone",
+    "yearsLabel": "Years",
+    "provenance": "Years and milestones transcribed verbatim from kaoming.com, August 2026, and paired from the source page's own stored layout — which the Traditional Chinese page reproduces independently. The two locales differ on one figure: the 2008 plant is 25,000 m² in English and 40,000 m² in Chinese. Each is printed as KAO MING wrote it, pending their confirmation."
   },
   "Factory": {
     "label": "Company",
@@ -587,13 +604,18 @@
   },
   "Sustainability": {
     "label": "Company",
-    "title": "What KAO MING measures",
-    "lede": "Seven commitments, published by KAO MING, one of which carries a figure.",
-    "claimsLabel": "Commitments",
-    "claimsTitle": "Stated on kaoming.com",
+    "title": "Social responsibility",
+    "lede": "KAO MING files this under responsibility rather than marketing. Its own words, and the one figure it puts a number on.",
+    "statementLabel": "The commitment",
+    "statementTitle": "Stated on kaoming.com",
+    "claimsLabel": "Equipment",
+    "claimsTitle": "How the plant spends less",
     "pillarsLabel": "Framework",
     "pillarsTitle": "The five pillars",
-    "provenance": "Transcribed verbatim from kaoming.com, August 2026. Where a claim carries no figure, none has been added."
+    "policyLabel": "Policy",
+    "co2Caption": "of CO₂ a year, from sensor-controlled LED lighting alone — the only figure KAO MING attaches a number to.",
+    "co2Unit": "kg",
+    "provenance": "Transcribed verbatim from the SOCIAL RESPONSIBILITY section of kaoming.com, August 2026, in each locale from that locale's own page. Where a claim carries no figure, none has been added."
   },
   "Network": {
     "label": "Company",
@@ -666,5 +688,45 @@
     "seeMachines": "See the machines",
     "cta": "Ask for a reference",
     "provenance": "This page will be built from supplied case studies. Nothing on it is written in advance of them."
+  },
+  "News": {
+    "label": "News",
+    "title": "Where KAO MING has been",
+    "lede": "Exhibitions, machine launches and company milestones, as KAO MING has published them.",
+    "stat": {
+      "entries": "Entries",
+      "latest": "Most recent"
+    },
+    "stale": "The most recent entry KAO MING has published is from {year}. Nothing later exists to transcribe. Anything from {year} onward — a show stand, a launch, an award — is published here the moment it is supplied.",
+    "kind": {
+      "exhibition": "Exhibition",
+      "product": "New product",
+      "company": "Company"
+    },
+    "group": {
+      "exhibition": {
+        "title": "Trade shows",
+        "lede": "Where the machines can be seen running, and the stand to ask for."
+      },
+      "product": {
+        "title": "Machine launches",
+        "lede": "Announcements as KAO MING wrote them, each linked to the series it became."
+      },
+      "company": {
+        "title": "Inside the company",
+        "lede": "Milestones and the work behind them."
+      }
+    },
+    "field": {
+      "date": "Date",
+      "when": "When",
+      "booth": "Stand"
+    },
+    "noBody": "KAO MING published this entry as a headline and a date, with no further text. Nothing has been added to it.",
+    "relatedSeries": "The machine",
+    "viewSeries": "Full specification",
+    "more": "More news",
+    "all": "All news",
+    "provenance": "Transcribed verbatim from the NEWS page on kaoming.com, August 2026. Product announcements are titled by machine type and linked to their 2026 catalogue series; the legacy model codes the source used are kept for search only. Photographs of named employees are not republished."
   }
 }

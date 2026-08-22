@@ -15,6 +15,7 @@ import { localeMeta, routing, type AppLocale } from '@/i18n/routing';
 import { SmoothScrollProvider } from '@/lib/motion/smooth-scroll';
 import { organizationSchema, schemaScript } from '@/lib/schema';
 import { ALLOW_INDEXING, alternatesFor, SITE_URL } from '@/lib/site';
+import { DEFAULT_THEME, themeInitScript } from '@/lib/theme';
 import { BODY_FONT_URL, CJK_FACES_URL, DISPLAY_FONT_URL, fontVariables } from '@/lib/fonts';
 import '../globals.css';
 
@@ -95,8 +96,30 @@ export default async function LocaleLayout({
   const t = await getTranslations('Header');
 
   return (
-    <html lang={localeMeta[locale as AppLocale].htmlLang} className={fontVariables}>
+    <html
+      lang={localeMeta[locale as AppLocale].htmlLang}
+      className={fontVariables}
+      /* The default theme is in the markup, not in a script: light survives a
+         visitor with JavaScript off, and there is no first frame in which the
+         document has no theme to flash out of. The script below only corrects
+         this for someone who has chosen otherwise. */
+      data-theme={DEFAULT_THEME}
+    >
       <body className="min-h-dvh bg-km-black antialiased">
+        {/*
+         * Corrects `data-theme` for a visitor who has chosen dark, before the
+         * browser paints anything below it. Inline and synchronous — `next/script`
+         * defers, which is a flash.
+         *
+         * First child of <body> rather than in <head> on purpose: a hand-written
+         * <head> closes before Next has streamed the page's metadata into it,
+         * which pushes <meta name="robots"> out and silently voids `noindex` on
+         * /rfq and /compare (the same reason the font preloads above are called
+         * rather than rendered). A synchronous script here still runs before the
+         * rest of the body is parsed, which is all this needs.
+         */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript() }} />
+
         {/* Part R — Organization, once, on every page. */}
         <script
           type="application/ld+json"

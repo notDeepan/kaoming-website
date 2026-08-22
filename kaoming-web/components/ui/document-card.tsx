@@ -35,7 +35,7 @@ export async function DocumentCard({
       className="flex h-full flex-col border border-km-steel-600/60 bg-km-steel-800 p-6 transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-steel-600 sm:p-8"
     >
       <div className="flex flex-wrap items-center gap-2">
-        <span className="km-label bg-km-red px-2 py-1 text-km-paper">{fileType}</span>
+        <span className="km-label bg-km-red px-2 py-1 text-km-on-brand">{fileType}</span>
         <span className="km-label border border-km-steel-600 px-2 py-1 text-km-offwhite">
           {version}
         </span>

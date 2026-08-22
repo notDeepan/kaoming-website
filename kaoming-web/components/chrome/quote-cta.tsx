@@ -19,7 +19,7 @@ export function QuoteCta({
     <Link
       href={`${RFQ_HREF}?source=header`}
       className={[
-        'km-label inline-flex items-center justify-center gap-2 border border-km-red bg-km-red px-4 py-3 text-km-paper',
+        'km-label inline-flex items-center justify-center gap-2 border border-km-red bg-km-red px-4 py-3 text-km-on-brand',
         'transition-colors duration-(--duration-km) ease-(--ease-km)',
         'hover:bg-transparent hover:text-km-red-glow hover:border-km-red-glow',
         block ? 'w-full' : 'min-h-11',

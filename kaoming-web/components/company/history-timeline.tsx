@@ -1,32 +1,40 @@
 'use client';
 
+import Image from 'next/image';
 import { useRef } from 'react';
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/motion/gsap';
 import { useSmoothScroll } from '@/lib/motion/smooth-scroll';
+import type { Milestone } from '@/lib/company';
 
 /**
  * The horizontal timeline (Part J.3): vertical scroll drives horizontal motion,
- * the section pinned while it runs, a thin rule drawing itself as it goes.
+ * the section pinned while it runs, a rule drawing itself as it goes.
+ *
+ * This used to print the years with nothing under them, because the pairing was
+ * unconfirmed and ten years beside ten milestones would have been a guess. The
+ * pairing has since been recovered from the source page's own stored layout (see
+ * lib/company), so each year now carries the milestone that belongs to it — and
+ * the component that was a row of dates is a timeline.
  *
  * The tween that moves the track uses `ease: 'none'` — with `scrub` anything
  * else breaks the 1:1 mapping between how far the page has scrolled and how far
  * the timeline has travelled, which is the whole illusion.
  *
- * Under reduced motion nothing is pinned and nothing is scrubbed: the years
- * become an ordinary list that scrolls with the page (Part P). The years are in
- * the DOM either way, so this is a presentation of content, never its carrier.
+ * Under reduced motion nothing is pinned and nothing is scrubbed: the milestones
+ * become an ordinary vertical list (Part P). Everything is in the DOM either
+ * way, in order, so this is a presentation of the record and never its carrier.
  */
 export function HistoryTimeline({
-  years,
-  events,
-  paired,
+  milestones,
+  illustrations,
   label,
+  hint,
 }: {
-  years: number[];
-  events: string[];
-  /** True only once KAO MING confirms which event belongs to which year. */
-  paired: boolean;
+  milestones: Milestone[];
+  /** Year -> photograph. Illustration chosen from _kit/factory, not evidence. */
+  illustrations: Record<number, { src: string; alt: string }>;
   label: string;
+  hint: string;
 }) {
   const root = useRef<HTMLElement>(null);
   const track = useRef<HTMLOListElement>(null);
@@ -78,7 +86,7 @@ export function HistoryTimeline({
         ScrollTrigger.refresh();
       };
     },
-    { scope: root, dependencies: [reducedMotion, years.length], revertOnUpdate: true },
+    { scope: root, dependencies: [reducedMotion, milestones.length], revertOnUpdate: true },
   );
 
   return (
@@ -93,15 +101,24 @@ export function HistoryTimeline({
       }
     >
       <div className="w-full">
+        {!reducedMotion ? (
+          <p className="km-label mx-auto mb-10 flex max-w-[1600px] items-center gap-4 px-5 text-km-steel-400 sm:px-6 xl:px-10">
+            <span aria-hidden="true" className="h-px w-10 shrink-0 bg-km-red sm:w-16" />
+            {hint}
+          </p>
+        ) : null}
+
+        {/* The spine. Two rules stacked: the full-width hairline the entries
+            hang from, and the red one that draws itself in over it. */}
         <div className="relative mx-auto max-w-[1600px] px-5 sm:px-6 xl:px-10">
           <span
             aria-hidden="true"
-            className="absolute inset-x-5 top-[3.25rem] h-px bg-km-steel-600/50 sm:inset-x-6 xl:inset-x-10"
+            className="absolute inset-x-5 top-[0.4375rem] h-px bg-km-steel-600/50 sm:inset-x-6 xl:inset-x-10"
           />
           <span
             ref={rule}
             aria-hidden="true"
-            className="absolute inset-x-5 top-[3.25rem] h-px origin-left bg-km-red sm:inset-x-6 xl:inset-x-10"
+            className="absolute inset-x-5 top-[0.4375rem] h-px origin-left bg-km-red sm:inset-x-6 xl:inset-x-10"
           />
         </div>
 
@@ -109,23 +126,44 @@ export function HistoryTimeline({
           ref={track}
           className={
             reducedMotion
-              ? 'mx-auto flex max-w-[1600px] flex-wrap gap-x-16 gap-y-10 px-5 pt-10 sm:px-6 xl:px-10'
-              : 'flex gap-16 px-5 pt-10 sm:px-6 xl:px-10'
+              ? 'mx-auto flex max-w-[1600px] flex-col gap-12 px-5 pt-10 sm:px-6 xl:px-10'
+              : 'flex items-start gap-12 px-5 pt-4 sm:px-6 xl:px-10'
           }
         >
-          {years.map((year, index) => (
-            <li key={year} data-year={year} className="shrink-0">
-              <span
-                aria-hidden="true"
-                className="mb-6 block size-2 rounded-full bg-km-red-glow"
-              />
-              <p className="km-display text-display-sm text-km-paper">{year}</p>
-              {/* Only once the pairing is confirmed does a year carry an event. */}
-              {paired && events[index] ? (
-                <p className="mt-4 max-w-[34ch] text-body text-km-steel-400">{events[index]}</p>
-              ) : null}
-            </li>
-          ))}
+          {milestones.map((milestone) => {
+            const illustration = illustrations[milestone.year];
+            return (
+              <li
+                key={milestone.year}
+                data-year={milestone.year}
+                data-milestone
+                className={
+                  reducedMotion
+                    ? 'border-t border-km-steel-600/60 pt-6'
+                    : 'w-[19rem] shrink-0 sm:w-[22rem]'
+                }
+              >
+                <span
+                  aria-hidden="true"
+                  className="mb-6 block size-3.5 rounded-full border-2 border-km-charcoal bg-km-red-glow"
+                />
+                <p className="font-display text-h2 text-km-paper">{milestone.year}</p>
+                <p className="mt-4 text-body text-km-steel-400">{milestone.text}</p>
+
+                {illustration ? (
+                  <div className="relative mt-6 aspect-4/3 overflow-hidden border border-km-steel-600/60">
+                    <Image
+                      src={illustration.src}
+                      alt={illustration.alt}
+                      fill
+                      sizes="(min-width: 640px) 22rem, 19rem"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : null}
+              </li>
+            );
+          })}
         </ol>
       </div>
     </section>

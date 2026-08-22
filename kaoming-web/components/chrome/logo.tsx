@@ -22,7 +22,7 @@ export function Logo({ label }: { label: string }) {
       aria-label={label}
       className="group -m-1 inline-flex shrink-0 items-center p-1"
     >
-      <span className="block bg-km-paper p-1.5 transition-colors duration-(--duration-km) ease-(--ease-km) group-hover:bg-km-white sm:p-2">
+      <span className="block bg-km-plate p-1.5 transition-colors duration-(--duration-km) ease-(--ease-km) group-hover:bg-km-plate-bright sm:p-2">
         <Image
           src="/brand/KMC_CIS_Final_20240108_LOGO.png"
           alt=""

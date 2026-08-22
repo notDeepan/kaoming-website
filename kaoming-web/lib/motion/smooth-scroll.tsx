@@ -11,6 +11,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { detectLowPower } from '@/lib/three/quality';
 import { gsap, ScrollTrigger } from './gsap';
 
 /**
@@ -21,6 +22,19 @@ import { gsap, ScrollTrigger } from './gsap';
  * Under `prefers-reduced-motion` Lenis is not instantiated at all — native
  * scrolling is the calm variant (Part P). Consumers keep working because
  * `useScrollSignal` falls back to a passive window listener.
+ *
+ * The same is true on a machine that cannot afford it. Smooth scroll is not
+ * free: every frame it moves the document and re-runs ScrollTrigger against
+ * every trigger on the page, and on a four-core office desktop that turns
+ * scrolling into stuttering — which is the single most visible thing wrong with
+ * this site on the machines its buyers actually use. `detectLowPower` drops
+ * those visitors onto native scroll.
+ *
+ * Note what this deliberately does NOT do: it does not set `reducedMotion`.
+ * Reduced motion is a stated preference and it unpins scenes, stops scrubs and
+ * flattens the whole choreography site-wide. A slow computer is not a request
+ * for the calm variant — it is a reason to stop paying for one luxury. The
+ * visitor keeps every scene; the browser scrolls the page.
  */
 
 export type ScrollSignal = {
@@ -33,9 +47,15 @@ export type ScrollSignal = {
 };
 
 type SmoothScrollContextValue = {
-  /** The live instance, or null when reduced motion is on. */
+  /** The live instance, or null when smooth scroll is off. */
   lenisRef: { current: Lenis | null };
   reducedMotion: boolean;
+  /**
+   * True when Lenis is driving the page. False under reduced motion and on a
+   * machine `detectLowPower` judged cannot afford it — two different reasons
+   * for the same fallback, kept apart so callers can tell them apart.
+   */
+  smooth: boolean;
   subscribe: (listener: (signal: ScrollSignal) => void) => () => void;
   scrollTo: (target: string | number | HTMLElement, options?: { offset?: number }) => void;
   stop: () => void;
@@ -63,6 +83,14 @@ function usePrefersReducedMotion() {
 
 export function SmoothScrollProvider({ children }: { children: ReactNode }) {
   const reducedMotion = usePrefersReducedMotion();
+  // Starts false so the server and the first client paint agree, exactly as
+  // `usePrefersReducedMotion` does; the effect corrects it before Lenis is
+  // instantiated, because the instantiation is itself in an effect.
+  const [lowPower, setLowPower] = useState(false);
+  // Declared here, before the effect that reads it: the dependency array is
+  // evaluated during render, so a `const` further down would be in its temporal
+  // dead zone at that point.
+  const smooth = !reducedMotion && !lowPower;
   const lenisRef = useRef<Lenis | null>(null);
   const listenersRef = useRef(new Set<(signal: ScrollSignal) => void>());
 
@@ -71,7 +99,11 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (reducedMotion) return;
+    setLowPower(detectLowPower());
+  }, []);
+
+  useEffect(() => {
+    if (!smooth) return;
 
     const lenis = new Lenis({
       // Weighted, framerate-independent easing — prime directive 6, "lerp
@@ -113,7 +145,7 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, [reducedMotion, emit]);
+  }, [smooth, emit]);
 
   const subscribe = useCallback((listener: (signal: ScrollSignal) => void) => {
     listenersRef.current.add(listener);
@@ -153,8 +185,8 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<SmoothScrollContextValue>(
-    () => ({ lenisRef, reducedMotion, subscribe, scrollTo, stop, start }),
-    [reducedMotion, subscribe, scrollTo, stop, start],
+    () => ({ lenisRef, reducedMotion, smooth, subscribe, scrollTo, stop, start }),
+    [reducedMotion, smooth, subscribe, scrollTo, stop, start],
   );
 
   return <SmoothScrollContext value={value}>{children}</SmoothScrollContext>;
@@ -173,14 +205,18 @@ export function useSmoothScroll() {
  * ticker, so it must only touch refs and the DOM — never setState per event.
  */
 export function useScrollSignal(handler: (signal: ScrollSignal) => void) {
-  const { subscribe, reducedMotion } = useSmoothScroll();
+  const { subscribe, smooth } = useSmoothScroll();
   const handlerRef = useRef(handler);
   handlerRef.current = handler;
 
   useEffect(() => {
     const forward = (signal: ScrollSignal) => handlerRef.current(signal);
 
-    if (!reducedMotion) return subscribe(forward);
+    // `smooth`, not `lenisRef.current`: child effects run before the provider's,
+    // so on first mount the instance does not exist yet and reading the ref here
+    // would strand every subscriber on the native listener for good. `smooth` is
+    // state, so this re-runs the moment the answer changes.
+    if (smooth) return subscribe(forward);
 
     // Native-scroll fallback: derive direction from the previous offset.
     let previous = window.scrollY;
@@ -194,5 +230,5 @@ export function useScrollSignal(handler: (signal: ScrollSignal) => void) {
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [subscribe, reducedMotion]);
+  }, [subscribe, smooth]);
 }

@@ -5,6 +5,8 @@ import { CERTIFICATIONS, COMPANY } from '@/lib/company';
 import { navSections } from '@/lib/nav';
 import { productCategories } from '@/lib/taxonomy';
 import { LanguageSwitcher } from './language-switcher';
+import { SocialLinks } from './social-links';
+import { ThemeToggle } from './theme-toggle';
 
 /**
  * Part E.2 — four columns (Products / Company / Resources / Contact + HQ),
@@ -94,7 +96,8 @@ export async function SiteFooter() {
           </section>
         </div>
 
-        {/* Certifications strip */}
+        {/* Certifications strip, and the accounts KAO MING actually runs. Both
+            are the same kind of claim — verifiable, and linked to the record. */}
         <div className="mt-16 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-km-steel-600/60 pt-6">
           <h2 className="km-label text-km-steel-400">{t('certifications')}</h2>
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
@@ -104,11 +107,16 @@ export async function SiteFooter() {
               </li>
             ))}
           </ul>
+
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:ms-auto">
+            <h2 className="km-label text-km-steel-400">{t('follow')}</h2>
+            <SocialLinks heading={t('follow')} className="-me-2" />
+          </div>
         </div>
 
         <div className="mt-10 flex flex-col gap-6 border-t border-km-steel-600/60 pt-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex items-end gap-4">
-            <span className="block bg-km-paper p-2">
+            <span className="block bg-km-plate p-2">
               <Image
                 src="/brand/KMC_CIS_Final_20240108_LOGO.png"
                 alt={COMPANY.legalName}
@@ -126,7 +134,10 @@ export async function SiteFooter() {
           </div>
 
           <div className="flex flex-col gap-3 lg:items-end">
-            <LanguageSwitcher className="-ms-2 lg:-me-2 lg:ms-0" />
+            <div className="-ms-2 flex flex-wrap items-center gap-x-2 lg:-me-2 lg:ms-0">
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </div>
             <p className="text-small text-km-steel-400">
               © {new Date().getFullYear()} {COMPANY.legalName} {t('rights')}
             </p>

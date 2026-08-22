@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { routing } from '@/i18n/routing';
 import { APPLICATION_SLUGS } from '@/lib/applications';
 import { catalogues } from '@/lib/catalogue';
+import { newsSlugs } from '@/lib/news';
 import { allSeries } from '@/lib/machines';
 import { productCategories } from '@/lib/taxonomy';
 import { ALLOW_INDEXING, SITE_URL } from '@/lib/site';
@@ -25,6 +26,7 @@ import { ALLOW_INDEXING, SITE_URL } from '@/lib/site';
 const STATIC_PATHS = [
   '',
   '/products',
+  '/news',
   '/applications',
   ...APPLICATION_SLUGS.map((slug) => `/applications/${slug}`),
   '/technology',
@@ -58,6 +60,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...productCategories.map((category) => `/products/${category.slug}`),
     ...allSeries.map((series) => `/products/${series.categorySlug}/${series.slug}`),
     ...catalogues.map((catalogue) => `/catalogue/${catalogue.slug}`),
+    ...newsSlugs.map((slug) => `/news/${slug}`),
   ];
 
   return routing.locales.flatMap((locale) =>

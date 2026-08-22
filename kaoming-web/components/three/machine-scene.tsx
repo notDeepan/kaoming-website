@@ -17,6 +17,18 @@ import {
   type QualityStep,
   type QualityTier,
 } from '@/lib/three/quality';
+import { useTheme } from '@/lib/use-theme';
+
+/**
+ * The hall, in each theme.
+ *
+ * These are the same two values `--color-km-black` takes in app/globals.css,
+ * repeated as literals rather than read from `getComputedStyle`: the renderer
+ * needs a number before first frame, and a style read at that moment is a
+ * forced layout on the critical path. They are the clear colour AND the floor,
+ * so the machine always sits in a room the colour of the page around it.
+ */
+const FIELD = { dark: '#0c0b0a', light: '#f2f0ea' } as const;
 
 /**
  * The persistent Canvas (Part C.3). One per 3D page, never two fighting for a
@@ -64,6 +76,8 @@ export function MachineScene({
 }) {
   const quality = stateFor(tier, step, pinned);
   const machine = useRef<Group>(null);
+  const theme = useTheme();
+  const field = FIELD[theme];
 
   return (
     <Canvas
@@ -75,7 +89,8 @@ export function MachineScene({
       gl={{
         antialias: quality.tier !== 'low',
         powerPreference: 'high-performance',
-        // The page behind the canvas is the same black; no need to composite.
+        // The page behind the canvas is the same colour as the scene's clear
+        // colour in either theme, so there is nothing to composite against.
         alpha: false,
       }}
       camera={{ fov: 38, near: 0.5, far: 120 }}
@@ -89,9 +104,9 @@ export function MachineScene({
       style={{ position: 'absolute', inset: 0 }}
     >
       <QualityContext value={{ ...quality, setTier: () => {}, reset: () => {} }}>
-        <color attach="background" args={['#0c0b0a']} />
+        <color attach="background" args={[field]} />
 
-        <Stage />
+        <Stage field={field} light={theme === 'light'} />
         <MachineModel slug={slug} tier={quality.tier} groupRef={machine} />
         <ExplodeRig root={machine} activeObject={activeObject} />
 
@@ -103,7 +118,7 @@ export function MachineScene({
           onScrubbedChange={onScrubbedChange}
         />
 
-        <PostFx bloom={quality.bloom} grain={quality.grain} />
+        <PostFx bloom={quality.bloom} grain={quality.grain} light={theme === 'light'} />
 
         {/* Drei's own adaptive DPR handles momentary dips; our watchdog handles
             a device that is simply too slow, and walks the Part O ladder. */}

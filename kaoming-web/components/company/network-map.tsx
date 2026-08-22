@@ -5,17 +5,28 @@ import { useMemo, useState } from 'react';
 import { track } from '@/lib/analytics';
 import { Link } from '@/i18n/navigation';
 import { markersFor, regions, type Agent } from '@/lib/distributors';
+import { WORLD_LAND_PATH } from '@/content/company/world-land';
 
 /**
  * The global network (Part J.4).
  *
- * **Why there are no coastlines.** The spec asks for a brand-styled SVG map
- * rather than Google tiles. Nobody supplied a base map, and drawing one from
- * memory would put a fabricated picture of the world on a page whose entire
- * purpose is to be accurate about where KAO MING actually has representation. So
- * the map is a graticule — real latitude and longitude lines — and the markers
- * sit at their countries' real coordinates. The arrangement carries the
- * geography, and every claim on the page is one KAO MING made.
+ * **The base map.** The spec asks for a brand-styled SVG map rather than Google
+ * tiles, and an earlier build shipped only a graticule, on the reasoning that
+ * nobody had supplied a coastline and inventing one would put a fabricated
+ * picture of the world on a page whose whole purpose is accuracy. The reasoning
+ * was right and the conclusion was wrong: a field of dots on ruled lines does
+ * not read as restraint, it reads as a map that failed to load — which is
+ * exactly how it was reported.
+ *
+ * The answer is not to draw a coastline but to use a surveyed one. Natural
+ * Earth's 1:110m land, public domain, projected at authoring time into this
+ * component's own frame by scripts/generate-world-land.py. Nothing is invented,
+ * nothing is fetched, and because the coastline and the markers come out of the
+ * same projection, a marker cannot sit off its own country.
+ *
+ * The graticule stays on top of it, lighter than before: with continents to read
+ * against it is no longer the only spatial reference, so it can go back to being
+ * what it is — a grid.
  *
  * A marker is a country, not an agent: Canada, Belgium, France, Russia, India,
  * Japan, China and Taiwan each have more than one, and the spec requires a
@@ -82,13 +93,30 @@ export function NetworkMap({ domesticDefault }: { domesticDefault: boolean }) {
           aria-label={t('mapAlt', { count: markers.length })}
           className="block h-auto w-full"
         >
-          {/* The graticule: meridians every 30°, parallels every 20°. Real
-              lines, and the only spatial reference on the page — with no
-              coastlines to read against, a marker means nothing unless the frame
-              it sits in is legible. The equator and the prime meridian are drawn
-              heavier and labelled, because those two are what let someone place
-              the rest at a glance. */}
-          <g stroke="var(--color-km-steel-600)" strokeWidth="0.75" opacity="0.55">
+          {/* Land first, so everything else sits over it. Filled in the raised
+              surface colour with a hairline coast: the continents read as plate
+              rather than as illustration, which is the register the rest of the
+              site is in. `fillRule` matters — the path carries lakes and inland
+              seas as reversed rings, and without it the Caspian fills in. */}
+          <path
+            d={WORLD_LAND_PATH}
+            fillRule="evenodd"
+            fill="var(--color-km-steel-800)"
+            /* The coast is the only edge between two adjacent greys, so it does
+               the separating: drawn in the muted type colour rather than the
+               hairline colour, which is a step too faint to read the shape of a
+               continent by. */
+            stroke="var(--color-km-steel-400)"
+            strokeOpacity="0.55"
+            strokeWidth="0.7"
+            strokeLinejoin="round"
+          />
+
+          {/* The graticule: meridians every 30°, parallels every 20°. Lighter
+              than the coastline it lies over — it is a grid now, not the only
+              way to read the picture. The equator and the prime meridian stay
+              heavier and labelled. */}
+          <g stroke="var(--color-km-steel-600)" strokeWidth="0.5" opacity="0.35">
             {Array.from({ length: 13 }, (_, index) => (
               <line
                 key={`m${index}`}
@@ -104,7 +132,7 @@ export function NetworkMap({ domesticDefault }: { domesticDefault: boolean }) {
           </g>
 
           {/* Equator: 0° latitude on a 72°N–52°S frame. */}
-          <g stroke="var(--color-km-steel-400)" strokeWidth="1" opacity="0.7">
+          <g stroke="var(--color-km-steel-400)" strokeWidth="0.8" opacity="0.5">
             <line x1={0} y1={(72 / 124) * 460} x2={1000} y2={(72 / 124) * 460} />
             <line x1={500} y1={0} x2={500} y2={460} />
           </g>
@@ -123,12 +151,23 @@ export function NetworkMap({ domesticDefault }: { domesticDefault: boolean }) {
             const active = open === marker.country;
             return (
               <g key={marker.country}>
+                {/* A marker sits on land, and land is now the same family of
+                    greys the marker is. The ring in the page field is what
+                    separates them — a stroke in the marker's own colour would
+                    only make the dot bigger. */}
+                <circle
+                  cx={x}
+                  cy={y}
+                  r={active ? 11.5 : 7.5}
+                  fill="var(--color-km-black)"
+                  opacity="0.85"
+                />
                 <circle
                   cx={x}
                   cy={y}
                   r={active ? 10 : 6}
                   fill={active ? 'var(--color-km-red)' : 'var(--color-km-blue)'}
-                  opacity={active ? 1 : 0.8}
+                  opacity={active ? 1 : 0.9}
                 />
                 {marker.agents.length > 1 ? (
                   <text
@@ -137,7 +176,7 @@ export function NetworkMap({ domesticDefault }: { domesticDefault: boolean }) {
                     textAnchor="middle"
                     className="font-mono"
                     fontSize="8"
-                    fill="var(--color-km-ink)"
+                    fill="var(--color-km-on-brand)"
                   >
                     {marker.agents.length}
                   </text>
@@ -195,7 +234,7 @@ export function NetworkMap({ domesticDefault }: { domesticDefault: boolean }) {
 
 function tabClass(active: boolean) {
   return `km-label min-h-11 border px-4 py-2 transition-colors duration-(--duration-km) ease-(--ease-km) ${
-    active ? 'border-km-red bg-km-red text-km-paper' : 'border-km-steel-600 text-km-offwhite hover:border-km-offwhite'
+    active ? 'border-km-red bg-km-red text-km-on-brand' : 'border-km-steel-600 text-km-offwhite hover:border-km-offwhite'
   }`;
 }
 

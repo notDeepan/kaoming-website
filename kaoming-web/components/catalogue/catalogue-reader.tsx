@@ -237,7 +237,7 @@ export function CatalogueReader({ catalogue, title }: { catalogue: Catalogue; ti
                 }}
                 className={`km-label min-h-11 min-w-11 border px-2 transition-colors duration-(--duration-km) ${
                   entry.page === page
-                    ? 'border-km-red bg-km-red text-km-paper'
+                    ? 'border-km-red bg-km-red text-km-on-brand'
                     : 'border-km-steel-600/60 text-km-steel-400 hover:text-km-offwhite'
                 }`}
               >
@@ -295,7 +295,7 @@ export function CatalogueReader({ catalogue, title }: { catalogue: Catalogue; ti
                   <Link
                     href={`/products/${machine.category}/${machine.slug}`}
                     data-explore-3d={machine.model}
-                    className="km-label inline-flex min-h-11 items-center gap-2.5 border border-km-blue px-4 py-2 text-km-blue transition-colors duration-(--duration-km) ease-(--ease-km) hover:bg-km-blue hover:text-km-ink"
+                    className="km-label inline-flex min-h-11 items-center gap-2.5 border border-km-blue px-4 py-2 text-km-blue transition-colors duration-(--duration-km) ease-(--ease-km) hover:bg-km-blue hover:text-km-on-brand"
                   >
                     {t('explore3d', { model: machine.model })}
                   </Link>
