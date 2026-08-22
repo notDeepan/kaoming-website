@@ -215,6 +215,61 @@ with sync_playwright() as p:
     persisted = page.evaluate("() => document.documentElement.getAttribute('data-theme')")
     check("the choice survives a navigation", persisted == "dark", persisted or "")
 
+    # Three switches are mounted at once — header, footer, mobile menu — and the
+    # footer's is unconditional, so at least two are live on every viewport. An
+    # earlier version gave each its own state, synced once at mount: clicking the
+    # footer left the header showing the old icon, and the header's next click
+    # then recomputed from that stale value and re-applied the theme already on,
+    # so it looked dead. Drive one and assert on the others.
+    page.goto(BASE + "/en", wait_until="load", timeout=60_000)
+    page.wait_for_timeout(300)
+
+    header_toggle = page.locator("header [data-theme-toggle]").first
+    footer_toggle = page.locator("footer [data-theme-toggle]").first
+    check(
+        "the header and the footer each carry a switch",
+        header_toggle.count() == 1 and footer_toggle.count() == 1,
+    )
+
+    def pressed_states():
+        # Only the ones a visitor can actually reach: the mobile menu's copy is
+        # in the DOM behind a closed overlay on a desktop viewport.
+        return page.eval_on_selector_all(
+            "header [data-theme-toggle], footer [data-theme-toggle]",
+            "els => els.map(e => e.getAttribute('aria-pressed'))",
+        )
+
+    # Clicked through the DOM rather than with the mouse. Lenis owns scroll on
+    # this page, so Playwright's scroll-into-view and Lenis fight over where the
+    # footer is and the click never becomes actionable. What is under test here
+    # is state synchronisation between two mounted switches, not hit-testing —
+    # m8-smoke.py is where reachability is asserted.
+    before_click = pressed_states()
+    page.eval_on_selector("footer [data-theme-toggle]", "el => el.click()")
+    page.wait_for_timeout(250)
+    after_click = pressed_states()
+    after_footer = page.evaluate("() => document.documentElement.getAttribute('data-theme')")
+
+    check(
+        "clicking one switch updates the other",
+        len(set(after_click)) == 1 and after_click != before_click,
+        f"{before_click} -> {after_click}",
+    )
+
+    # And the stale-state consequence: the switch that was NOT clicked must now
+    # reverse the theme, not re-apply the one already on.
+    page.eval_on_selector("header [data-theme-toggle]", "el => el.click()")
+    page.wait_for_timeout(250)
+    reversed_to = page.evaluate("() => document.documentElement.getAttribute('data-theme')")
+    # Relative to whatever the footer click left it on, not to a fixed value:
+    # the theme carried over from the persistence check above, so hard-coding
+    # "light" here would only be testing the order of the checks.
+    check(
+        "a switch that was not clicked still reverses the theme",
+        reversed_to != after_footer,
+        f"{after_footer} -> {reversed_to}",
+    )
+
     browser.close()
 
 width = max(len(name) for name, _, _ in results)

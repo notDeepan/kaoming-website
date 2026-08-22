@@ -69,8 +69,9 @@ export function useQuality(): QualityApi {
 /**
  * What the GPU calls itself, via WEBGL_debug_renderer_info, or null.
  *
- * Reading it costs a throwaway WebGL context, so the result is memoised: this
- * is called once per page by `detectTier` and once by `detectLowPower`.
+ * Reading it costs a throwaway WebGL context, so the result is memoised. There
+ * is exactly one caller: `detectTier`, through `isWeakGpu`. `detectLowPower` is
+ * GPU-blind on purpose — see its own note — so it is not one.
  *
  * The extension is unmasked in Chromium and Firefox and absent in Safari, which
  * is fine — Safari only runs on Apple silicon and Apple integrated graphics,

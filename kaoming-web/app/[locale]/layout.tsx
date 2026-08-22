@@ -104,6 +104,12 @@ export default async function LocaleLayout({
          document has no theme to flash out of. The script below only corrects
          this for someone who has chosen otherwise. */
       data-theme={DEFAULT_THEME}
+      /* Because the script corrects it BEFORE hydration, a returning dark-theme
+         visitor hydrates an <html> whose attribute no longer matches what the
+         server sent. That divergence is the point of the technique, so React is
+         told not to treat it as a mismatch. Scoped to this element's own
+         attributes — it does not extend to the tree below. */
+      suppressHydrationWarning
     >
       <body className="min-h-dvh bg-km-black antialiased">
         {/*

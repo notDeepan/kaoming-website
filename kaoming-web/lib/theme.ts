@@ -28,7 +28,14 @@ export function isTheme(value: unknown): value is Theme {
 }
 
 /**
- * The blocking script in <head>.
+ * The blocking script, rendered as the FIRST CHILD OF <body> — not in <head>.
+ *
+ * That placement is deliberate and load-bearing: a hand-written <head> in this
+ * app closes before Next has streamed the page's metadata into it, which pushes
+ * <meta name="robots"> out and silently voids `noindex` on /rfq and /compare.
+ * `app/[locale]/layout.tsx` carries the same warning over the font preloads.
+ * A synchronous script at the top of <body> still runs before the rest of the
+ * body is parsed, which is all this needs. Do not "tidy" it into <head>.
  *
  * Kept as a string, and deliberately tiny, because it runs before first paint on
  * every page. It only ever *corrects* the server's attribute, so the common case

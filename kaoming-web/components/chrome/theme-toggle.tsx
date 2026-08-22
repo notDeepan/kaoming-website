@@ -1,40 +1,35 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
-import {
-  DEFAULT_THEME,
-  isTheme,
-  THEME_STORAGE_KEY,
-  THEME_SWITCHING_ATTRIBUTE,
-  type Theme,
-} from '@/lib/theme';
+import { THEME_STORAGE_KEY, THEME_SWITCHING_ATTRIBUTE, type Theme } from '@/lib/theme';
+import { useTheme } from '@/lib/use-theme';
 
 /**
  * The light / dark switch (Part E.2, beside the language switcher).
  *
- * Reads the live attribute rather than holding its own idea of the theme.
- * `<html data-theme>` is set by the server and may already have been corrected
- * by the blocking script in <head> before React ever runs, so the DOM is the
- * only honest source; a `useState(DEFAULT_THEME)` here would render the wrong
- * icon for one frame on every page load for anyone who has chosen dark.
+ * **Three of these are mounted at once** — the header, the footer, and the
+ * mobile menu — and the footer's is unconditional, so on every viewport at least
+ * two are live on every page. That is the whole reason this reads the theme
+ * through `useTheme()`, which observes the `data-theme` attribute, rather than
+ * holding its own state.
  *
- * The read happens in an effect, not during render, for the same reason the
- * button starts out labelled from `DEFAULT_THEME`: reading the DOM during a
- * server render is impossible and during hydration is a mismatch.
+ * An earlier version did hold its own, synced once in a mount effect. Clicking
+ * the footer switch then left the header switch showing the old icon, and its
+ * next click computed `next` from that stale value — re-applying the theme
+ * already on, so the button appeared dead until it self-corrected. The attribute
+ * is the one thing every writer agrees on, which is exactly what `useTheme`'s
+ * own docblock says.
  */
 export function ThemeToggle({ className = '' }: { className?: string }) {
   const t = useTranslations('Header');
-  const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
-
-  useEffect(() => {
-    const current = document.documentElement.getAttribute('data-theme');
-    if (isTheme(current)) setTheme(current);
-  }, []);
+  const theme = useTheme();
 
   const toggle = () => {
-    const next: Theme = theme === 'dark' ? 'light' : 'dark';
     const root = document.documentElement;
+    // Read the attribute rather than the rendered value: two clicks inside one
+    // frame would otherwise both see the same pre-click theme.
+    const current: Theme = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next: Theme = current === 'dark' ? 'light' : 'dark';
 
     // Every hairline, label and panel on the page carries a colour transition.
     // Flipping the palette with those live turns the switch into a 250 ms
@@ -53,7 +48,8 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       // load; it simply is not remembered, which is the right failure.
     }
 
-    setTheme(next);
+    // No setState: the MutationObserver in `useTheme` has just fired, and every
+    // other switch on the page is re-rendering from the same signal.
   };
 
   const dark = theme === 'dark';

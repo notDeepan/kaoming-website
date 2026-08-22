@@ -82,7 +82,7 @@ python tests/theme-audit.py   # both themes, WCAG contrast computed per surface
 python tests/perf-guards.py   # GPU tier cap and the smooth-scroll gate
 ```
 
-**461 checks, all green.** Every one needs the production server running. The M2
+**464 checks, all green.** Every one needs the production server running. The M2
 suite also needs a database (`npm run db:migrate`) and posts enough enquiries to
 trip the rate limiter, so run it with `RFQ_RATE_MAX=40`.
 
