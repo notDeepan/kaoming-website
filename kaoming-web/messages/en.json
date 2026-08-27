@@ -377,7 +377,8 @@
     "open": "Compare",
     "differs": "Differs",
     "quoteFor": "Request a quote",
-    "notStated": "Not stated in the catalogue"
+    "notStated": "Not stated in the catalogue",
+    "emptyPick": "Pick up to three. Every figure below is transcribed from the 2026 catalogues."
   },
   "Search": {
     "open": "Search",
@@ -481,8 +482,9 @@
     "indexTitle": "Where these machines are used",
     "indexLede": "Six industries. What follows on each page is what KAO MING has published, which in most cases is the way type suited to the work.",
     "tile": {
-      "stated": "{count} stated by KAO MING",
-      "pending": "Nothing published yet"
+      "stated": "{count, plural, one {# application stated by KAO MING} other {# applications stated by KAO MING}}",
+      "pending": "KAO MING has published nothing for this industry yet",
+      "action": "View industry"
     },
     "gap": "KAO MING's own applications pages have never been filled in — their site audit records the industry, materials and multi-angle machining sections as empty. These pages are built and routed; they are waiting on content only.",
     "pageTitle": "{industry}",

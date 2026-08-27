@@ -66,11 +66,48 @@ export function CompareTable({
       });
   }, [rowOrder, selected]);
 
+  /*
+   * Nothing selected yet.
+   *
+   * This used to be a 24rem box holding one sentence and a button — a quarter of
+   * a screen of ruled emptiness, and the largest dead element on the site. The
+   * sentence was also an instruction ("add machines from any product page")
+   * rather than a way to do the thing.
+   *
+   * The whole comparable set is already a prop and the selection is just a URL
+   * parameter, so the empty state can be the picker: every series listed, one
+   * click away from being in the comparison. No store, no height to reserve —
+   * the panel is as tall as its contents.
+   */
   if (!selected.length) {
     return (
-      <div className="mt-14 min-h-[24rem] border border-km-steel-600/60 p-10">
-        <p className="text-km-steel-400">{t('empty')}</p>
-        <Action href="/products" variant="secondary" className="mt-6">
+      <div className="mt-14 border-t border-km-steel-600/60">
+        <p className="km-label mt-6 max-w-[60ch] text-km-steel-400">{t('emptyPick')}</p>
+
+        <ul className="mt-8 grid gap-px sm:grid-cols-2 xl:grid-cols-3">
+          {series.map((entry) => (
+            <li key={entry.slug}>
+              <Link
+                href={{ pathname: '/compare', query: { m: entry.slug } }}
+                data-pick={entry.slug}
+                className="group flex min-h-24 items-center justify-between gap-6 border-b border-km-steel-600/40 py-5 transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red sm:pe-8"
+              >
+                <span className="min-w-0">
+                  <span className="block font-display text-body text-km-paper">{entry.name}</span>
+                  <span className="mt-1 block text-small text-km-steel-400">{entry.type}</span>
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="km-label shrink-0 text-km-steel-400 transition-colors duration-(--duration-km) group-hover:text-km-red-glow"
+                >
+                  +
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <Action href="/products" variant="text" className="mt-10">
           {t('browse')}
         </Action>
       </div>
@@ -78,7 +115,7 @@ export function CompareTable({
   }
 
   return (
-    <div className="mt-14 min-h-[24rem] overflow-x-auto">
+    <div className="mt-14 overflow-x-auto">
       <table className="w-full min-w-[48rem] border-collapse text-left">
         <caption className="sr-only">{t('title')}</caption>
         <thead>

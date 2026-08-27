@@ -38,7 +38,23 @@ export function SectionHeader({
       {index ? <MarginIndex index={index} /> : null}
 
       <div className="relative flex flex-col gap-x-16 gap-y-8 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-[24ch]">
+        {/*
+         * The measure is in rem, not ch.
+         *
+         * `max-w-[24ch]` looks right and is not: `ch` resolves against the
+         * element's OWN font-size, and this wrapper inherits the 17px body size
+         * while the h2 inside it is set at up to 52px. That made the title block
+         * 257px wide for a 52px headline — "What has been registered and
+         * awarded" came out as five lines of one word each, which reads as a
+         * broken column rather than a title block. Every section on the site was
+         * affected.
+         *
+         * 34rem is a title measure at display size: two or three lines for a long
+         * title, still visibly narrower than the field it sits in, and still
+         * wider than the lede beside it, which is the relationship this header
+         * is built on.
+         */}
+        <div className="max-w-[34rem]">
           {label ? (
             <p className="km-label mb-6 flex items-center gap-4 text-km-steel-400">
               {/* The leader. Runs from the label out past the edge of the

@@ -166,6 +166,15 @@ A fourth pass, from a page-by-page read:
 | **One scroll idiom** | The machine band had a clip-path wipe of its own while every other section used the shared fade-and-rise, which made the page read as two pages stitched together. `hero-sequence.tsx` is gone; everything below the hero is `Reveal`. |
 | **Hero copy** | "Precision machine tools since 1968", *Our machines* → `/products`, *Contact us* → `/support/contact`. |
 
+A fifth pass, from a whole-site critique:
+
+| | |
+|---|---|
+| **Every section title was set in a 257px column** | `SectionHeader` capped its title block at `max-w-[24ch]`, and `ch` resolves against the element's *own* font-size — the wrapper inherits 17px while the h2 inside is up to 52px. "What has been registered and awarded" came out as five lines of one word. Now measured in rem, at display size: 1–3 lines. Affected every section on the site. |
+| **The compare page's empty state was a 24rem dead box** | One sentence and a button in a quarter-screen of ruled emptiness — and the sentence was an instruction rather than a way to do the thing. The whole comparable set is already a prop and the selection is just a URL parameter, so the empty state *is* the picker now: nine series, one click into the comparison. |
+| **The applications index was six identical boxes** | Each with a name, a line of grey text and a bare `→` — the "too many boxes" Part B.2 puts on its own avoid list. Now a numbered index: rule per row, industry set large, what KAO MING has actually published stated as a figure, a real link label. The one industry with nothing published says so instead of looking like the five that do. |
+| **"1 stated by KAO MING"** | One what. Now "1 application stated by KAO MING", properly pluralised in both locales. |
+
 `tests/theme-audit.py` grew three checks for this: the contrast sweep cannot see
 a photograph through a transparent scrim, so the hero and the over-media header
 are excluded from it and asserted explicitly instead — the type is the
