@@ -116,7 +116,7 @@ export async function SiteFooter() {
 
         <div className="mt-10 flex flex-col gap-6 border-t border-km-steel-600/60 pt-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex items-end gap-4">
-            <span className="block bg-km-plate p-2">
+            <span className="block bg-km-plate-frost p-2 ring-1 ring-km-plate-edge backdrop-blur-md">
               <Image
                 src="/brand/KMC_CIS_Final_20240108_LOGO.png"
                 alt={COMPANY.legalName}

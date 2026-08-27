@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { NetworkMap } from '@/components/company/network-map';
 import { PageHeader, Provenance, SHELL } from '@/components/ui/page-shell';
+import { Figures } from '@/components/ui/figures';
 import { routing } from '@/i18n/routing';
 import { networkCounts, VERIFY_BEFORE_LAUNCH } from '@/lib/distributors';
 import { alternatesFor } from '@/lib/site';
@@ -54,18 +55,12 @@ export default async function NetworkPage({ params }: { params: Promise<{ locale
           countries: networkCounts.countries,
         })}
         aside={
-          <dl className="flex gap-10">
-            <div>
-              <dd className="font-mono text-spec-xl text-km-paper">
-                {networkCounts.international}
-              </dd>
-              <dt className="km-label mt-2 text-km-steel-400">{t('figures.agents')}</dt>
-            </div>
-            <div>
-              <dd className="font-mono text-spec-xl text-km-paper">{networkCounts.countries}</dd>
-              <dt className="km-label mt-2 text-km-steel-400">{t('figures.countries')}</dt>
-            </div>
-          </dl>
+          <Figures
+            figures={[
+              { label: t('figures.agents'), value: networkCounts.international },
+              { label: t('figures.countries'), value: networkCounts.countries },
+            ]}
+          />
         }
       />
 

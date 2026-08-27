@@ -163,15 +163,21 @@ CONTRAST_JS = r"""
 """
 
 
+def parse_rgb(value):
+    """(r, g, b, a) from a computed colour, accepting rgb() and rgba()."""
+    inner = value[value.index("(") + 1 : value.rindex(")")]
+    parts = [float(p) for p in inner.replace("/", " ").replace(",", " ").split()]
+    return parts[0], parts[1], parts[2], parts[3] if len(parts) > 3 else 1.0
+
+
 def luminance_of(rgb):
-    values = [int(part) for part in rgb.replace("rgb(", "").replace(")", "").split(",")]
+    r, g, b, _ = parse_rgb(rgb)
 
     def channel(v):
         v /= 255
         return v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4
 
-    r, g, b = (channel(v) for v in values[:3])
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+    return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b)
 
 
 with sync_playwright() as p:
@@ -250,10 +256,19 @@ with sync_playwright() as p:
             "() => { const i = document.querySelector('header img[src*=\"LOGO\"]');"
             " return i ? getComputedStyle(i.closest('span')).backgroundColor : null; }"
         )
+        # The plate is frosted glass now, not a solid card, so this asserts two
+        # things instead of one: the ground is still a light colour, and it is
+        # still opaque enough to lift the mark's dark ink off whatever is behind
+        # it. Fully transparent would pass a luminance check and be useless.
         check(
             f"{theme} logo plate stays light",
             plate is not None and luminance_of(plate) > 0.7,
             plate or "no plate found",
+        )
+        check(
+            f"{theme} logo plate is still a ground",
+            plate is not None and parse_rgb(plate)[3] >= 0.5,
+            f"alpha {parse_rgb(plate)[3] if plate else 'n/a'}",
         )
         context.close()
 

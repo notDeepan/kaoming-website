@@ -50,7 +50,7 @@ export async function CompanyHeroSection() {
       title={t('companyTitle')}
       body={t('companyBody')}
       primary={t('companyAction')}
-      secondary={t('requestQuote')}
+      secondary={t('companyContact')}
       scroll={t('scroll')}
     />
   );

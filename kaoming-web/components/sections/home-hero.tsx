@@ -4,7 +4,7 @@ import { DimensionRule, MachinePlate } from '@/components/ui/machine-plate';
 import { RFQ_HREF } from '@/lib/nav';
 import { seriesBySlug } from '@/lib/machines';
 import { displayImage } from '@/lib/images';
-import { HeroSequence } from './hero-sequence';
+import { Reveal } from '@/components/ui/reveal';
 
 /**
  * Part F.1 — the machine statement.
@@ -20,6 +20,11 @@ import { HeroSequence } from './hero-sequence';
  * `86svh` and the load sequence's opening light pass are gone. It is now the
  * band that opens the product half of the page, and it starts where the company
  * story finishes rather than above the fold.
+ *
+ * Its bespoke entrance went with them. It had a clip-path wipe of its own while
+ * every other section on the page used the shared fade-and-rise, which made the
+ * scroll read as two different pages stitched together. One idiom now — `Reveal`
+ * — everywhere below the hero.
  */
 export async function HomeHero() {
   const t = await getTranslations('Home');
@@ -30,14 +35,14 @@ export async function HomeHero() {
   const largest = gn?.models.at(-1);
 
   return (
-    <HeroSequence>
+    <Reveal>
       <section className="relative overflow-hidden">
         {/* 4/8, and the machine overlaps the copy rather than sitting beside it.
             A 50/50 hero with the headline in one half and the product in the
             other is the arrangement every landing page uses; the machine is
             14.5 metres long and should dominate the frame it is in. */}
         <div className="mx-auto grid max-w-[1600px] items-center gap-x-8 gap-y-12 px-5 pt-8 pb-16 sm:px-6 lg:grid-cols-[minmax(0,38%)_1fr] xl:px-10">
-          <div data-hero-copy className="relative z-1">
+          <div data-reveal className="relative z-1">
             {/* Not `eyebrow` any more — the hero above already says "Since 1968
                 · Houli, Taichung", and repeating it two screens later reads as a
                 template rather than a page. */}
@@ -61,7 +66,7 @@ export async function HomeHero() {
           </div>
 
           {hero ? (
-            <div data-hero-machine className="lg:-mt-24">
+            <div data-reveal className="lg:-mt-24">
               {/* The machine runs off the right edge — it is 14.5 metres long and
                   should not sit politely inside a margin. The dimension rule
                   stays inside the grid so its value is never clipped with it. */}
@@ -86,6 +91,6 @@ export async function HomeHero() {
         </div>
 
       </section>
-    </HeroSequence>
+    </Reveal>
   );
 }

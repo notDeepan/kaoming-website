@@ -2,8 +2,9 @@ import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { Action } from '@/components/ui/action';
 import { Counter } from '@/components/ui/counter';
-import { Bleed, BEAT, COMPARISON, RAIL, SHELL, VOID } from '@/components/ui/layout';
+import { Bleed, BEAT, RAIL, SHELL, VOID } from '@/components/ui/layout';
 import { ProductCard } from '@/components/ui/product-card';
+import { FigureStrip } from '@/components/ui/figures';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
 import { Link } from '@/i18n/navigation';
@@ -176,10 +177,17 @@ export async function TechnologyTeaser() {
           {/* Three measurements of one scraped surface, read together — so one
               baseline. They were on three different heights, which made a set of
               related figures look like three unrelated boasts. */}
-          <dl className={`${COMPARISON} grid-cols-2 sm:grid-cols-3`}>
-            {(['ppi', 'split', 'contact'] as const).map((key) => (
-              <div key={key}>
-                <dd className="font-mono text-spec-xl text-km-paper">
+          <dl className="grid grid-cols-1 gap-y-8 sm:grid-cols-3">
+            {(['ppi', 'split', 'contact'] as const).map((key, index) => (
+              <div
+                key={key}
+                className={
+                  index === 0
+                    ? undefined
+                    : 'sm:border-s sm:border-km-steel-600/60 sm:ps-8 xl:ps-10'
+                }
+              >
+                <dd className="font-mono text-spec-xl leading-none text-km-paper">
                   {t(`technologyStats.${key}.value`)}
                 </dd>
                 <dt className="km-label mt-3 border-t border-km-steel-600/60 pt-3 text-km-steel-400">
@@ -224,22 +232,17 @@ export async function NumbersStrip() {
 
   return (
     <section className="mt-40 border-y border-km-steel-600/60 bg-km-charcoal sm:mt-56">
-      <Reveal
-        as="dl"
-        className={`${SHELL} ${COMPARISON} grid-cols-2 py-24 lg:grid-cols-4`}
-      >
-        {/* Aligned. These four are the company at a glance and they are read as
-            one row of facts; staggering them turned a summary into a scatter. */}
-        {stats.map((stat) => (
-          <div key={stat.key} data-reveal>
-            <dd className="font-mono text-spec-xl text-km-paper">
-              <Counter value={stat.value} suffix={stat.suffix} />
-            </dd>
-            <dt className="km-label mt-4 border-t border-km-steel-600/60 pt-4 text-km-steel-400">
-              {t(`numbers.${stat.key}`)}
-            </dt>
-          </div>
-        ))}
+      {/* Aligned. These four are the company at a glance and they are read as
+          one row of facts; staggering them turned a summary into a scatter.
+          Ruled between, so the row is read as four figures rather than as one
+          very long one. */}
+      <Reveal className={`${SHELL} py-24`}>
+        <FigureStrip
+          figures={stats.map((stat) => ({
+            label: t(`numbers.${stat.key}`),
+            value: <Counter value={stat.value} suffix={stat.suffix} />,
+          }))}
+        />
       </Reveal>
     </section>
   );

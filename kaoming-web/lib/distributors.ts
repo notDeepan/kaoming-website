@@ -252,6 +252,25 @@ export type Marker = {
 const NORTH = 72;
 const SOUTH = -52;
 
+/** The one projection. Everything on the map goes through it. */
+function project(latitude: number, longitude: number): { x: number; y: number } {
+  return { x: (longitude + 180) / 360, y: (NORTH - latitude) / (NORTH - SOUTH) };
+}
+
+/**
+ * Houli, Taichung — where every one of these machines is built and shipped from.
+ *
+ * Exported separately from the agent markers because it is not an agent: it is
+ * the point the network radiates from, it is on the map whether or not Taiwan's
+ * domestic agents are shown, and it is the only marker on the page that is a
+ * fact about KAO MING rather than about a distributor.
+ */
+export const HQ = {
+  country: 'Taiwan',
+  city: 'Houli, Taichung',
+  ...project(...(COORDINATES.Taiwan as [number, number])),
+};
+
 export function markersFor(regionId: string | null, includeDomestic: boolean): Marker[] {
   const byCountry = new Map<string, Marker>();
 
@@ -269,11 +288,9 @@ export function markersFor(regionId: string | null, includeDomestic: boolean): M
         continue;
       }
 
-      const [latitude, longitude] = coordinates;
       byCountry.set(agent.country, {
         country: agent.country,
-        x: (longitude + 180) / 360,
-        y: (NORTH - latitude) / (NORTH - SOUTH),
+        ...project(...coordinates),
         regionId: region.id,
         agents: [agent],
       });

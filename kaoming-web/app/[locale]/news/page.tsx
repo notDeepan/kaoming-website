@@ -4,6 +4,7 @@ import { NewsCard } from '@/components/company/news-card';
 import { ContentGap, PageHeader, Provenance, SHELL } from '@/components/ui/page-shell';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
+import { Figures } from '@/components/ui/figures';
 import { routing } from '@/i18n/routing';
 import { latestNewsYear, NEWS_KINDS, newsFor } from '@/lib/news';
 import { alternatesFor } from '@/lib/site';
@@ -57,16 +58,12 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
         title={t('title')}
         lede={t('lede')}
         aside={
-          <dl className="flex gap-10">
-            <div>
-              <dt className="km-label text-km-steel-400">{t('stat.entries')}</dt>
-              <dd className="mt-2 font-mono text-spec-xl text-km-paper">{items.length}</dd>
-            </div>
-            <div>
-              <dt className="km-label text-km-steel-400">{t('stat.latest')}</dt>
-              <dd className="mt-2 font-mono text-spec-xl text-km-paper">{latestNewsYear}</dd>
-            </div>
-          </dl>
+          <Figures
+            figures={[
+              { label: t('stat.entries'), value: items.length },
+              { label: t('stat.latest'), value: latestNewsYear },
+            ]}
+          />
         }
       />
 

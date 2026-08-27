@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useDeferredValue, useMemo, useRef, useState } from 'react';
 import { track } from '@/lib/analytics';
 import { Link } from '@/i18n/navigation';
-import { markersFor, regions, type Agent, type Marker } from '@/lib/distributors';
+import { HQ, markersFor, regions, type Agent, type Marker } from '@/lib/distributors';
 import { WORLD_LAND_PATH } from '@/content/company/world-land';
 
 /**
@@ -120,6 +120,7 @@ export function NetworkMap({
         onHover={setHover}
         onSelect={(country) => select(country, true)}
         alt={t('mapAlt', { count: shown.length })}
+        hqLabel={t('hq')}
       />
 
       {/*
@@ -131,6 +132,11 @@ export function NetworkMap({
        */}
       <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
         <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          {/* Square, not a dot — it is a different kind of thing. */}
+          <li className="km-label flex items-center gap-2.5 text-km-steel-400">
+            <span aria-hidden="true" className="size-2.5 shrink-0 bg-km-red" />
+            {t('legend.hq')}
+          </li>
           <LegendKey className="bg-km-blue">{t('legend.agent')}</LegendKey>
           <LegendKey className="bg-km-red">{t('legend.selected')}</LegendKey>
           <li className="km-label flex items-center gap-2.5 text-km-steel-400">
@@ -289,6 +295,7 @@ function MapPanel({
   onHover,
   onSelect,
   alt,
+  hqLabel,
 }: {
   markers: Marker[];
   open: string | null;
@@ -296,6 +303,7 @@ function MapPanel({
   onHover: (country: string | null) => void;
   onSelect: (country: string | null) => void;
   alt: string;
+  hqLabel: string;
 }) {
   const labelled = hover ? (markers.find((marker) => marker.country === hover) ?? null) : null;
 
@@ -341,6 +349,39 @@ function MapPanel({
           ))}
         </g>
 
+        {/*
+         * The reach, drawn.
+         *
+         * Every machine on this map was built in Houli and shipped to the
+         * territory the arc lands in, so an arc is a real relationship rather
+         * than decoration — which is the difference between this and the
+         * glowing node graphics it resembles. Drawn under the markers and at low
+         * opacity: it is the pattern that should register at a glance, not any
+         * one line. Hovering a country brings its own arc up to full.
+         *
+         * They bow rather than run straight because thirty-four straight lines
+         * from one point is a starburst, and a starburst reads as a diagram of
+         * itself. On an equirectangular map an arc from Taiwan to Peru crosses
+         * the whole sheet; that is what the projection does, and every network
+         * map drawn on one looks like this.
+         */}
+        <g fill="none" strokeLinecap="round">
+          {markers.map((marker) => {
+            const lit = hover === marker.country || open === marker.country;
+            return (
+              <path
+                key={`arc-${marker.country}`}
+                data-arc={marker.country}
+                d={arc(marker)}
+                stroke={lit ? 'var(--color-km-red)' : 'var(--color-km-blue)'}
+                strokeOpacity={lit ? 0.85 : 0.22}
+                strokeWidth={lit ? 1.4 : 0.7}
+                className="transition-all duration-(--duration-km) ease-(--ease-km)"
+              />
+            );
+          })}
+        </g>
+
         {markers.map((marker) => (
           <MapMarker
             key={marker.country}
@@ -351,6 +392,9 @@ function MapPanel({
             onSelect={onSelect}
           />
         ))}
+
+        {/* Last, so it sits over every arc that leaves it. */}
+        <HeadquartersMarker label={hqLabel} />
       </svg>
 
       {/*
@@ -383,6 +427,82 @@ function MapPanel({
         </div>
       ) : null}
     </div>
+  );
+}
+
+/**
+ * A bowed line from Houli to a territory.
+ *
+ * A quadratic Bézier whose control point is the midpoint pushed perpendicular
+ * to the chord. The offset is a fraction of the distance, so a short hop to
+ * Japan curves gently and a long one to Argentina curves hard — which is what
+ * keeps thirty-four of them from collapsing into a fan. It is signed by the
+ * direction of travel, so arcs leaving east and arcs leaving west bow apart
+ * instead of overlaying each other.
+ */
+function arc(marker: Marker): string {
+  const x1 = HQ.x * 1000;
+  const y1 = HQ.y * 460;
+  const x2 = marker.x * 1000;
+  const y2 = marker.y * 460;
+
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const distance = Math.hypot(dx, dy);
+  if (distance < 1) return `M${x1},${y1}L${x2},${y2}`;
+
+  const bow = distance * 0.16 * (dx > 0 ? -1 : 1);
+  const cx = (x1 + x2) / 2 + (-dy / distance) * bow;
+  const cy = (y1 + y2) / 2 + (dx / distance) * bow;
+
+  return `M${x1.toFixed(1)},${y1.toFixed(1)}Q${cx.toFixed(1)},${cy.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`;
+}
+
+/**
+ * Houli, Taichung.
+ *
+ * Not an agent, and deliberately not styled like one: a ringed square in brand
+ * red, on the map whether or not Taiwan’s domestic agents are shown, because it
+ * is where the machines are made rather than anywhere they are sold. It is the
+ * only labelled point on the map, which is what makes the arcs read as leaving
+ * somewhere rather than as a pattern.
+ */
+function HeadquartersMarker({ label }: { label: string }) {
+  const x = HQ.x * 1000;
+  const y = HQ.y * 460;
+
+  return (
+    <g data-hq aria-hidden="true">
+      <circle cx={x} cy={y} r={13} fill="var(--color-km-red)" opacity="0.16" />
+      <circle
+        cx={x}
+        cy={y}
+        r={9}
+        fill="none"
+        stroke="var(--color-km-red)"
+        strokeWidth="1.2"
+        opacity="0.6"
+      />
+      <rect
+        x={x - 4}
+        y={y - 4}
+        width={8}
+        height={8}
+        fill="var(--color-km-red)"
+        stroke="var(--color-km-black)"
+        strokeWidth="1.5"
+      />
+      <text
+        x={x + 16}
+        y={y + 3.5}
+        className="font-mono"
+        fontSize="10"
+        letterSpacing="1.2"
+        fill="var(--color-km-offwhite)"
+      >
+        {label}
+      </text>
+    </g>
   );
 }
 

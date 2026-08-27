@@ -82,7 +82,7 @@ python tests/theme-audit.py   # both themes, WCAG contrast computed per surface
 python tests/perf-guards.py   # GPU tier cap and the smooth-scroll gate
 ```
 
-**477 checks, all green.** Every one needs the production server running. The M2
+**479 checks, all green.** Every one needs the production server running. The M2
 suite also needs a database (`npm run db:migrate`) and posts enough enquiries to
 trip the rate limiter, so run it with `RFQ_RATE_MAX=40`.
 
@@ -155,6 +155,16 @@ A third pass — the landing page:
 | **A photograph is its own environment** | The hero scrim is dark and its type is light in *both* themes. The alternative — a light scrim over a bright sky — has no contrast to give and turns the photograph into a wash. `km-on-brand` is the one type colour that does not invert, which is exactly why it exists. |
 | **The header over media** | It is transparent until 80px of scroll, so on this page it sits *on* the photograph in its own colours — dark ink, in the light theme. `data-media-hero` re-points the header's role tokens to the non-inverting colour while it is still transparent, and stops the moment it goes solid. |
 | **Dropping in a better photo** | Put a file at `public/img/factory/kaoming-plant-aerial.jpg` and the hero uses it; leave it absent and it falls back to the kit image. Checked with `existsSync` at build time, because an import of a missing file is a build error and the point is that it is optional. |
+
+A fourth pass, from a page-by-page read:
+
+| | |
+|---|---|
+| **Numbers read as one number** | `FOUNDED 1968` beside `LATEST MILESTONE 2016` is read as *19682016* before the labels are. Paired figures now stack — label above value, a hairline between — and the four-across bands are ruled between cells. `components/ui/figures.tsx`. |
+| **The map now reads as a network** | An arc from Houli to every one of the 34 territories, bowed rather than straight so 34 lines from one point is not a starburst. Houli is a ringed red square, the only labelled point, present whether or not Taiwan's domestic agents are shown. Hovering a country lights its own arc. The arcs are a real relationship — every machine on the map was built there and shipped out — which is what separates this from the glowing node graphics it resembles. |
+| **The logo sat on a white card** | Over the landing photograph that was a box punched through the picture. It is frosted glass now: the same light ground at 62% with the page blurred behind it. Declared as its own token rather than `bg-km-plate/62`, because the opacity modifier compiles to `oklab(… / .62)` and stops being readable as a colour by anything inspecting it — the audit asserts both its lightness and its alpha. |
+| **One scroll idiom** | The machine band had a clip-path wipe of its own while every other section used the shared fade-and-rise, which made the page read as two pages stitched together. `hero-sequence.tsx` is gone; everything below the hero is `Reveal`. |
+| **Hero copy** | "Precision machine tools since 1968", *Our machines* → `/products`, *Contact us* → `/support/contact`. |
 
 `tests/theme-audit.py` grew three checks for this: the contrast sweep cannot see
 a photograph through a transparent scrim, so the hero and the over-media header

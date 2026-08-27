@@ -106,6 +106,15 @@
   /* The plate's hover state. Pure white in both themes for the same reason the
      plate itself is: it is under the logo, not behind the page. */
   --color-km-plate-bright: #ffffff;
+  /* The plate as frosted glass, which is what the logo actually sits on: the
+     same light ground, partly transparent, over a backdrop blur. Declared as a
+     token with its own alpha rather than written `bg-km-plate/62`, because the
+     opacity modifier compiles to `oklab(... / .62)` and the value stops being
+     readable as a colour by anything that inspects it — tests/theme-audit.py
+     asserts both the lightness and the alpha of this exact declaration. */
+  --color-km-plate-frost: rgb(250 249 246 / 0.62);
+  --color-km-plate-frost-strong: rgb(250 249 246 / 0.85);
+  --color-km-plate-edge: rgb(250 249 246 / 0.25);
 
   /* --- Type scale (Part B.3) ------------------------------------------- */
   /* CJK order is deliberate — see lib/fonts/index.ts. The platform face is

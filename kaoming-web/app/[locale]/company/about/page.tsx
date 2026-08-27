@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Action } from '@/components/ui/action';
-import { COMPARISON } from '@/components/ui/layout';
 import { PageHeader, Provenance, SHELL } from '@/components/ui/page-shell';
+import { FigureStrip } from '@/components/ui/figures';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
 import { routing } from '@/i18n/routing';
@@ -77,20 +77,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
       {/* ---------------------------------------------------- the figures */}
       <section className="border-y border-km-steel-600/60 bg-km-charcoal">
-        <Reveal
-          as="dl"
-          className={`${SHELL} ${COMPARISON} grid-cols-2 py-20 xl:grid-cols-4`}
-        >
-          {/* Founded, series, agents, plant — the company in one row, read
-              across. Aligned for the same reason the specification figures are. */}
-          {figures.map((figure) => (
-            <div key={figure.label} data-reveal>
-              <dd className="font-mono text-spec-xl text-km-paper">{figure.value}</dd>
-              <dt className="km-label mt-4 border-t border-km-steel-600/60 pt-4 text-km-steel-400">
-                {figure.label}
-              </dt>
-            </div>
-          ))}
+        {/* Founded, series, agents, plant — the company in one row, read across.
+            Aligned for the same reason the specification figures are, and ruled
+            between the cells so `1968` and `9` are not read as `19689`. */}
+        <Reveal className={`${SHELL} py-20`}>
+          <FigureStrip figures={figures} />
         </Reveal>
       </section>
 

@@ -31,25 +31,34 @@ export async function CompanyStatement() {
     <section className={`${SHELL} py-24 sm:py-32`}>
       <SectionHeader index="01" label={t('storyLabel')} title={t('storyTitle')} />
 
-      <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
+      <Reveal className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
         <div>
           {/* The origin story, as KAO MING tells it. Set at reading size rather
               than as a pull quote: it is the only paragraph on the landing page
               that is genuinely worth reading, and shrinking it to caption size
               is how a company's own account of itself becomes decoration. */}
-          <p className="max-w-[58ch] text-h3 text-balance text-km-paper">{identity.originStory}</p>
+          <p data-reveal className="max-w-[58ch] text-h3 text-balance text-km-paper">
+            {identity.originStory}
+          </p>
 
-          <Reveal as="ul" className="mt-12 flex flex-col gap-7">
+          <ul className="mt-12 flex flex-col gap-7">
             {identity.positioningClaims.map((claim) => (
-              <li key={claim} data-claim className="max-w-[56ch] border-s-2 border-km-blue ps-6">
+              <li
+                key={claim}
+                data-claim
+                data-reveal
+                className="max-w-[56ch] border-s-2 border-km-blue ps-6"
+              >
                 <p className="text-body text-km-offwhite">“{claim}”</p>
               </li>
             ))}
-          </Reveal>
+          </ul>
 
-          <p className="km-label mt-8 max-w-[64ch] text-km-steel-400">{t('storyNote')}</p>
+          <p data-reveal className="km-label mt-8 max-w-[64ch] text-km-steel-400">
+            {t('storyNote')}
+          </p>
 
-          <div className="mt-12 flex flex-wrap gap-4">
+          <div data-reveal className="mt-12 flex flex-wrap gap-4">
             <Action href="/company/about" variant="secondary">
               {t('storyAction')}
             </Action>
@@ -59,7 +68,7 @@ export async function CompanyStatement() {
           </div>
         </div>
 
-        <figure className="lg:pt-4">
+        <figure data-reveal className="lg:pt-4">
           <div className="relative aspect-4/3 overflow-hidden border border-km-steel-600/60">
             <Image
               src="/img/factory/kaoming-factory-04-heritage-kaoming-gate.jpg"
@@ -71,7 +80,7 @@ export async function CompanyStatement() {
           </div>
           <figcaption className="km-label mt-4 text-km-steel-400">{t('heritageCaption')}</figcaption>
         </figure>
-      </div>
+      </Reveal>
     </section>
   );
 }

@@ -5,7 +5,6 @@ import { useEffect, useRef } from 'react';
 import { Action } from '@/components/ui/action';
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/motion/gsap';
 import { useSmoothScroll } from '@/lib/motion/smooth-scroll';
-import { RFQ_HREF } from '@/lib/nav';
 
 /**
  * The company hero — the first thing anyone now sees.
@@ -152,14 +151,17 @@ export function CompanyHero({
 
           <p className="mt-8 max-w-[54ch] text-body text-km-on-brand/80">{body}</p>
 
+          {/* The machines, then a person. An opening frame's job is to send a
+              visitor somewhere, and on a machine-tool site those are the only
+              two places worth sending them. */}
           <div className="mt-12 flex flex-wrap gap-4">
-            <Action href="/company/about" variant="primary">
+            <Action href="/products" variant="primary">
               {primary}
             </Action>
             {/* Not the shared `secondary` variant: that one fills with the body
                 text colour and letters itself in the page field, which over a
                 photograph is a white block. Over media it is a hairline. */}
-            <Action href={RFQ_HREF} variant="onMedia">
+            <Action href="/support/contact" variant="onMedia">
               {secondary}
             </Action>
           </div>

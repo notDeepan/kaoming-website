@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { HistoryTimeline } from '@/components/company/history-timeline';
 import { PageHeader, Provenance, SHELL } from '@/components/ui/page-shell';
 import { SectionHeader } from '@/components/ui/section-header';
+import { Figures } from '@/components/ui/figures';
 import { routing } from '@/i18n/routing';
 import { history, milestonesFor } from '@/lib/company';
 import { alternatesFor } from '@/lib/site';
@@ -84,16 +85,12 @@ export default async function HistoryPage({ params }: { params: Promise<{ locale
         title={t('title')}
         lede={t('lede')}
         aside={
-          <dl className="flex gap-10">
-            <div>
-              <dt className="km-label text-km-steel-400">{t('founded')}</dt>
-              <dd className="mt-2 font-mono text-spec-xl text-km-paper">{first}</dd>
-            </div>
-            <div>
-              <dt className="km-label text-km-steel-400">{t('latest')}</dt>
-              <dd className="mt-2 font-mono text-spec-xl text-km-paper">{last}</dd>
-            </div>
-          </dl>
+          <Figures
+            figures={[
+              { label: t('founded'), value: first },
+              { label: t('latest'), value: last },
+            ]}
+          />
         }
       />
 
