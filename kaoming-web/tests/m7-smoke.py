@@ -152,6 +152,66 @@ with sync_playwright() as p:
         f"{page.locator('[data-agent]').count()} cards, {canada} agents",
     )
 
+    # --- The locator, since it stopped being a picture beside a list.
+    #
+    # The old version showed nothing until you clicked and had no link between
+    # the map and the directory. These four assertions are the difference: the
+    # answer is on the page from the first frame, a marker is a real control, the
+    # two are bound in both directions, and the search actually narrows both.
+    check(
+        "every territory is listed before any interaction",
+        page.locator("[data-marker]").count() == expected,
+        f"{page.locator('[data-marker]').count()} markers",
+    )
+
+    page.locator("[data-country='Canada']").click()  # close it again
+    page.wait_for_timeout(250)
+    page.locator("[data-marker='Japan']").click()
+    page.wait_for_timeout(500)
+    check(
+        "clicking a marker opens that country in the directory",
+        page.get_attribute("[data-country='Japan']", "aria-expanded") == "true",
+    )
+    check(
+        "and the marker shows as selected",
+        page.get_attribute("[data-marker='Japan']", "aria-pressed") == "true",
+    )
+
+    page.locator("[data-marker='Brazil']").focus()
+    page.keyboard.press("Enter")
+    page.wait_for_timeout(400)
+    check(
+        "a marker is operable from the keyboard",
+        page.get_attribute("[data-country='Brazil']", "aria-expanded") == "true",
+    )
+
+    page.fill("[data-network-search]", "india")
+    page.wait_for_timeout(500)
+    rows = page.locator("[data-country]").count()
+    check(
+        "search narrows the directory and the map together",
+        rows == page.locator("[data-marker]").count() and 0 < rows < expected,
+        f"{rows} rows, {page.locator('[data-marker]').count()} markers",
+    )
+
+    page.fill("[data-network-search]", "zzzzzz")
+    page.wait_for_timeout(400)
+    check(
+        "an empty result offers the enquiry form instead of nothing",
+        page.locator("a[href*='/rfq']").count() > 0
+        and "no representative matches" in page.inner_text("body").lower(),
+    )
+    page.fill("[data-network-search]", "")
+    page.wait_for_timeout(300)
+
+    # The registry's note asks KAO MING's sales team to confirm every entry. It
+    # is addressed to them, not to a buyer, and a production build must not
+    # publish it.
+    check(
+        "the internal verification note is not published",
+        "ask sales to confirm" not in page.inner_text("body").lower(),
+    )
+
     # The privacy rule: no personal mailbox reaches the page.
     #
     # This deliberately does NOT restate the allowlist from lib/distributors.

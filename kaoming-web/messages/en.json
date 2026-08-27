@@ -620,7 +620,7 @@
   "Network": {
     "label": "Company",
     "title": "Where KAO MING reaches",
-    "lede": "{agents} international agents across {countries} countries and territories, in KAO MING's own five regions.",
+    "lede": "{agents} international agents across {countries} countries and territories, in KAO MING's own five regions. Every one of them quotes, installs and services locally.",
     "representativesLabel": "Support",
     "representativesTitle": "Find your representative",
     "representativesLede": "The nearest KAO MING agent, by region and country. Every one of them can quote, and every one of them can reach service.",
@@ -631,7 +631,6 @@
     "all": "All regions",
     "showDomestic": "Include Taiwan domestic",
     "mapAlt": "Map of KAO MING agent countries — {count} shown",
-    "choose": "Choose a country to see its representatives.",
     "field": {
       "address": "Address",
       "tel": "Telephone",
@@ -640,7 +639,17 @@
     "withheld": "Direct contact is a personal address and is not published. Use the enquiry form and it will reach them.",
     "website": "Website",
     "enquire": "Request a quote through this representative",
-    "provenance": "Agent registry transcribed from kaoming.com, August 2026."
+    "provenance": "Agent registry transcribed from kaoming.com, August 2026.",
+    "search": "Search a country or agent",
+    "showing": "{countries} territories · {agents} agents",
+    "empty": "No representative matches “{query}”.",
+    "emptyAction": "Send the enquiry to KAO MING directly",
+    "legend": {
+      "agent": "Agent location",
+      "selected": "Selected",
+      "count": "Agents in that territory"
+    },
+    "notListed": "Your country not listed? Enquire direct"
   },
   "Support": {
     "label": "Support",

@@ -18,7 +18,7 @@ import { SectionHeader } from '@/components/ui/section-header';
 import { SourceNote } from '@/components/ui/source-note';
 import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
-import { catalogueDocuments } from '@/lib/images';
+import { catalogueDocuments, displayImage } from '@/lib/images';
 import { MAX_FEATURE_CARDS, overflowFeatures as overflowFor } from '@/lib/features';
 import { allSeries, catalogueForSeries, getSeries, specHighlights } from '@/lib/machines';
 import { RFQ_HREF } from '@/lib/nav';
@@ -184,7 +184,7 @@ export default async function SeriesPage({
           {hero ? (
             <div className="lg:-me-5 xl:-me-10">
               <MachinePlate
-                image={hero.cut}
+                image={displayImage(hero)}
                 alt={t('imageAlt', { model: hero.model, view: hero.view })}
                 priority
                 glow="lg"

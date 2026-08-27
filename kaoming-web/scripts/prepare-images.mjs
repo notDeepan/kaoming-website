@@ -145,7 +145,28 @@ async function knockout(src, { threshold = 250 } = {}) {
     .webp({ quality: 86, alphaQuality: 92, effort: 5 })
     .toBuffer();
 
-  return { buffer, width: w, height: h };
+  /*
+   * Did the removal find anything?
+   *
+   * This keys on studio white, which is the right rule — no pixel of the machine
+   * is ever altered — but it means a render shot on black or on a coloured
+   * ground comes back untouched and fully opaque. Nine of the supplied
+   * twenty-nine are like that, and on a light page an opaque one is a slab
+   * rather than a silhouette.
+   *
+   * The four corners answer it: a real knockout is clear at all of them.
+   * Measured on the mask rather than the encoded file, because WebP's alpha
+   * quantisation can nudge a 0 to a 2.
+   */
+  const corners = [
+    [2, 2],
+    [w - 3, 2],
+    [2, h - 3],
+    [w - 3, h - 3],
+  ];
+  const transparent = corners.every(([x, y]) => bg[y * w + x] === 1);
+
+  return { buffer, width: w, height: h, transparent };
 }
 
 const manifest = JSON.parse(readFileSync(path.join(KIT, 'images', '_manifest.json'), 'utf8'));
@@ -180,7 +201,16 @@ for (const [seriesLabel, entry] of Object.entries(manifest.series)) {
         width: plate.info.width,
         height: plate.info.height,
       },
-      cut: { src: `/img/machines/${stem}-cut.webp`, width: cut.width, height: cut.height },
+      cut: {
+        src: `/img/machines/${stem}-cut.webp`,
+        width: cut.width,
+        height: cut.height,
+        // Whether the removal actually found a studio background. A render shot
+        // on black or on a coloured ground comes back unchanged and opaque, and
+        // the page must show the plate for those instead — see `displayImage`
+        // in lib/images. Recorded here because only this script can measure it.
+        transparent: cut.transparent,
+      },
     });
     console.log(`  ${stem} ${plate.info.width}x${plate.info.height}`);
   }

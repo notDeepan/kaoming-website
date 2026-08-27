@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import type { Series } from '@/lib/machines';
+import { displayImage } from '@/lib/images';
 import { DimensionRule, MachinePlate } from './machine-plate';
 
 /**
@@ -59,7 +60,7 @@ export async function ProductCard({
             you read the plate, and the page should work the same way. */}
         {image ? (
           <MachinePlate
-            image={image.cut}
+            image={displayImage(image)}
             alt={`${series.name} — ${image.model}`}
             glow="sm"
             priority={priority}

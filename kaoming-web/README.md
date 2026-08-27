@@ -82,7 +82,7 @@ python tests/theme-audit.py   # both themes, WCAG contrast computed per surface
 python tests/perf-guards.py   # GPU tier cap and the smooth-scroll gate
 ```
 
-**464 checks, all green.** Every one needs the production server running. The M2
+**471 checks, all green.** Every one needs the production server running. The M2
 suite also needs a database (`npm run db:migrate`) and posts enough enquiries to
 trip the rate limiter, so run it with `RFQ_RATE_MAX=40`.
 
@@ -137,6 +137,15 @@ Seven things came back from the first read. All seven are in.
 | **No NEWS** | `/news`, both locales: exhibitions, machine launches, company milestones. KAO MING's three tabs become three sections, because eight entries is one page. The section states its own age — the newest entry anyone has published is from 2023. |
 | **The map looked broken** | It was a graticule with dots and no coastline, on the reasoning that inventing one would be dishonest. Correct reasoning, wrong conclusion: it read as a map that failed to load. It now uses Natural Earth's surveyed 1:110m land, projected at authoring time into the same two lines of arithmetic that place the markers, so a marker cannot sit off its own country. |
 | **No social links** | Facebook, YouTube and Instagram, in the footer and on the contact page, `rel="me"`, from KAO MING's own footer and nowhere else. |
+
+A second pass, after a design critique of the finished site:
+
+| | |
+|---|---|
+| **The agents page** | Rebuilt from a picture beside a list into a locator. Every agent is listed from the first frame — the old page's most valuable slot held the words "Choose a country to see its representatives" — the map is a real control (focusable markers, keyboard-operable, tooltip on hover *and* focus), and the two are bound both ways: hover a country and its marker lights, click a marker and the directory scrolls to it. Plus a search field, region grouping, a legend, and an enquiry route for a country that is not listed. |
+| **Nine photographs were slabs** | The knockout keys on studio white, correctly — no pixel of a machine is ever retouched — so nine renders shot on black or on a coloured ground came back opaque. On the old dark field they blended in; on paper they were black rectangles. `displayImage` now picks per image: a real knockout floats, a photograph that kept its background is shown as a framed plate. |
+| **An internal note was published** | The agent registry carries a line asking KAO MING's sales team to confirm every entry before launch. It was rendering on the live page in warning yellow. Dev only now, same rule CLAUDE.md sets for `{{TO_BE_VERIFIED}}`. |
+| **Two true numbers, one screen** | The header says 32 countries and the directory lists 34 rows, because KAO MING splits France and India into northern and southern sales territories. Both are right; neither said what it was counting. Now they do. |
 
 Two things for KAO MING that came out of the work: their English and Chinese
 pages disagree on the 2008 plant area (25,000 m² vs 40,000 m²) — each locale

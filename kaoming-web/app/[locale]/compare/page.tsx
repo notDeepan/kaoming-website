@@ -5,6 +5,7 @@ import { CompareTable, type ComparableSeries } from '@/components/compare/compar
 import { routing } from '@/i18n/routing';
 import { allSeries, specHighlights } from '@/lib/machines';
 import { alternatesFor } from '@/lib/site';
+import { displayImage } from '@/lib/images';
 
 const SHELL = 'mx-auto max-w-[1600px] px-5 sm:px-6 xl:px-10';
 
@@ -61,7 +62,7 @@ export default async function ComparePage({ params }: { params: Promise<{ locale
       name: series.name,
       type: series.type,
       categorySlug: series.categorySlug,
-      image: series.images[0]?.cut ?? null,
+      image: series.images[0] ? displayImage(series.images[0]) : null,
       rows,
     };
   });

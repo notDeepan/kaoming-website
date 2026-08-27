@@ -70,11 +70,19 @@ export default async function NetworkPage({ params }: { params: Promise<{ locale
       />
 
       <section className={`${SHELL} pb-24`}>
-        <NetworkMap domesticDefault={locale === 'zh-tw'} />
+        <NetworkMap domesticDefault={locale === 'zh-tw'} lead="map" />
 
-        <p className="km-label mt-12 max-w-[80ch] border-s-2 border-km-warning ps-6 text-km-warning">
-          {VERIFY_BEFORE_LAUNCH}
-        </p>
+        {/* The registry carries a note from KAO MING's own transcription asking
+            sales to confirm every entry before launch. It is addressed to KAO
+            MING, not to a buyer, and on a live page it reads as an unfinished
+            site — so it shows where it is useful and nowhere else. Same rule
+            CLAUDE.md sets for {{TO_BE_VERIFIED}}: visible in dev, hidden in
+            production. */}
+        {process.env.NODE_ENV !== 'production' ? (
+          <p className="km-label mt-12 max-w-[80ch] border-s-2 border-km-warning ps-6 text-km-warning">
+            {VERIFY_BEFORE_LAUNCH}
+          </p>
+        ) : null}
         <Provenance>{t('provenance')}</Provenance>
       </section>
     </>

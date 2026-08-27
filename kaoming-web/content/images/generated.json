@@ -17,7 +17,8 @@
           "cut": {
             "src": "/img/machines/KMC-325GM-01-front-elevation-cut.webp",
             "width": 2000,
-            "height": 1333
+            "height": 1333,
+            "transparent": true
           }
         },
         {
@@ -32,7 +33,8 @@
           "cut": {
             "src": "/img/machines/KMC-325GM-02-three-quarter-open-cut.webp",
             "width": 2000,
-            "height": 1333
+            "height": 1333,
+            "transparent": true
           }
         },
         {
@@ -47,7 +49,8 @@
           "cut": {
             "src": "/img/machines/KMC-325GM-03-front-doors-open-cut.webp",
             "width": 1100,
-            "height": 737
+            "height": 737,
+            "transparent": false
           }
         }
       ]
@@ -68,7 +71,8 @@
           "cut": {
             "src": "/img/machines/KMC-1445GN-01-three-quarter-master-cut.webp",
             "width": 2000,
-            "height": 1354
+            "height": 1354,
+            "transparent": true
           }
         },
         {
@@ -83,7 +87,8 @@
           "cut": {
             "src": "/img/machines/KMC-1445GN-02-atc-magazine-detail-cut.webp",
             "width": 2000,
-            "height": 1333
+            "height": 1333,
+            "transparent": false
           }
         },
         {
@@ -98,7 +103,8 @@
           "cut": {
             "src": "/img/machines/KMC-1445GN-03-hero-dark-cut.webp",
             "width": 1700,
-            "height": 645
+            "height": 645,
+            "transparent": false
           }
         },
         {
@@ -113,7 +119,8 @@
           "cut": {
             "src": "/img/machines/KMC-1445GN-04-linear-guide-detail-cut.webp",
             "width": 715,
-            "height": 540
+            "height": 540,
+            "transparent": false
           }
         }
       ]
@@ -134,7 +141,8 @@
           "cut": {
             "src": "/img/machines/KMC-425HA11-01-cut.webp",
             "width": 2000,
-            "height": 1210
+            "height": 1210,
+            "transparent": true
           }
         },
         {
@@ -149,7 +157,8 @@
           "cut": {
             "src": "/img/machines/KMC-425HA11-02-cut.webp",
             "width": 2000,
-            "height": 1444
+            "height": 1444,
+            "transparent": true
           }
         },
         {
@@ -164,7 +173,8 @@
           "cut": {
             "src": "/img/machines/KMC-215H7-01-cut.webp",
             "width": 2000,
-            "height": 1300
+            "height": 1300,
+            "transparent": true
           }
         },
         {
@@ -179,7 +189,8 @@
           "cut": {
             "src": "/img/machines/KMC-215H7-02-cut.webp",
             "width": 2000,
-            "height": 1299
+            "height": 1299,
+            "transparent": true
           }
         },
         {
@@ -194,7 +205,8 @@
           "cut": {
             "src": "/img/machines/KMC-318H7-01-cut.webp",
             "width": 2000,
-            "height": 1070
+            "height": 1070,
+            "transparent": true
           }
         },
         {
@@ -209,7 +221,8 @@
           "cut": {
             "src": "/img/machines/KMC-318H7-02-portrait-cut.webp",
             "width": 2000,
-            "height": 3000
+            "height": 3000,
+            "transparent": false
           }
         }
       ]
@@ -230,7 +243,8 @@
           "cut": {
             "src": "/img/machines/KMC-436HMA-01-cut.webp",
             "width": 2000,
-            "height": 1070
+            "height": 1070,
+            "transparent": true
           }
         }
       ]
@@ -251,7 +265,8 @@
           "cut": {
             "src": "/img/machines/KMC-136CE-01-cut.webp",
             "width": 2000,
-            "height": 1065
+            "height": 1065,
+            "transparent": true
           }
         },
         {
@@ -266,7 +281,8 @@
           "cut": {
             "src": "/img/machines/KMC-136CE-02-cut.webp",
             "width": 2000,
-            "height": 1248
+            "height": 1248,
+            "transparent": true
           }
         },
         {
@@ -281,7 +297,8 @@
           "cut": {
             "src": "/img/machines/KMC-168CE-01-cut.webp",
             "width": 1477,
-            "height": 1108
+            "height": 1108,
+            "transparent": false
           }
         },
         {
@@ -296,7 +313,8 @@
           "cut": {
             "src": "/img/machines/KMC-168CE-02-cut.webp",
             "width": 1705,
-            "height": 960
+            "height": 960,
+            "transparent": false
           }
         },
         {
@@ -311,7 +329,8 @@
           "cut": {
             "src": "/img/machines/KMC-158CH-01-cut.webp",
             "width": 1523,
-            "height": 812
+            "height": 812,
+            "transparent": false
           }
         }
       ]
@@ -332,7 +351,8 @@
           "cut": {
             "src": "/img/machines/KMC-123E7-01-cut.webp",
             "width": 2000,
-            "height": 1536
+            "height": 1536,
+            "transparent": true
           }
         },
         {
@@ -347,7 +367,8 @@
           "cut": {
             "src": "/img/machines/KMC-123E7-02-cut.webp",
             "width": 2000,
-            "height": 1536
+            "height": 1536,
+            "transparent": true
           }
         },
         {
@@ -362,7 +383,8 @@
           "cut": {
             "src": "/img/machines/KMC-123EU-01-cut.webp",
             "width": 2000,
-            "height": 2874
+            "height": 2874,
+            "transparent": true
           }
         },
         {
@@ -377,7 +399,8 @@
           "cut": {
             "src": "/img/machines/KMC-123EU-02-cut.webp",
             "width": 2000,
-            "height": 2410
+            "height": 2410,
+            "transparent": false
           }
         },
         {
@@ -392,7 +415,8 @@
           "cut": {
             "src": "/img/machines/KMC-318E8-01-cut.webp",
             "width": 2000,
-            "height": 1420
+            "height": 1420,
+            "transparent": true
           }
         },
         {
@@ -407,7 +431,8 @@
           "cut": {
             "src": "/img/machines/KMC-318E8-02-cutaway-cut.webp",
             "width": 1920,
-            "height": 882
+            "height": 882,
+            "transparent": true
           }
         }
       ]
@@ -428,7 +453,8 @@
           "cut": {
             "src": "/img/machines/KMR-1600DH-01-cut.webp",
             "width": 2000,
-            "height": 3000
+            "height": 3000,
+            "transparent": true
           }
         },
         {
@@ -443,7 +469,8 @@
           "cut": {
             "src": "/img/machines/KMR-detail-01-cut.webp",
             "width": 945,
-            "height": 942
+            "height": 942,
+            "transparent": false
           }
         },
         {
@@ -458,7 +485,8 @@
           "cut": {
             "src": "/img/machines/KMR-detail-02-cut.webp",
             "width": 629,
-            "height": 472
+            "height": 472,
+            "transparent": false
           }
         },
         {
@@ -473,7 +501,8 @@
           "cut": {
             "src": "/img/machines/KMR-detail-03-cut.webp",
             "width": 630,
-            "height": 472
+            "height": 472,
+            "transparent": false
           }
         }
       ]

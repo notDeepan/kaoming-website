@@ -1,16 +1,32 @@
 import Image from 'next/image';
 
 /**
- * A machine on the dark field, lit from below.
+ * A machine on the page field, lit from below.
  *
- * Every render the kit supplies is a studio plate on white; the knockout
+ * Most of the renders the kit supplies are studio plates on white; the knockout
  * derivative (scripts/prepare-images.mjs) removes that background so the machine
  * can stand in the hall rather than in a white box. The pool of light underneath
  * is CSS, not a baked shadow, so it stays consistent across every machine and
  * costs nothing to change.
+ *
+ * Nine of the twenty-nine were shot on black or on a coloured ground, so there
+ * is no studio white to remove and the knockout returns them untouched. Those
+ * arrive with `framed`, and get the opposite treatment: no pool of light —
+ * which under an opaque image is a smear, not a shadow — and a hairline around
+ * the edge, so the photograph reads as a photograph instead of as a slab.
  */
 
-export type PlateImage = { src: string; width: number; height: number };
+export type PlateImage = {
+  src: string;
+  width: number;
+  height: number;
+  /**
+   * True where the file still carries its own studio background, so it must be
+   * presented as a photograph rather than as a silhouette. Set by `displayImage`
+   * in lib/images, which is the only thing that knows.
+   */
+  framed?: boolean;
+};
 
 export function MachinePlate({
   image,
@@ -40,11 +56,15 @@ export function MachinePlate({
   ];
 
   return (
-    <div className={`relative ${className}`}>
-      <div
-        aria-hidden="true"
-        className={`pointer-events-none absolute bottom-[4%] ${glowScale} rounded-[50%] bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--color-km-steel-400)_38%,transparent),transparent_70%)] blur-2xl`}
-      />
+    <div
+      className={`relative ${image.framed ? 'overflow-hidden border border-km-steel-600/60' : ''} ${className}`}
+    >
+      {image.framed ? null : (
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute bottom-[4%] ${glowScale} rounded-[50%] bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--color-km-steel-400)_38%,transparent),transparent_70%)] blur-2xl`}
+        />
+      )}
       <Image
         src={image.src}
         alt={alt}

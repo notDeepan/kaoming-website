@@ -621,7 +621,7 @@
   "Network": {
     "label": "公司",
     "title": "高明的服務範圍",
-    "lede": "{countries} 個國家與地區、{agents} 家國際代理商，依高明自訂的五大區域劃分。",
+    "lede": "{countries} 個國家與地區、{agents} 家國際代理商，依高明自訂的五大區域劃分。每一家都能在當地報價、安裝與服務。",
     "representativesLabel": "支援",
     "representativesTitle": "尋找您的代理商",
     "representativesLede": "依區域與國家查詢最近的高明代理商。每一家都能報價，也都能聯繫服務。",
@@ -632,7 +632,6 @@
     "all": "所有區域",
     "showDomestic": "含台灣國內代理",
     "mapAlt": "高明代理國家分布圖——顯示 {count} 國",
-    "choose": "請選擇國家以查看該地代理商。",
     "field": {
       "address": "地址",
       "tel": "電話",
@@ -641,7 +640,17 @@
     "withheld": "該聯絡方式為個人信箱，不予公開。請使用詢價表單，訊息同樣會送達。",
     "website": "官方網站",
     "enquire": "透過此代理商詢價",
-    "provenance": "代理商名錄轉錄自 kaoming.com，2026 年 8 月。"
+    "provenance": "代理商名錄轉錄自 kaoming.com，2026 年 8 月。",
+    "search": "搜尋國家或代理商",
+    "showing": "{countries} 個地區 · {agents} 家代理商",
+    "empty": "找不到符合「{query}」的代理商。",
+    "emptyAction": "直接向高明送出詢價",
+    "legend": {
+      "agent": "代理據點",
+      "selected": "已選取",
+      "count": "該地區代理商家數"
+    },
+    "notListed": "找不到您的國家？直接詢價"
   },
   "Support": {
     "label": "支援",

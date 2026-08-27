@@ -42,7 +42,11 @@ export type SeriesImage = {
   view: string;
   bestFor: string;
   plate: { src: string; width: number; height: number };
-  cut: { src: string; width: number; height: number };
+  /**
+   * The knockout. `transparent` is false where the background removal found
+   * nothing to remove — see `displayImage` in lib/images for why that matters.
+   */
+  cut: { src: string; width: number; height: number; transparent: boolean };
 };
 
 /**

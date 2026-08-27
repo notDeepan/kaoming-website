@@ -3,6 +3,7 @@ import { Action } from '@/components/ui/action';
 import { DimensionRule, MachinePlate } from '@/components/ui/machine-plate';
 import { RFQ_HREF } from '@/lib/nav';
 import { seriesBySlug } from '@/lib/machines';
+import { displayImage } from '@/lib/images';
 import { HeroSequence } from './hero-sequence';
 
 /**
@@ -74,7 +75,7 @@ export async function HomeHero() {
                   stays inside the grid so its value is never clipped with it. */}
               <div className="lg:-me-10 xl:-me-16">
                 <MachinePlate
-                  image={hero.cut}
+                  image={displayImage(hero)}
                   alt={t('heroImageAlt', { model: hero.model })}
                   priority
                   glow="lg"
