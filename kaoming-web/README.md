@@ -82,7 +82,7 @@ python tests/theme-audit.py   # both themes, WCAG contrast computed per surface
 python tests/perf-guards.py   # GPU tier cap and the smooth-scroll gate
 ```
 
-**471 checks, all green.** Every one needs the production server running. The M2
+**477 checks, all green.** Every one needs the production server running. The M2
 suite also needs a database (`npm run db:migrate`) and posts enough enquiries to
 trip the rate limiter, so run it with `RFQ_RATE_MAX=40`.
 
@@ -146,6 +146,21 @@ A second pass, after a design critique of the finished site:
 | **Nine photographs were slabs** | The knockout keys on studio white, correctly — no pixel of a machine is ever retouched — so nine renders shot on black or on a coloured ground came back opaque. On the old dark field they blended in; on paper they were black rectangles. `displayImage` now picks per image: a real knockout floats, a photograph that kept its background is shown as a framed plate. |
 | **An internal note was published** | The agent registry carries a line asking KAO MING's sales team to confirm every entry before launch. It was rendering on the live page in warning yellow. Dev only now, same rule CLAUDE.md sets for `{{TO_BE_VERIFIED}}`. |
 | **Two true numbers, one screen** | The header says 32 countries and the directory lists 34 rows, because KAO MING splits France and India into northern and southern sales territories. Both are right; neither said what it was counting. Now they do. |
+
+A third pass — the landing page:
+
+| | |
+|---|---|
+| **The company comes first** | `/en` opened on a machine. Right for a product page, wrong for a landing page: a buyer arriving cold wants to know who this is before they are sold a fourteen-metre gantry. It now opens full-bleed on the CTSP plant with KAO MING's own founding line over it, then the origin story and their three claims, then the machine that used to be the hero leading the product half. Nothing was dropped to make room. |
+| **A photograph is its own environment** | The hero scrim is dark and its type is light in *both* themes. The alternative — a light scrim over a bright sky — has no contrast to give and turns the photograph into a wash. `km-on-brand` is the one type colour that does not invert, which is exactly why it exists. |
+| **The header over media** | It is transparent until 80px of scroll, so on this page it sits *on* the photograph in its own colours — dark ink, in the light theme. `data-media-hero` re-points the header's role tokens to the non-inverting colour while it is still transparent, and stops the moment it goes solid. |
+| **Dropping in a better photo** | Put a file at `public/img/factory/kaoming-plant-aerial.jpg` and the hero uses it; leave it absent and it falls back to the kit image. Checked with `existsSync` at build time, because an import of a missing file is a build error and the point is that it is optional. |
+
+`tests/theme-audit.py` grew three checks for this: the contrast sweep cannot see
+a photograph through a transparent scrim, so the hero and the over-media header
+are excluded from it and asserted explicitly instead — the type is the
+non-inverting colour, and the scrim is opaque enough to be a ground rather than
+a tint. It does not claim to prove a contrast ratio, and says so.
 
 Two things for KAO MING that came out of the work: their English and Chinese
 pages disagree on the 2008 plant area (25,000 m² vs 40,000 m²) — each locale

@@ -97,8 +97,25 @@ CONTRAST_JS = r"""
     return out;
   };
 
+  /*
+   * Type over a photograph cannot be measured this way and must not be guessed
+   * at. `getComputedStyle` sees a transparent scrim over an <img>; it does not
+   * see the photograph, so compositing against the nearest painted ancestor
+   * reports light type on a light page and fails something that is in fact
+   * white on a dark scrim.
+   *
+   * Two subtrees are affected, and both are excluded here and checked
+   * explicitly further down instead: the media hero itself, and the header while
+   * it is still transparent over one.
+   */
+  const overMedia = (el) =>
+    el.closest('[data-company-hero]') !== null ||
+    (document.documentElement.dataset.mediaHero === 'true' &&
+      el.closest("header[data-solid='false']") !== null);
+
   const bad = [];
   for (const el of document.querySelectorAll('body *')) {
+    if (overMedia(el)) continue;
     // Only elements that render text of their own.
     const own = [...el.childNodes]
       .filter((n) => n.nodeType === 3)
@@ -182,6 +199,48 @@ with sync_playwright() as p:
                 f"{theme} {route} text meets AA",
                 not failures,
                 "; ".join(f"{f['ratio']}:1 {f['tag']} \"{f['text']}\"" for f in failures[:3]),
+            )
+
+        # What the sweep above had to skip: the type over the photograph.
+        #
+        # The photograph itself is unmeasurable from computed styles, so this
+        # asserts the two things that ARE measurable and that together make the
+        # type legible: it is set in the one colour that does not invert, and the
+        # scrim under it is opaque enough to be a ground rather than a tint. It
+        # does not prove a contrast ratio, and says so.
+        page.goto(BASE + "/en", wait_until="load", timeout=60_000)
+        page.wait_for_timeout(500)
+        media = page.evaluate(
+            """() => {
+              const hero = document.querySelector('[data-company-hero]');
+              if (!hero) return null;
+              const h1 = hero.querySelector('h1');
+              const scrim = [...hero.querySelectorAll('div')]
+                .map((d) => getComputedStyle(d).backgroundImage)
+                .find((bg) => bg.includes('linear-gradient'));
+              const alphas = [...(scrim || '').matchAll(/rgba\([^)]*?,\s*([0-9.]+)\)/g)]
+                .map((m) => Number(m[1]));
+              return {
+                colour: h1 ? getComputedStyle(h1).color : null,
+                onBrand: getComputedStyle(document.documentElement)
+                  .getPropertyValue('--color-km-on-brand').trim(),
+                maxAlpha: alphas.length ? Math.max(...alphas) : 0,
+              };
+            }"""
+        )
+        check(f"{theme} the hero has a media scrim", media is not None)
+        if media:
+            expected = media["onBrand"].lstrip("#")
+            rgb = tuple(int(expected[i : i + 2], 16) for i in (0, 2, 4))
+            check(
+                f"{theme} hero type is the non-inverting colour",
+                media["colour"] == f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})",
+                f"{media['colour']} vs km-on-brand {media['onBrand']}",
+            )
+            check(
+                f"{theme} the scrim is a ground, not a tint",
+                media["maxAlpha"] >= 0.75,
+                f"max alpha {media['maxAlpha']}",
             )
 
         # The logo sits on a plate because the supplied mark is dark ink on

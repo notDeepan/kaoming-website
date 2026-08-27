@@ -162,7 +162,19 @@
     "resourcesLabel": "Resources",
     "resourcesTitle": "The 2026 catalogues",
     "viewAllResources": "View all resources",
-    "openCatalogue": "Open catalogue"
+    "openCatalogue": "Open catalogue",
+    "companyTitle": "Taiwan's gantry builder since 1968",
+    "companyBody": "Founded in Fongyuan by Chang Gao-Ming and Chang Tsai Mei-Hsia, and building gantry, double-column, multi-face and vertical machining centres from a constant-temperature plant in the Central Taiwan Science Park.",
+    "companyAction": "About KAO MING",
+    "plantAlt": "The KAO MING plant in the Central Taiwan Science Park, Houli",
+    "storyLabel": "The company",
+    "storyTitle": "Fifty-eight years of one thing",
+    "storyNote": "Quoted as claims, because that is what they are. Each is stated verbatim on kaoming.com; none has been independently verified here.",
+    "storyAction": "The full company record",
+    "storyHistory": "Ten milestones since {year}",
+    "heritageAlt": "The original KAO MING works gate at Fongyuan",
+    "heritageCaption": "Fongyuan — where it started",
+    "machineEyebrow": "The machines · nine catalogue series"
   },
   "Products": {
     "label": "Products",

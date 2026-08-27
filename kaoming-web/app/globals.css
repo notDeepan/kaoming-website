@@ -220,6 +220,29 @@
   --color-km-warning: #8a6410;
 }
 
+/* ============================================================================
+   Over media
+   ============================================================================
+
+   The header is transparent until 80px of scroll, so on a page that opens with
+   a full-bleed photograph it sits *on* that photograph in its own colours — and
+   in the light theme those colours are dark ink on a dark scrim.
+
+   `data-media-hero` is set by components/sections/company-hero.tsx while such a
+   hero is mounted. Inside the header, and only while it is still transparent,
+   the same role tokens are re-pointed at the one colour that does not invert.
+   The moment the header goes solid the selector stops matching and the header is
+   the theme's again — which is why this is scoped to `[data-solid='false']`
+   rather than applied for the whole page.
+
+   The logo is untouched: it sits on `km-plate`, which is constant already. */
+:root[data-media-hero] header[data-solid='false'] {
+  --color-km-steel-400: color-mix(in oklab, var(--color-km-on-brand) 74%, transparent);
+  --color-km-offwhite: var(--color-km-on-brand);
+  --color-km-paper: var(--color-km-on-brand);
+  --color-km-steel-600: color-mix(in oklab, var(--color-km-on-brand) 42%, transparent);
+}
+
 /* Machine livery — 3D PBR material values only, never UI.
    Kept out of @theme deliberately: brand note 2 in brand-tokens.css requires
    interface blue and livery blue to stay in different families, and the surest

@@ -12,7 +12,7 @@ import { Link } from '@/i18n/navigation';
  * a direct file (the catalogues), where next-intl's Link would be wrong.
  */
 
-export type ActionVariant = 'primary' | 'secondary' | 'text';
+export type ActionVariant = 'primary' | 'secondary' | 'text' | 'onMedia';
 
 const BASE =
   'km-label group inline-flex min-h-11 items-center justify-center gap-2.5 transition-colors duration-(--duration-km) ease-(--ease-km)';
@@ -23,6 +23,14 @@ const VARIANTS: Record<ActionVariant, string> = {
   secondary:
     'border border-km-steel-600 px-5 py-3 text-km-offwhite hover:border-km-offwhite hover:bg-km-offwhite hover:text-km-black',
   text: 'text-km-offwhite hover:text-km-red-glow',
+  /*
+   * Over a photograph. `secondary` fills with the body-text colour on hover and
+   * letters itself in the page field, which over media is a white block with
+   * white text in one theme and a black one in the other. This is the same
+   * shape in the one colour that does not invert.
+   */
+  onMedia:
+    'border border-km-on-brand/45 px-5 py-3 text-km-on-brand hover:border-km-on-brand hover:bg-km-on-brand hover:text-km-ink',
 };
 
 function Inner({ children, variant }: { children: ReactNode; variant: ActionVariant }) {

@@ -163,7 +163,19 @@
     "resourcesLabel": "資源中心",
     "resourcesTitle": "2026 年型錄",
     "viewAllResources": "查看所有資源",
-    "openCatalogue": "開啟型錄"
+    "openCatalogue": "開啟型錄",
+    "companyTitle": "台灣龍門加工中心機的鼻祖，始於 1968",
+    "companyBody": "由創辦人張鎬洺先生與張蔡梅霞女士於豐原創立，現於中部科學園區恆溫廠房生產龍門式、門型、多面體與立式加工中心機。",
+    "companyAction": "認識高明",
+    "plantAlt": "高明精機位於后里中部科學園區的廠房",
+    "storyLabel": "關於高明",
+    "storyTitle": "五十八年，只做一件事",
+    "storyNote": "以「主張」呈現，因為這正是其性質。以下皆逐字引自 kaoming.com，本站未另行查證。",
+    "storyAction": "完整公司紀錄",
+    "storyHistory": "自 {year} 年起的十項紀事",
+    "heritageAlt": "高明精機豐原舊廠大門",
+    "heritageCaption": "豐原——一切的起點",
+    "machineEyebrow": "產品機種 · 九大型錄系列"
   },
   "Products": {
     "label": "產品",
