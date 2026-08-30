@@ -59,6 +59,7 @@ export function CompareTray() {
   return (
     <aside
       aria-label={t('tray')}
+      data-compare-tray
       className="fixed inset-x-0 bottom-0 z-110 border-t border-km-steel-600 bg-km-charcoal/95 backdrop-blur-md"
     >
       <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-x-6 gap-y-3 px-5 py-3 sm:px-6 xl:px-10">

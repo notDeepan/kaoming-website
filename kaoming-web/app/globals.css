@@ -255,6 +255,43 @@
   --color-km-steel-600: color-mix(in oklab, var(--color-km-on-brand) 42%, transparent);
 }
 
+/* ============================================================================
+   A machine window is open
+   ============================================================================
+
+   Set by components/product/machine-window.tsx while the window is mounted.
+
+   Two jobs. It takes the site chrome out of the way, because the window is the
+   whole interface while it is open and a navigation bar floating over it says
+   the opposite. And it removes `<main>`'s stacking context: main carries
+   `relative z-1`, so the window's `z-200` is only 200 *inside main*, and main's
+   own 1 loses to the header's 120 — which is why the window rendered underneath
+   the header before this rule existed. */
+:root[data-window-open] > body > header,
+:root[data-window-open] > body > footer {
+  display: none;
+}
+
+/* The compare tray is the exception: it rides OVER the window rather than being
+   hidden by it. Adding a machine to a comparison from inside its own window and
+   getting no confirmation is the reason it is here at all, and a thin bar along
+   the bottom edge is not the site navigation reasserting itself. */
+:root[data-window-open] [data-compare-tray] {
+  z-index: 210;
+}
+
+/* A machine window's panes.
+   All four are in the document so the machine reads as one plain page when
+   scripting is off; `data-js` is set before first paint, so with scripting the
+   unselected three are gone before anything is drawn rather than flashing. */
+:root[data-js] [data-pane-panel][data-selected='false'] {
+  display: none;
+}
+
+:root[data-window-open] main {
+  z-index: auto;
+}
+
 /* Machine livery — 3D PBR material values only, never UI.
    Kept out of @theme deliberately: brand note 2 in brand-tokens.css requires
    interface blue and livery blue to stay in different families, and the surest

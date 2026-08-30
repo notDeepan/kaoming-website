@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/motion/gsap';
 import { useSmoothScroll } from '@/lib/motion/smooth-scroll';
+import { useWindowView } from './window-view';
 
 /**
  * The machine, as a constellation.
@@ -79,6 +80,8 @@ export function MachineConstellation({
   const root = useRef<HTMLElement>(null);
   const field = useRef<HTMLDivElement>(null);
   const { reducedMotion } = useSmoothScroll();
+  // Present when this is a pane of the machine window, null on an ordinary page.
+  const window_ = useWindowView();
 
   const [frame, setFrame] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -197,7 +200,7 @@ export function MachineConstellation({
       ref={root}
       data-constellation
       aria-label={`${name} — ${labels.specifications}`}
-      className="relative overflow-hidden border-b border-km-steel-600/60 bg-km-charcoal"
+      className="relative overflow-hidden"
     >
       {/* The sheet under it. A drawing grid, at the threshold of visible —
           it is what makes the field read as a surface the nodes sit on rather
@@ -207,7 +210,7 @@ export function MachineConstellation({
         className="pointer-events-none absolute inset-0 opacity-[0.55] [background-image:linear-gradient(var(--color-km-steel-600)_1px,transparent_1px),linear-gradient(90deg,var(--color-km-steel-600)_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]"
       />
 
-      <div className="relative mx-auto max-w-[1600px] px-5 pt-10 pb-16 sm:px-6 lg:pt-40 xl:px-10">
+      <div className="relative mx-auto max-w-[1600px]">
         {/* ------------------------------------------------------ the field */}
         <div
           ref={field}
@@ -312,12 +315,27 @@ export function MachineConstellation({
               <p className="mt-1 text-small text-km-steel-400">{type}</p>
 
               <div className="mt-5 flex flex-col gap-2">
-                <a
-                  href={onOpen3d}
-                  className="km-label flex min-h-11 items-center justify-center border border-km-red bg-km-red px-4 text-km-on-brand transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow"
-                >
-                  {labels.view3d}
-                </a>
+                {/* Inside the window this switches pane; on an ordinary page it
+                    is an anchor to the section. Same control, and neither case
+                    needs the other to exist. */}
+                {window_ ? (
+                  <button
+                    type="button"
+                    data-open-3d
+                    onClick={() => window_.setView('viewer')}
+                    className="km-label flex min-h-11 items-center justify-center border border-km-red bg-km-red px-4 text-km-on-brand transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow"
+                  >
+                    {labels.view3d}
+                  </button>
+                ) : (
+                  <a
+                    href={onOpen3d}
+                    data-open-3d
+                    className="km-label flex min-h-11 items-center justify-center border border-km-red bg-km-red px-4 text-km-on-brand transition-colors duration-(--duration-km) ease-(--ease-km) hover:border-km-red-glow hover:bg-transparent hover:text-km-red-glow"
+                  >
+                    {labels.view3d}
+                  </a>
+                )}
                 {catalogueHref ? (
                   <a
                     href={catalogueHref}
@@ -378,6 +396,7 @@ function NodeCard({
   active: boolean;
   onFocus: (id: string | null) => void;
 }) {
+  const window_ = useWindowView();
   const body = (
     <>
       <dt className="km-label text-km-red-glow">{node.label}</dt>
@@ -394,9 +413,23 @@ function NodeCard({
     active ? 'border-km-red' : 'border-km-steel-600/60'
   }`;
 
-  // A fact that belongs to a specification group is a link to that group; one
-  // that does not is a plain card. Nothing pretends to be clickable.
-  return node.href ? (
+  // A fact that belongs to a specification group opens the specification — as a
+  // pane inside the window, or as an anchor on an ordinary page. One that does
+  // not belong to a group is a plain card, because nothing here should pretend
+  // to be clickable.
+  if (!node.href) return <div className={shell}>{body}</div>;
+
+  return window_ ? (
+    <button
+      type="button"
+      onClick={() => window_.setView('spec')}
+      onFocus={() => onFocus(node.id)}
+      onBlur={() => onFocus(null)}
+      className={`${shell} w-full text-start hover:border-km-red`}
+    >
+      {body}
+    </button>
+  ) : (
     <a
       href={node.href}
       onFocus={() => onFocus(node.id)}
@@ -405,8 +438,6 @@ function NodeCard({
     >
       {body}
     </a>
-  ) : (
-    <div className={shell}>{body}</div>
   );
 }
 

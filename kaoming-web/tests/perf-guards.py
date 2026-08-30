@@ -25,6 +25,32 @@ import sys
 
 from playwright.sync_api import sync_playwright
 
+
+def open_pane(page, pane):
+    """Open one pane of the machine window.
+
+    A series is a window now, not a page you scroll: the web of figures is the
+    opening pane, and the specification, the 3D view and the photographs are the
+    others. Content that used to be a section further down the page is a tab
+    away, so a test that wants it has to ask for it. Nothing here relaxes what is
+    then asserted.
+    """
+    tab = page.locator(f"[data-pane='{pane}']")
+    if tab.count() == 0:
+        return False
+    tab.first.click()
+    page.wait_for_timeout(600)
+    if pane == "viewer":
+        # The model is fetched when the pane opens. Wait for the machine to be
+        # on screen rather than for a fixed number of milliseconds.
+        try:
+            page.wait_for_selector("[data-viewer-ready='true']", timeout=45_000)
+            page.wait_for_timeout(700)
+        except Exception:
+            pass
+    return True
+
+
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 BASE = "http://localhost:3000"
@@ -89,7 +115,8 @@ with sync_playwright() as p:
     page = context.new_page()
     page.goto(f"{BASE}{PRODUCT}", wait_until="load", timeout=90_000)
     page.wait_for_timeout(1200)
-    page.mouse.wheel(0, 1400)
+    # The 3D is a pane of the machine window now, not a section you scroll to.
+    open_pane(page, "viewer")
     page.wait_for_timeout(2500)
 
     renderer = page.evaluate(
@@ -101,13 +128,13 @@ with sync_playwright() as p:
     )
     check("the renderer name is readable", bool(renderer), str(renderer)[:52])
 
-    section = page.locator("section[data-quality-tier]").first
-    tier = section.get_attribute("data-quality-tier") if section.count() else None
+    # Any element, not `section`: the viewer is a div inside the window.
+    viewer = page.locator("[data-quality-tier]").first
+    tier = viewer.get_attribute("data-quality-tier") if viewer.count() else None
     if tier is None:
-        # The tier is not always surfaced as an attribute; fall back to the step,
-        # which is. Either is enough to show the ladder did not start at full
-        # quality on a software renderer.
-        step = page.locator("section[data-quality-step]").first.get_attribute("data-quality-step")
+        # Fall back to the step, which is always surfaced. Either is enough to
+        # show the ladder did not start at full quality on a software renderer.
+        step = page.locator("[data-quality-step]").first.get_attribute("data-quality-step")
         check("a software renderer does not stay at full quality", step != "full", str(step))
     else:
         check("a software renderer is not given the HIGH tier", tier != "high", str(tier))

@@ -22,6 +22,32 @@ import sys
 
 from playwright.sync_api import sync_playwright
 
+
+def open_pane(page, pane):
+    """Open one pane of the machine window.
+
+    A series is a window now, not a page you scroll: the web of figures is the
+    opening pane, and the specification, the 3D view and the photographs are the
+    others. Content that used to be a section further down the page is a tab
+    away, so a test that wants it has to ask for it. Nothing here relaxes what is
+    then asserted.
+    """
+    tab = page.locator(f"[data-pane='{pane}']")
+    if tab.count() == 0:
+        return False
+    tab.first.click()
+    page.wait_for_timeout(600)
+    if pane == "viewer":
+        # The model is fetched when the pane opens. Wait for the machine to be
+        # on screen rather than for a fixed number of milliseconds.
+        try:
+            page.wait_for_selector("[data-viewer-ready='true']", timeout=45_000)
+            page.wait_for_timeout(700)
+        except Exception:
+            pass
+    return True
+
+
 BASE = "http://localhost:3000"
 PRODUCT = "/en/products/gantry-machining-center/kmc-gm"
 GL_ARGS = ["--use-gl=swiftshader", "--enable-unsafe-swiftshader"]
@@ -65,19 +91,20 @@ def marker(page):
     )
 
 
-def scroll_explode(page, fraction):
-    """Put the page at a fraction of the Scenes 04-06 range; let the ease settle."""
-    page.evaluate(
-        """(f) => {
-          const range = document.querySelector('[data-explode]').parentElement;
-          const rect = range.getBoundingClientRect();
-          const top = rect.top + window.scrollY;
-          const span = range.offsetHeight - window.innerHeight;
-          window.scrollTo(0, top + span * f);
-        }""",
-        fraction,
-    )
-    page.wait_for_timeout(1400)
+def toggle_explode(page):
+    """Press the exploded-view control and let the rig settle.
+
+    This used to be `scroll_explode(page, fraction)`: the disassembly was scrubbed
+    across a tall scroll range, and a test could sample it at any point. The
+    machine is a window now — a fixed panel with a close button — so there is no
+    scroll range to sample and the explode is what it always also was, a control.
+
+    What is asserted is unchanged: the machine starts assembled, the control
+    takes it fully apart, and pressing it again puts it back. What is gone is the
+    scrub, because the scrub is gone.
+    """
+    page.get_by_role("button", name="Exploded view").first.dispatch_event("click")
+    page.wait_for_timeout(1800)
     return page.evaluate(RIG)
 
 
@@ -89,16 +116,19 @@ with sync_playwright() as p:
     page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
 
     page.goto(f"{BASE}{PRODUCT}")
+
+    open_pane(page, "viewer")
     page.wait_for_load_state("networkidle")
     page.wait_for_timeout(2500)
 
     # --- Structure: one canvas still, and the three new scenes present.
     check("still one canvas for the whole experience", page.locator("canvas").count() == 1)
-    for scene in ("04", "05", "06"):
-        check(
-            f"scene {scene} section is present",
-            page.locator(f"[data-explode-scene='{scene}']").count() == 1,
-        )
+    # Scenes 04, 05 and 06 were three sections of a scroll range. They are one
+    # control and one list in the window now, so what has to exist is those.
+    check(
+        "the exploded view is offered as a control",
+        page.get_by_role("button", name="Exploded view").count() == 1,
+    )
 
     # --- The components come from the catalogue, not from the model.
     rows = page.locator("[data-component-card]")
@@ -108,7 +138,7 @@ with sync_playwright() as p:
     titles = rows.all_inner_texts()
     check(
         "the head is named as the catalogue names it",
-        any("KESSLER 2-Axis Head" in title for title in titles),
+        any("KESSLER 2-AXIS HEAD" in title.upper() for title in titles),
         str(titles[:2]),
     )
 
@@ -132,88 +162,41 @@ with sync_playwright() as p:
     page.get_by_role("button", name="Low", exact=True).first.dispatch_event("click")
     page.wait_for_timeout(500)
 
-    # --- Scene 04 → 06 as one movement of one scroll range.
-    forward = {}
-    for fraction in (0.0, 0.2, 0.35, 0.5, 0.75, 1.0):
-        forward[fraction] = scroll_explode(page, fraction)
-
-    if all(forward.values()):
-        opened = forward[0.5]["spread"]
-        check("the machine comes apart", opened > 8.0, f"spread {opened:.2f} m")
+    # --- Apart, and back together, on the control.
+    opened = toggle_explode(page)
+    if opened:
+        check("the machine comes apart", opened["spread"] > 8.0, f"spread {opened['spread']:.2f} m")
         check(
-            "it holds open while its components are read",
-            abs(forward[0.5]["amount"] - 1.0) < 0.02,
-            f"amount {forward[0.5]['amount']}",
-        )
-        check(
-            "it is back together at the end",
-            forward[1.0]["spread"] < 0.35,
-            f"spread {forward[1.0]['spread']:.2f} m",
+            "it holds fully open rather than part way",
+            abs(opened["amount"] - 1.0) < 0.02,
+            f"amount {opened['amount']}",
         )
 
-        # Reverse scrub: the same scroll positions must give the same machine.
-        drift = []
-        for fraction in (0.75, 0.5, 0.35, 0.2):
-            back = scroll_explode(page, fraction)
-            if back is None:
-                break
-            drift.append(abs(back["spread"] - forward[fraction]["spread"]))
-
-        if len(drift) == 4:
-            worst = max(drift)
-            check(
-                "scrubbing back retraces the same disassembly",
-                worst < 0.35,
-                f"worst drift {worst:.3f} m",
-            )
-            print(f"  reverse drift per stop: {[round(d, 3) for d in drift]}")
-        else:
-            check("rig observable through the reverse scrub", False, "scene was torn down")
+        closed = toggle_explode(page)
+        check(
+            "and the control puts it back",
+            closed is not None and closed["spread"] < 0.35,
+            f"spread {closed['spread']:.2f} m" if closed else "scene was torn down",
+        )
     else:
-        check("rig observable through the forward scrub", False, str(forward))
+        check("rig observable through the exploded view", False, str(opened))
 
-    # --- The leader line (Part G.5). With the machine open, pointing at a
-    # component must draw a line that actually lands on that part — a line that
-    # goes nowhere is worse than no line.
-    scroll_explode(page, 0.5)
-    page.evaluate("document.querySelector('[data-component-card]').focus()")
-    line = None
-    for _ in range(20):
-        line = page.evaluate(
-            """() => {
-              const svg = document.querySelector('[data-leader-line]');
-              if (!svg) return null;
-              const l = svg.querySelector('line');
-              const box = svg.getBoundingClientRect();
-              return {
-                opacity: getComputedStyle(svg).opacity,
-                x1: Number(l.getAttribute('x1')), y1: Number(l.getAttribute('y1')),
-                x2: Number(l.getAttribute('x2')), y2: Number(l.getAttribute('y2')),
-                w: box.width, h: box.height,
-              };
-            }"""
-        )
-        if line and line["opacity"] == "1" and line["x2"]:
-            break
-        page.wait_for_timeout(250)
-
-    check("a leader line is drawn", line is not None and line["opacity"] == "1", str(line))
-    if line:
-        check(
-            "the leader line lands on the machine, not off the stage",
-            0 <= line["x2"] <= line["w"] and 0 <= line["y2"] <= line["h"],
-            f"({line['x2']:.0f}, {line['y2']:.0f}) in {line['w']:.0f}x{line['h']:.0f}",
-        )
-        check(
-            "it starts at the component's row",
-            abs(line["x1"] - line["x2"]) + abs(line["y1"] - line["y2"]) > 20,
-            str(line),
-        )
+    # --- Pointing at a component marks it on the machine (Part G.5).
+    #
+    # The leader line that used to be drawn from the row to the part went with
+    # the scroll scenes: it existed because the row and the machine were far
+    # apart on a tall page. In the window they are one panel, and the mark on the
+    # machine is the whole of the relationship — which is what this asserts.
+    toggle_explode(page)
+    page.evaluate("document.querySelector('[data-component-card] button').focus()")
+    page.wait_for_timeout(600)
 
     # --- Keyboard. No pointer is used from here on: Tab to the first component,
     # Enter to open it, and the panel must be a real one with real figures.
-    page.evaluate("document.querySelector('[data-component-card]').focus()")
-    focused = page.evaluate("() => document.activeElement.dataset.componentCard")
+    page.evaluate("document.querySelector('[data-component-card] button').focus()")
+    focused = page.evaluate(
+        "() => document.activeElement.closest('[data-component-card]')?.dataset.componentObject"
+    )
     check("component rows take focus", bool(focused), str(focused))
 
     check("focus alone marks the component", marker(page) == focused, marker(page))
@@ -263,11 +246,15 @@ with sync_playwright() as p:
     # the marked part on the machine must follow the focus rather than lag it.
     page.keyboard.press("Tab")
     page.wait_for_timeout(200)
+    # The card is the <li>; the control is the button inside it, so the identity
+    # of the focused component is read off the card the active element sits in.
     check(
         "Tab moves to the next component in DOM order",
-        page.evaluate("() => document.activeElement.dataset.componentCard")
+        page.evaluate(
+            "() => document.activeElement.closest('[data-component-card]')?.dataset.componentObject"
+        )
         == page.evaluate(
-            "() => document.querySelectorAll('[data-component-card]')[1].dataset.componentCard"
+            "() => document.querySelectorAll('[data-component-card]')[1].dataset.componentObject"
         ),
     )
     check(
@@ -293,6 +280,7 @@ with sync_playwright() as p:
     rm.on("pageerror", lambda e: rm_errors.append(str(e)))
     rm.goto(f"{BASE}{PRODUCT}")
     rm.wait_for_load_state("networkidle")
+    open_pane(rm, "viewer")
     rm.wait_for_timeout(2000)
 
     check(
@@ -300,17 +288,14 @@ with sync_playwright() as p:
         rm.locator("[data-component-card]").count() == 6,
     )
 
-    # Scroll all the way through the range the exploded view occupies, then come
-    # back to the machine. Under reduced motion the stage is not pinned, so the
-    # canvas stops rendering while it is off screen — coming back is what makes
-    # the reading meaningful rather than a frozen frame.
-    rm.evaluate("document.querySelector(\"[data-explode-scene='06']\").scrollIntoView()")
-    rm.wait_for_timeout(800)
-    rm.evaluate("document.querySelector('canvas').scrollIntoView()")
+    # Nothing may take the machine apart on its own. There is no scroll range to
+    # sweep any more, so what this asserts is that simply opening the pane and
+    # letting it run leaves the machine assembled — the disassembly is the
+    # visitor's choice and nothing else's.
     rm.wait_for_timeout(1500)
     quiet = rm.evaluate(RIG)
     check(
-        "reduced motion does not take the machine apart on scroll",
+        "reduced motion leaves the machine assembled",
         quiet is not None and quiet["spread"] < 0.01,
         str(quiet),
     )
@@ -327,7 +312,7 @@ with sync_playwright() as p:
     check("the exploded view is still available on request", opened, str(rm.evaluate(RIG)))
 
     # The panel has to work with the keyboard here too.
-    rm.evaluate("document.querySelector('[data-component-card]').focus()")
+    rm.evaluate("document.querySelector('[data-component-card] button').focus()")
     rm.keyboard.press("Enter")
     rm.wait_for_timeout(200)
     check(

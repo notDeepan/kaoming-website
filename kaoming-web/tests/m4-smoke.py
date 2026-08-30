@@ -20,6 +20,32 @@ import sys
 
 from playwright.sync_api import sync_playwright
 
+
+def open_pane(page, pane):
+    """Open one pane of the machine window.
+
+    A series is a window now, not a page you scroll: the web of figures is the
+    opening pane, and the specification, the 3D view and the photographs are the
+    others. Content that used to be a section further down the page is a tab
+    away, so a test that wants it has to ask for it. Nothing here relaxes what is
+    then asserted.
+    """
+    tab = page.locator(f"[data-pane='{pane}']")
+    if tab.count() == 0:
+        return False
+    tab.first.click()
+    page.wait_for_timeout(600)
+    if pane == "viewer":
+        # The model is fetched when the pane opens. Wait for the machine to be
+        # on screen rather than for a fixed number of milliseconds.
+        try:
+            page.wait_for_selector("[data-viewer-ready='true']", timeout=45_000)
+            page.wait_for_timeout(700)
+        except Exception:
+            pass
+    return True
+
+
 BASE = "http://localhost:3000"
 PRODUCT = "/en/products/gantry-machining-center/kmc-gm"
 GL_ARGS = ["--use-gl=swiftshader", "--enable-unsafe-swiftshader"]
@@ -66,121 +92,45 @@ with sync_playwright() as p:
     page.on("pageerror", lambda e: errors.append(str(e)))
     page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
 
+    # ---------------------------------------------- what M4 measured, and where
+    #
+    # M4 was the scroll choreography of the product page: scene 03 pinned the
+    # stage, scrubbed a scripted camera path across a tall range, and slid the
+    # feature cards past it from alternating sides. All of it was measured here —
+    # the forward pass, the reverse pass, the drift between them.
+    #
+    # A machine is a window now. It does not scroll, so there is no scrub to
+    # measure and no pinned stage to check: the camera is the visitor's, the
+    # features are a list in the specification pane, and the disassembly is a
+    # control (measured in m5-smoke). Those assertions are not weakened here,
+    # they are gone with the thing they described.
+    #
+    # What is still M4's subject — scroll choreography that still exists — is
+    # asserted where it lives: the landing hero's parallax and the history
+    # timeline's pinned scrub in their own suites, the shared-element transition
+    # below, and the constellation that replaced this page's opening.
     page.goto(f"{BASE}{PRODUCT}")
     page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(1500)
+
+    check(
+        "the machine opens as a window, not a scrolling page",
+        page.locator("[data-machine-window]").count() == 1,
+    )
+    check(
+        "and there is nothing behind it to scroll to",
+        page.evaluate("() => document.documentElement.scrollHeight <= window.innerHeight + 1"),
+        str(page.evaluate("() => document.documentElement.scrollHeight - window.innerHeight")),
+    )
+
+    open_pane(page, "viewer")
     page.wait_for_timeout(2500)
-
-    check("one canvas for the whole experience", page.locator("canvas").count() == 1)
-    check("scene 03 section is present", page.locator("section[data-scrubbed]").count() == 1)
-
-    cards = page.locator("[data-feature-card]")
-    count = cards.count()
-    check("feature cards render from the catalogue", 3 <= count <= 6, f"{count} cards")
-
-    # Cards must alternate sides, which is what makes the machine readable
-    # between them rather than permanently hidden behind a panel.
-    sides = page.evaluate("""() => [...document.querySelectorAll('[data-feature-card]')]
-      .map((el) => getComputedStyle(el).justifyContent)""")
-    check("cards alternate sides", len(set(sides)) == 2, str(sides))
-
-    # Pin the quality tier before measuring. Under software rasterisation the
-    # watchdog correctly walks the Part O ladder and eventually removes the
-    # canvas, which would end the measurement rather than fail it — and the
-    # scrub takes long enough to measure that it gets there. Dispatched rather
-    # than clicked: a real click scrolls the control into view, which moves the
-    # very scroll position being measured.
-    page.get_by_role("button", name="Low", exact=True).first.dispatch_event("click")
-    page.wait_for_timeout(500)
-
-    # --- Forward pass, recording the camera at each stop.
-    forward = {}
-    for fraction in (0.0, 0.25, 0.5, 0.75, 1.0):
-        pose = scroll_to(page, fraction)
-        check(f"camera readable at {fraction:.2f}", pose is not None)
-        if pose is None:
-            break
-        forward[fraction] = pose
-
-    if len(forward) == 5:
-        # The camera must actually travel: a scrub that does not move is not a
-        # scrub, and would pass every other check here.
-        travelled = distance(forward[0.0], forward[1.0])
-        check("camera travels across the scroll range", travelled > 4.0, f"{travelled:.2f} units")
-
-        # No jumps between adjacent samples — the path is a curve, not a cut.
-        hops = [
-            distance(forward[a], forward[b])
-            for a, b in ((0.0, 0.25), (0.25, 0.5), (0.5, 0.75), (0.75, 1.0))
-        ]
-        check("no discontinuity along the path", max(hops) < travelled, f"max hop {max(hops):.2f}")
-
-        # --- Reverse pass: the same positions, scrolled the other way.
-        # Progress 0 is excluded on purpose: at exactly zero the visitor is back
-        # in Scene 01, where the camera idles by design, so it is the one point
-        # that is legitimately not a function of scroll.
-        drift = []
-        for fraction in (0.75, 0.5, 0.25):
-            pose = scroll_to(page, fraction)
-            if pose is None:
-                break
-            drift.append(distance(pose, forward[fraction]))
-
-        if len(drift) == 3:
-            worst = max(drift)
-            check(
-                "scrubbing back retraces the same path",
-                worst < 0.25,
-                f"worst drift {worst:.3f} units",
-            )
-            print(f"  reverse drift per stop: {[round(d, 3) for d in drift]}")
-        else:
-            check("camera observable through the reverse scrub", False, "scene was torn down")
-
-        # --- Framerate independence. Throttle the CPU hard, repeat the pass,
-        # and the camera must land in the same places: a frame-counted animation
-        # would fall behind and land somewhere else.
-        cdp = page.context.new_cdp_session(page)
-        cdp.send("Emulation.setCPUThrottlingRate", {"rate": 6})
-        slow = {}
-        for fraction in (0.25, 0.5, 0.75):
-            slow[fraction] = scroll_to(page, fraction)
-        cdp.send("Emulation.setCPUThrottlingRate", {"rate": 1})
-
-        if all(slow[f] for f in slow):
-            deltas = [distance(slow[f], forward[f]) for f in slow]
-            worst_fps = max(deltas)
-            check(
-                "same scroll lands the camera in the same place at 6x CPU throttle",
-                worst_fps < 0.25,
-                f"worst {worst_fps:.3f} units",
-            )
-            print(f"  throttled drift per stop: {[round(d, 3) for d in deltas]}")
-        else:
-            check("camera observable while throttled", False, "scene was torn down")
-
-    check("no console errors during the scrub", not errors, str(errors[:3]))
-    page.close()
-
-    # --- Reduced motion: the calm variant. No pinning, no scrub, cards readable.
-    ctx = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
-    rm = ctx.new_page()
-    rm.goto(f"{BASE}{PRODUCT}")
-    rm.wait_for_load_state("networkidle")
-    rm.wait_for_timeout(2000)
-    sticky = rm.evaluate("""() => {
-      const stage = document.querySelector('section[data-scrubbed] > div');
-      return getComputedStyle(stage).position;
-    }""")
-    check("reduced motion does not pin the stage", sticky != "sticky", str(sticky))
-
-    before = rm.evaluate(CAMERA_POSE)
-    rm.evaluate("window.scrollBy(0, 2500)")
-    rm.wait_for_timeout(1500)
-    after = rm.evaluate(CAMERA_POSE)
-    if before and after:
-        moved = distance(before, after)
-        check("reduced motion does not scroll-drive the camera", moved < 0.6, f"{moved:.3f} units")
-    ctx.close()
+    check("the 3D is a pane of that window", page.locator("canvas").count() == 1)
+    check(
+        "the camera is the visitor's from the first frame",
+        page.get_by_role("button", name="Reset").count() == 1,
+    )
+    check("no console errors in the window", not errors, str(errors[:2]))
 
     # --- The entry transition names a shared element on both sides.
     t = browser.new_page(viewport={"width": 1440, "height": 900})
@@ -246,9 +196,9 @@ with sync_playwright() as p:
     # The core's two ways out.
     check(
         "the core opens the 3D view",
-        t.locator("[data-constellation-core] a[href='#experience']").count() == 1,
+        t.locator("[data-constellation-core] [data-open-3d]").count() == 1,
     )
-    check("the 3D anchor exists", t.locator("#experience").count() == 1)
+    check("the 3D pane exists to open", t.locator("[data-pane='viewer']").count() == 1)
 
     # Hovering a fact traces it back to the middle.
     first = t.locator("[data-node]").first.get_attribute("data-fact")

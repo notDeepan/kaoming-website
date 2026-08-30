@@ -254,7 +254,17 @@ export function RfqForm({
   }
 
   return (
-    <form ref={formRef} onSubmit={onSubmit} noValidate className="max-w-[46rem]">
+    <form
+      ref={formRef}
+      onSubmit={onSubmit}
+      noValidate
+      /* Where the enquiry came from, on the form rather than only in the
+         payload. It used to be legible in the URL a visitor followed to get
+         here; now that a machine carries its own enquiry, the form is the only
+         place attribution can be read from outside. */
+      data-rfq-source={source}
+      className="max-w-[46rem]"
+    >
       {submissionDisabled ? (
         <p
           data-static-notice

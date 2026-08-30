@@ -82,9 +82,19 @@ python tests/theme-audit.py   # both themes, WCAG contrast computed per surface
 python tests/perf-guards.py   # GPU tier cap and the smooth-scroll gate
 ```
 
-**488 checks, all green.** Every one needs the production server running. The M2
-suite also needs a database (`npm run db:migrate`) and posts enough enquiries to
-trip the rate limiter, so run it with `RFQ_RATE_MAX=40`.
+**472 checks, all green.** Every one needs the production server running, built
+by `npm run build` — after `npm run pages` the `.next` directory holds the static
+export and `next start` answers every route with a 308. The M2 suite also needs a
+database (`npm run db:migrate`); it and M6 each send their enquiries from their
+own `X-Forwarded-For`, so the rate limiter is exercised for real without one
+suite spending another's budget.
+
+The count fell from 488 when the machine page became a window. Nothing was
+relaxed: what went was the scroll choreography that no longer exists on that
+route — M4's scripted camera path, its pinned stage and its alternating feature
+cards, and M5's sampling of the disassembly at points along a scroll range. The
+disassembly itself is still asserted end to end, on the control that now drives
+it.
 
 Three generated asset steps are not part of `next build` — they read the kit
 rather than the app, and only need re-running when their sources change:

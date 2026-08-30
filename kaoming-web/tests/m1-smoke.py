@@ -13,6 +13,32 @@ document manifest on the resource centre, and no WebGL context anywhere.
 
 from playwright.sync_api import sync_playwright
 
+
+def open_pane(page, pane):
+    """Open one pane of the machine window.
+
+    A series is a window now, not a page you scroll: the web of figures is the
+    opening pane, and the specification, the 3D view and the photographs are the
+    others. Content that used to be a section further down the page is a tab
+    away, so a test that wants it has to ask for it. Nothing here relaxes what is
+    then asserted.
+    """
+    tab = page.locator(f"[data-pane='{pane}']")
+    if tab.count() == 0:
+        return False
+    tab.first.click()
+    page.wait_for_timeout(600)
+    if pane == "viewer":
+        # The model is fetched when the pane opens. Wait for the machine to be
+        # on screen rather than for a fixed number of milliseconds.
+        try:
+            page.wait_for_selector("[data-viewer-ready='true']", timeout=45_000)
+            page.wait_for_timeout(700)
+        except Exception:
+            pass
+    return True
+
+
 BASE = "http://localhost:3000"
 results = []
 
@@ -66,6 +92,10 @@ with sync_playwright() as p:
         heading = page.locator("h1").first.inner_text()
         check(f"{series} names the catalogue series", "KMC-" in heading, heading)
 
+        # The provenance, the model table and the specification all live in the
+        # window's specification pane now.
+        open_pane(page, "spec")
+
         # Provenance is on every page that shows a specification.
         check(
             f"{series} states its source",
@@ -87,27 +117,30 @@ with sync_playwright() as p:
     # The flagship carries the full transcribed specification.
     page.goto(f"{BASE}/en/products/gantry-machining-center/kmc-gm")
     page.wait_for_load_state("networkidle")
+    open_pane(page, "spec")
     open_specifications(page)
     body = page.inner_text("main")
     for value in ("HSK-A100", "15,000 rpm", "±0.002", "50,000 kg", "KMC-625GM"):
         check(f"kmc-gm shows {value}", value in body)
 
-    # Scene 03 carries the first six features; anything beyond is listed below
-    # it and numbered from seven. GM states seven features, GN nine — so the
-    # overflow indices are the arithmetic proof that the split is right.
-    for series, expected in (("kmc-gm", ["07"]), ("kmc-gn", ["07", "08", "09"])):
+    # The catalogue features, all of them, in the specification pane.
+    #
+    # These used to be split: the first six were the info cards of scroll-scene
+    # 03 and the remainder was an "overflow" list numbered from seven. The scenes
+    # are gone with the scrolling page, and the split was never a distinction the
+    # catalogue made — so the count is now simply every feature the series
+    # states. GM states seven, GN nine.
+    for series, expected in (("kmc-gm", 7), ("kmc-gn", 9)):
         page.goto(f"{BASE}/en/products/gantry-machining-center/{series}")
         page.wait_for_load_state("networkidle")
-        indices = page.evaluate(
-            """() => [...document.querySelectorAll('section li > span.km-label')]
-                 .map((el) => el.textContent.trim())
-                 .filter((text) => /^0[7-9]$/.test(text))"""
-        )
-        check(f"{series} numbers its overflow features {expected}", indices == expected, str(indices))
+        open_pane(page, "spec")
+        listed = page.locator("[data-feature]").count()
+        check(f"{series} lists all {expected} catalogue features", listed == expected, str(listed))
 
     # Traditional Chinese renders the same figures with translated labels.
     page.goto(f"{BASE}/zh-tw/products/gantry-machining-center/kmc-gm")
     page.wait_for_load_state("networkidle")
+    open_pane(page, "spec")
     open_specifications(page)
     zh = page.inner_text("main")
     check("zh-tw keeps catalogue figures", "HSK-A100" in zh and "50,000 kg" in zh)
@@ -134,6 +167,8 @@ with sync_playwright() as p:
 
     page.goto(f"{BASE}/en/products/gantry-machining-center/kmc-gm")
     page.wait_for_load_state("networkidle")
+    open_pane(page, "spec")
+    open_specifications(page)
     product = page.inner_text("main")
     check(
         "product page states its specification in the DOM, not only in 3D",
@@ -164,6 +199,7 @@ with sync_playwright() as p:
         "document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1"
     )
     check("mobile page does not scroll sideways", overflow)
+    open_pane(m, "spec")
     scroller = m.evaluate(
         "!!document.querySelector('table')?.closest('div')?.matches('.overflow-x-auto')"
     )

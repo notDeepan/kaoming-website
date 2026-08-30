@@ -47,7 +47,11 @@ export function isTheme(value: unknown): value is Theme {
  */
 export function themeInitScript(): string {
   return [
-    '(function(){try{',
+    // `data-js` gates every rule that hides content behind an interactive
+    // control. Set before the try, and before first paint, so a machine's
+    // specification is a plain readable document when scripting is off and
+    // never flashes all four panes at once when it is on.
+    "(function(){document.documentElement.setAttribute('data-js','');try{",
     `var t=localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});`,
     "if(t==='dark'||t==='light'){",
     "var r=document.documentElement;",

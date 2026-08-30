@@ -17,6 +17,32 @@ import urllib.request
 
 from playwright.sync_api import sync_playwright
 
+
+def open_pane(page, pane):
+    """Open one pane of the machine window.
+
+    A series is a window now, not a page you scroll: the web of figures is the
+    opening pane, and the specification, the 3D view and the photographs are the
+    others. Content that used to be a section further down the page is a tab
+    away, so a test that wants it has to ask for it. Nothing here relaxes what is
+    then asserted.
+    """
+    tab = page.locator(f"[data-pane='{pane}']")
+    if tab.count() == 0:
+        return False
+    tab.first.click()
+    page.wait_for_timeout(600)
+    if pane == "viewer":
+        # The model is fetched when the pane opens. Wait for the machine to be
+        # on screen rather than for a fixed number of milliseconds.
+        try:
+            page.wait_for_selector("[data-viewer-ready='true']", timeout=45_000)
+            page.wait_for_timeout(700)
+        except Exception:
+            pass
+    return True
+
+
 BASE = "http://localhost:3000"
 GL_ARGS = ["--use-gl=swiftshader", "--enable-unsafe-swiftshader"]
 results = []
@@ -83,7 +109,11 @@ with sync_playwright() as p:
 
     # Part P: hotspots focusable, Enter opens. Measured properly at M5; this is
     # the regression guard now that four more milestones sit on top of it.
-    page.evaluate("document.querySelector('[data-component-card]').focus()")
+    # The component list is in the window's 3D pane, and the control is the
+    # button inside the card.
+    open_pane(page, "viewer")
+    page.wait_for_timeout(2000)
+    page.evaluate("document.querySelector('[data-component-card] button').focus()")
     page.keyboard.press("Enter")
     page.wait_for_timeout(300)
     check(

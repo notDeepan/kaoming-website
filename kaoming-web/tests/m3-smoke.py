@@ -23,6 +23,32 @@ from playwright.sync_api import sync_playwright
 
 BASE = "http://localhost:3000"
 PRODUCT = "/en/products/gantry-machining-center/kmc-gm"
+
+
+def open_pane(page, pane):
+    """Open one pane of the machine window.
+
+    A series is a window now, not a page you scroll: the web of figures is the
+    opening pane, and the specification, the 3D view and the photographs are the
+    others. Content that used to be a section further down the page is a tab
+    away, so a test that wants it has to ask for it. Nothing here relaxes what is
+    then asserted.
+    """
+    tab = page.locator(f"[data-pane='{pane}']")
+    if tab.count() == 0:
+        return False
+    tab.first.click()
+    page.wait_for_timeout(600)
+    if pane == "viewer":
+        # The model is fetched when the pane opens. Wait for the machine to be
+        # on screen rather than for a fixed number of milliseconds.
+        try:
+            page.wait_for_selector("[data-viewer-ready='true']", timeout=45_000)
+            page.wait_for_timeout(700)
+        except Exception:
+            pass
+    return True
+
 GL_ARGS = ["--use-gl=swiftshader", "--enable-unsafe-swiftshader"]
 results = []
 
@@ -32,16 +58,21 @@ def check(name, ok, detail=""):
 
 
 def to_scene_01(page):
-    """Put the stage at the top of the viewport.
+    """Put the stage in view and wait for it.
 
-    M4 made the viewer a sticky stage at the head of a tall scroll container, so
-    scrolling a fixed number of pixels now lands somewhere inside Scene 03 —
-    where the scripted camera has taken over and Scene 02's affordances are
-    deliberately gone.
+    This used to scroll: the viewer was a sticky stage at the head of a tall
+    container, and scrolling a fixed number of pixels landed somewhere inside
+    Scene 03 where the scripted camera had already taken over.
+
+    The viewer is a pane of the machine window now. There is nothing to scroll
+    to — opening the pane is what puts it on screen — so this is only the wait
+    for the scene to come up. It still scrolls where a viewer is found on an
+    ordinary page, so the helper works either way.
     """
     page.evaluate("""() => {
-      const section = document.querySelector('section[data-quality-step]');
-      window.scrollTo(0, section.getBoundingClientRect().top + window.scrollY);
+      const stage = document.querySelector('[data-quality-step]');
+      if (!stage || stage.closest('[data-machine-window]')) return;
+      window.scrollTo(0, stage.getBoundingClientRect().top + window.scrollY);
     }""")
     page.wait_for_timeout(2500)
 
@@ -69,6 +100,8 @@ with sync_playwright() as p:
     page.on("pageerror", lambda e: console_errors.append(str(e)))
 
     page.goto(f"{BASE}{PRODUCT}")
+
+    open_pane(page, "viewer")
     page.wait_for_load_state("networkidle")
     to_scene_01(page)
 
@@ -105,11 +138,12 @@ with sync_playwright() as p:
         page.get_by_text("Scale placeholder").first.is_visible(),
     )
 
-    # --- Scene 02: the control strip appears and inspection can be entered.
-    explore = page.get_by_role("button", name="Explore this machine")
-    check("scene 01 offers the way into inspection", explore.count() == 1)
-    explore.first.click()
-    page.wait_for_timeout(1200)
+    # --- The controls.
+    #
+    # There is no longer a gate to pass first. "Explore this machine" existed
+    # because Scene 01 was a scripted approach that the visitor had to take the
+    # camera back from; the viewer is a pane you opened on purpose, so it is
+    # interactive from the first frame and the control strip is simply there.
     for control in ("Reset", "Auto rotate", "Fullscreen"):
         check(f"control strip has {control}", page.get_by_role("button", name=control).count() >= 1)
     # The exploded view was declared pending at M3 and built at M5, so this now
@@ -143,12 +177,13 @@ with sync_playwright() as p:
     slow = browser.new_page(viewport={"width": 1440, "height": 900})
     slow.goto(f"{BASE}{PRODUCT}")
     slow.wait_for_load_state("networkidle")
+    open_pane(slow, "viewer")
     to_scene_01(slow)
     fps = slow.evaluate(FPS_PROBE)
     print(f"  frame rate under software rasterisation: {fps} fps (not a GPU figure)")
 
     slow.wait_for_timeout(12000)
-    section = slow.locator("section[data-quality-step]").first
+    section = slow.locator("[data-quality-step]").first
     step = section.get_attribute("data-quality-step")
     check("degradation ladder engages when the floor is missed", step != "full", f"still '{step}'")
     print(f"  ladder walked to: {step}")
@@ -156,7 +191,7 @@ with sync_playwright() as p:
     if step == "static":
         check(
             "static fallback hands the page back to photography",
-            slow.locator("section[data-quality-step] img").count() >= 1,
+            slow.locator("[data-quality-step] img").count() >= 1,
         )
         check("static fallback drops the canvas", slow.locator("canvas").count() == 0)
     slow.close()
@@ -165,6 +200,7 @@ with sync_playwright() as p:
     idle = browser.new_page(viewport={"width": 1440, "height": 900})
     idle.goto(f"{BASE}{PRODUCT}")
     idle.wait_for_load_state("networkidle")
+    open_pane(idle, "viewer")
     to_scene_01(idle)
     idle.evaluate("window.__before = performance.now()")
     idle.mouse.wheel(0, 6000)  # scroll the viewer far out of view
@@ -184,11 +220,11 @@ with sync_playwright() as p:
     # scroll. So the assertion is conditional on the ladder not having given up:
     # either the canvas is still there, or the page has correctly handed itself
     # back to photography.
-    idle_step = idle.locator("section[data-quality-step]").first.get_attribute("data-quality-step")
+    idle_step = idle.locator("[data-quality-step]").first.get_attribute("data-quality-step")
     if idle_step == "static":
         check(
             "scrolled away, the static fallback stands in for the canvas",
-            idle.locator("section[data-quality-step] img").count() >= 1,
+            idle.locator("[data-quality-step] img").count() >= 1,
             idle_step,
         )
     else:
@@ -204,6 +240,7 @@ with sync_playwright() as p:
     rm = ctx.new_page()
     rm.goto(f"{BASE}{PRODUCT}")
     rm.wait_for_load_state("networkidle")
+    open_pane(rm, "viewer")
     to_scene_01(rm)
     check("reduced motion still shows the machine", rm.locator("canvas").count() == 1)
     check(
@@ -218,7 +255,20 @@ with sync_playwright() as p:
     nb = blind.new_page(viewport={"width": 1440, "height": 900})
     nb.goto(f"{BASE}{PRODUCT}")
     nb.wait_for_load_state("networkidle")
+    # The 3D pane degrades to the photograph, and the figures are a tab away and
+    # unaffected — which is the point: the 3D was never carrying them.
+    open_pane(nb, "viewer")
     nb.wait_for_timeout(1500)
+    check(
+        "no-webgl viewer falls back to the photograph",
+        nb.locator("[data-machine-viewer] img").count() >= 1,
+    )
+
+    open_pane(nb, "spec")
+    control = nb.locator("[data-spec-expand]")
+    if control.count():
+        control.first.click()
+        nb.wait_for_timeout(400)
     body = nb.inner_text("main")
     check("no-webgl page still states the specification", "HSK-A100" in body)
     check("no-webgl page still shows the model table", nb.locator("table").count() >= 1)
@@ -227,6 +277,8 @@ with sync_playwright() as p:
 
 # --- Bundle isolation: three.js must not reach a route without a machine.
 import urllib.request
+
+
 
 def scripts_for(path):
     with urllib.request.urlopen(BASE + path) as response:

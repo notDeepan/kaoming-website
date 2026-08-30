@@ -20,6 +20,42 @@ import time
 
 from playwright.sync_api import sync_playwright
 
+# The limiter keys on the client address, and its window is ten minutes of
+# process memory. Without an address of their own, the enquiries this suite
+# sends would still be counted against the ones m6 sends — and against this
+# suite's own previous run — which is how a green suite turns red for a reason
+# that is not a defect. Each block below gets its own address instead, so the
+# flood check still proves the limiter refuses a flood.
+TRAP_IP = f"10.7.{int(time.time()) % 251}.11"
+FLOOD_IP = f"10.7.{int(time.time()) % 251}.12"
+FORM_IP = f"10.7.{int(time.time()) % 251}.13"
+
+
+def open_pane(page, pane):
+    """Open one pane of the machine window.
+
+    A series is a window now, not a page you scroll: the web of figures is the
+    opening pane, and the specification, the 3D view and the photographs are the
+    others. Content that used to be a section further down the page is a tab
+    away, so a test that wants it has to ask for it. Nothing here relaxes what is
+    then asserted.
+    """
+    tab = page.locator(f"[data-pane='{pane}']")
+    if tab.count() == 0:
+        return False
+    tab.first.click()
+    page.wait_for_timeout(600)
+    if pane == "viewer":
+        # The model is fetched when the pane opens. Wait for the machine to be
+        # on screen rather than for a fixed number of milliseconds.
+        try:
+            page.wait_for_selector("[data-viewer-ready='true']", timeout=45_000)
+            page.wait_for_timeout(700)
+        except Exception:
+            pass
+    return True
+
+
 BASE = "http://localhost:3000"
 DB = os.path.join(os.path.dirname(__file__), "..", "prisma", "dev.db")
 results = []
@@ -61,14 +97,35 @@ with sync_playwright() as p:
         ("compare", "/en/compare?m=kmc-gm,kmc-gn", "Request a quote"),
         ("contact", "/en/support/contact", "Request a quote"),
     ]
-    page = browser.new_page(viewport={"width": 1440, "height": 900})
+    page = browser.new_page(
+        viewport={"width": 1440, "height": 900},
+        extra_http_headers={"x-forwarded-for": FORM_IP},
+    )
     for source, path, label in entry_points:
         page.goto(f"{BASE}{path}")
         page.wait_for_load_state("networkidle")
+        # A machine is a window now, and its enquiry sits in the specification
+        # pane beside the figures it would be quoting against.
+        if source == "product":
+            open_pane(page, "spec")
+        if source == "product":
+            # A machine holds its own enquiry now, so attribution is carried by
+            # the form rather than by a query string on a link to one. Same two
+            # facts, read where they now live.
+            check(
+                "product carries a source",
+                page.locator("[data-rfq-source]").first.get_attribute("data-rfq-source")
+                == "product",
+                str(page.locator("[data-rfq-source]").first.get_attribute("data-rfq-source")),
+            )
+            pressed = page.locator('[data-machine="kmc-gm"]').first.get_attribute("aria-pressed")
+            check("product carries a machine", pressed == "true", str(pressed))
+            continue
+
         # Scoped to main: the header CTA carries the same label on every page.
         href = page.locator("main").get_by_role("link", name=label).first.get_attribute("href")
         check(f"{source} links to the RFQ with a source", href and "source=" in href, str(href))
-        if source in ("product", "compare"):
+        if source == "compare":
             check(f"{source} carries a machine", href and "machine=" in href, str(href))
 
     # --- The form pre-populates from the URL.
@@ -125,9 +182,9 @@ with sync_playwright() as p:
     c = browser.new_page(viewport={"width": 1440, "height": 900})
     c.goto(f"{BASE}/en/products/gantry-machining-center/kmc-gm")
     c.wait_for_load_state("networkidle")
-    # Two controls since M6: one in the hero for a buyer who has already
-    # decided, one in Scene 09 for a buyer who decided after reading the
-    # specification. Both drive the same tray, so either will do here.
+    # One control now, in the window's specification pane — beside the figures a
+    # buyer would be comparing. The hero copy of it went with the hero.
+    open_pane(c, "spec")
     c.get_by_role("button", name="Add to compare").first.click()
     c.wait_for_timeout(400)
     check("tray appears after adding", c.get_by_role("complementary").is_visible())
@@ -140,7 +197,7 @@ with sync_playwright() as p:
     browser.close()
 
 # --- The abuse controls, exercised directly against the endpoint.
-def post(fields):
+def post(fields, address=TRAP_IP):
     payload = {
         "company": "Bot Co", "name": "Bot", "email": "bot@example.com",
         "country": "Germany", "consent": "true", "locale": "en", "source": "rfq",
@@ -151,7 +208,7 @@ def post(fields):
     for key, value in payload.items():
         args += ["-F", f"{key}={value}"]
     out = subprocess.run(
-        ["curl", "-s", "-o", "-", "-w", "\n%{http_code}", "-X", "POST", f"{BASE}/api/rfq", *args],
+        ["curl", "-s", "-o", "-", "-w", "\n%{http_code}", "-H", f"X-Forwarded-For: {address}", "-X", "POST", f"{BASE}/api/rfq", *args],
         capture_output=True, text=True,
     ).stdout.strip().splitlines()
     return out[-1], "\n".join(out[:-1])
@@ -178,7 +235,7 @@ check("still nothing stored from rejected attempts", len(query("SELECT id FROM L
 # --- The limiter itself: keep posting valid enquiries until one is refused.
 limit_hit = False
 for _ in range(int(os.environ.get("RFQ_RATE_MAX", "40")) + 2):
-    status, _ = post({"company": "Rate Limit Probe"})
+    status, _ = post({"company": "Rate Limit Probe"}, address=FLOOD_IP)
     if status == "429":
         limit_hit = True
         break

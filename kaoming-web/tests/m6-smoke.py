@@ -20,12 +20,39 @@ The QR entry (Part J.7) is walked separately afterwards: it is the one journey
 that does not start at the home page.
 """
 
+import time
 import json
 import sys
 import urllib.request
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
+
+
+def open_pane(page, pane):
+    """Open one pane of the machine window.
+
+    A series is a window now, not a page you scroll: the web of figures is the
+    opening pane, and the specification, the 3D view and the photographs are the
+    others. Content that used to be a section further down the page is a tab
+    away, so a test that wants it has to ask for it. Nothing here relaxes what is
+    then asserted.
+    """
+    tab = page.locator(f"[data-pane='{pane}']")
+    if tab.count() == 0:
+        return False
+    tab.first.click()
+    page.wait_for_timeout(600)
+    if pane == "viewer":
+        # The model is fetched when the pane opens. Wait for the machine to be
+        # on screen rather than for a fixed number of milliseconds.
+        try:
+            page.wait_for_selector("[data-viewer-ready='true']", timeout=45_000)
+            page.wait_for_timeout(700)
+        except Exception:
+            pass
+    return True
+
 
 BASE = "http://localhost:3000"
 GL_ARGS = ["--use-gl=swiftshader", "--enable-unsafe-swiftshader"]
@@ -86,6 +113,10 @@ with sync_playwright() as p:
     check("the card leads to the flagship", "kmc-gm" in page.url, page.url)
 
     # ------------------------------------------------------ FULL-SCREEN 3D
+    # Reached by clicking the card rather than by `goto`, so the pane is opened
+    # here rather than by the pass that patched the gotos.
+    check("the card opens the machine as a window", page.locator("[data-machine-window]").count() == 1)
+    open_pane(page, "viewer")
     check("the machine is on a canvas", page.locator("canvas").count() == 1)
 
     # Pin the tier: software rasterisation walks the Part O ladder and would
@@ -93,20 +124,16 @@ with sync_playwright() as p:
     page.get_by_role("button", name="Low", exact=True).first.dispatch_event("click")
     page.wait_for_timeout(400)
 
-    # -------------------------------------- SCROLL -> EXPLODED -> COMPONENTS
-    page.evaluate(
-        """() => {
-          const range = document.querySelector('[data-explode]').parentElement;
-          const rect = range.getBoundingClientRect();
-          const span = range.offsetHeight - window.innerHeight;
-          window.scrollTo(0, rect.top + window.scrollY + span * 0.5);
-        }"""
-    )
-    page.wait_for_timeout(1600)
+    # ------------------------------------------- EXPLODED -> COMPONENTS
+    # The disassembly was a scroll range on the old page; in the window it is a
+    # control. The journey is the same one — take the machine apart, ask a part
+    # what it is, put it back — and it is still asserted end to end.
+    page.get_by_role("button", name="Exploded view").first.dispatch_event("click")
+    page.wait_for_timeout(1800)
     rig = page.evaluate(RIG)
-    check("the machine comes apart on the way down", rig and rig["spread"] > 8.0, str(rig))
+    check("the machine comes apart on the way through", rig and rig["spread"] > 8.0, str(rig))
 
-    page.evaluate("document.querySelector('[data-component-card]').focus()")
+    page.evaluate("document.querySelector('[data-component-card] button').focus()")
     page.keyboard.press("Enter")
     page.wait_for_timeout(300)
     panel = page.evaluate("() => document.activeElement.getAttribute('aria-controls')")
@@ -114,17 +141,14 @@ with sync_playwright() as p:
     page.keyboard.press("Enter")
 
     # --------------------------------------------------------- REASSEMBLY
-    page.evaluate(
-        """() => {
-          const range = document.querySelector('[data-explode]').parentElement;
-          const rect = range.getBoundingClientRect();
-          const span = range.offsetHeight - window.innerHeight;
-          window.scrollTo(0, rect.top + window.scrollY + span);
-        }"""
-    )
-    page.wait_for_timeout(1600)
+    page.get_by_role("button", name="Exploded view").first.dispatch_event("click")
+    page.wait_for_timeout(1800)
     rig = page.evaluate(RIG)
     check("and goes back together", rig and rig["spread"] < 0.35, str(rig))
+
+    # The rest of the machine's own content — what it makes, who buys it, the
+    # specification and the way to ask for a price — is the window's other pane.
+    open_pane(page, "spec")
 
     # ----------------------------------------------------------- WORKPIECE
     check("the workpiece scene exists", page.locator("#workpiece").count() == 1)
@@ -230,12 +254,16 @@ with sync_playwright() as p:
     )
 
     # ---------------------------------------------------------------- EXIT
-    check("the way out is offered", page.locator("[data-product-exit]").count() == 1)
+    # The scroll-to-the-bottom exit band is gone with the scrolling page. A
+    # window closes, and its close control is in the header — which makes the
+    # way out reachable at every point of the journey rather than only at the
+    # end of it, so the second assertion is stronger here than it was.
+    check("the way out is offered", page.locator("[data-window-close]").count() == 1)
     check(
-        "and is reachable once past the first screen",
-        page.locator("[data-product-exit]").first.is_visible(),
+        "and is reachable from anywhere in the machine",
+        page.locator("[data-window-close]").first.is_visible(),
     )
-    page.locator("[data-product-exit]").first.click()
+    page.locator("[data-window-close]").first.click()
     page.wait_for_load_state("networkidle")
     check("it returns to the products", "/products" in page.url, page.url)
 
