@@ -209,7 +209,15 @@
     "viewSpecifications": "檢視完整規格",
     "hideSpecifications": "收合完整規格",
     "backToProducts": "返回產品",
-    "downloadsPending": "本系列目前僅有 2026 年型錄。型錄冊、機台配置圖、選配與應用指南將於發行後陸續提供。"
+    "downloadsPending": "本系列目前僅有 2026 年型錄。型錄冊、機台配置圖、選配與應用指南將於發行後陸續提供。",
+    "view3d": "開啟 3D 檢視",
+    "turntable": "拍攝視角",
+    "constellationHint": "此處數據均轉錄自 2026 年型錄 · 滑過卡片可看對應連線",
+    "specificationsTitle": "規格",
+    "fact": {
+      "models": "系列機型數",
+      "architecture": "結構"
+    }
   },
   "Spec": {
     "model": "機型",

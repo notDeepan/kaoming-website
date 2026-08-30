@@ -82,7 +82,7 @@ python tests/theme-audit.py   # both themes, WCAG contrast computed per surface
 python tests/perf-guards.py   # GPU tier cap and the smooth-scroll gate
 ```
 
-**479 checks, all green.** Every one needs the production server running. The M2
+**488 checks, all green.** Every one needs the production server running. The M2
 suite also needs a database (`npm run db:migrate`) and posts enough enquiries to
 trip the rate limiter, so run it with `RFQ_RATE_MAX=40`.
 
@@ -174,6 +174,29 @@ A fifth pass, from a whole-site critique:
 | **The compare page's empty state was a 24rem dead box** | One sentence and a button in a quarter-screen of ruled emptiness — and the sentence was an instruction rather than a way to do the thing. The whole comparable set is already a prop and the selection is just a URL parameter, so the empty state *is* the picker now: nine series, one click into the comparison. |
 | **The applications index was six identical boxes** | Each with a name, a line of grey text and a bare `→` — the "too many boxes" Part B.2 puts on its own avoid list. Now a numbered index: rule per row, industry set large, what KAO MING has actually published stated as a figure, a real link label. The one industry with nothing published says so instead of looking like the five that do. |
 | **"1 stated by KAO MING"** | One what. Now "1 application stated by KAO MING", properly pluralised in both locales. |
+
+## The machine page
+
+A series page used to open like every other product page on the internet: a
+photograph, a name, two buttons, and every figure about the machine below the
+fold in a table. It now opens on a **constellation** — the headline figures
+arranged around the machine itself, connected to it.
+
+| | |
+|---|---|
+| **Why radial** | These figures are not a sequence and they are not ranked. A buyer scanning for "how big is the table" should not have to read past spindle speed to reach it. A ring gives ten facts the same standing and puts the object they describe in the middle. A grid would imply an order the data does not have. |
+| **The turntable** | KAO MING supplies one to six photographs per series, taken from different angles rather than as an even sweep — so the core cross-fades through the angles that exist. A sprite of the machine turning, built only from photographs the company actually took. A series with one photograph holds still. |
+| **The facts** | `constellationFacts` in `lib/machines.ts`. Every one is transcribed or selected, never derived: a range is the minimum and maximum of figures the catalogue prints, a row is lifted whole, the model count is the length of the transcribed table. A series that states fewer than ten gets fewer than ten nodes. |
+| **On a phone** | A ring at 390px is a pile, so the same nodes become a column and the connectors are not drawn. The DOM order is the reading order either way — the ring is CSS positioning over a list, never a re-ordering of it. |
+
+Everything the page had is still there and still reachable: **Open the 3D view**
+scrolls to the scenes, **Open catalogue** opens the PDF, each fact links to its
+own specification table, and the enquiry and comparison sit on the hairline
+directly beneath.
+
+`tests/m4-smoke.py` gained nine checks for it, including the two things that
+broke while it was being built — a connector left un-drawn, and a ring radius
+too small for its cards.
 
 `tests/theme-audit.py` grew three checks for this: the contrast sweep cannot see
 a photograph through a transparent scrim, so the hero and the over-media header

@@ -81,7 +81,10 @@
   --color-km-ink: #2b2925;
   --color-km-red: #b61b31;
   --color-km-blue: #64a9da;
-  --color-km-red-glow: #e8465c;
+  /* The accent for labels and eyebrows. Measured against the km-steel-800 card,
+     not the page field — the constellation's fact labels sit on one, and at
+     #e8465c they were 4.32:1 there. 5.07:1 now, and 5.99:1 on the field. */
+  --color-km-red-glow: #ee5c70;
   --color-km-blue-glow: #8fc7ee;
 
   /* Semantic */

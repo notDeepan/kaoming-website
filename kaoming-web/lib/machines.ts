@@ -620,27 +620,8 @@ export function specHighlights(series: Series, limit = 4): SpecRow[] {
   const highlights: SpecRow[] = [];
 
   const rangeFor = (column: string): SpecRow | null => {
-    const index = series.modelColumns.indexOf(column);
-    if (index === -1 || !series.models.length) return null;
-
-    const parsed = series.models
-      .map((model) => model.cells[index])
-      .filter(Boolean)
-      .map((cell) => ({ cell, number: Number(cell.replace(/[^\d.]/g, '')) }))
-      .filter((entry) => Number.isFinite(entry.number) && entry.number > 0);
-    if (!parsed.length) return null;
-
-    const min = parsed.reduce((a, b) => (b.number < a.number ? b : a));
-    const max = parsed.reduce((a, b) => (b.number > a.number ? b : a));
-    const unit = max.cell.replace(/^[\d.,\s]+/, '').trim();
-
-    return {
-      label: column,
-      value:
-        min.number === max.number
-          ? max.cell
-          : `${min.number.toLocaleString('en-US')} – ${max.number.toLocaleString('en-US')} ${unit}`.trim(),
-    };
+    const value = modelRange(series, column);
+    return value ? { label: column, value } : null;
   };
 
   for (const column of ['travelX', 'tableLength']) {
@@ -659,6 +640,150 @@ export function specHighlights(series: Series, limit = 4): SpecRow[] {
   }
 
   return highlights.slice(0, limit);
+}
+
+/* --------------------------------------------------------- the constellation */
+
+export type ConstellationFact = {
+  /** Stable id, used as the React key and the connector's target. */
+  id: string;
+  /**
+   * `spec` labels resolve under the `Spec` namespace; `structural` ones under
+   * `Machine.fact`. Kept apart because a spec label is a catalogue term and a
+   * structural one is this site's own word for a fact about the series.
+   */
+  kind: 'spec' | 'structural';
+  labelKey: string;
+  value: string;
+  /** Spec group this row belongs to, so a node can point at its own table. */
+  group: string | null;
+};
+
+/**
+ * Which model column ranges are worth a node of their own, in order.
+ *
+ * A range across the whole series says more on a summary than any single
+ * model's figure: "1,900 – 14,500 mm" is the series, and "4,500 mm" is one
+ * machine in it. Selecting a minimum and a maximum from transcribed figures is
+ * selection; no value here is calculated.
+ */
+const CONSTELLATION_RANGES = ['travelX', 'travelY', 'travelZ', 'tableLength'];
+
+/** Then these, verbatim, in order of what a buyer asks about first. */
+const CONSTELLATION_ROWS = [
+  'spindleSpeed',
+  'spindleSpeedVertical',
+  'spindleTaper',
+  'tableLoad',
+  'spindleMotor',
+  'spindleTorque',
+  'accuracyPositioning',
+  'accuracyRepeatability',
+  'atcCapacity',
+  'feedRapid',
+  'controller',
+  'netWeight',
+];
+
+/**
+ * Up to ten facts about a series, for the constellation on its page.
+ *
+ * Every one is transcribed or selected, never derived: a range is the minimum
+ * and the maximum of figures the catalogue prints, a row is lifted whole, and
+ * the model count is the length of the transcribed table. A series that states
+ * fewer than ten gets fewer than ten nodes — the layout is built for that, and
+ * padding it with invented figures is the one thing CLAUDE.md forbids outright.
+ */
+export function constellationFacts(series: Series, limit = 10): ConstellationFact[] {
+  const facts: ConstellationFact[] = [];
+
+  const groupOf = (label: string): string | null =>
+    series.specGroups.find((group) => group.rows.some((row) => row.label === label))?.label ?? null;
+
+  // 1. The series itself: how many machines it holds, and its span.
+  if (series.models.length > 1) {
+    const first = series.models[0].model;
+    const last = series.models[series.models.length - 1].model;
+    facts.push({
+      id: 'models',
+      kind: 'structural',
+      labelKey: 'models',
+      value: `${series.models.length} · ${first} – ${last}`,
+      group: null,
+    });
+  }
+
+  // 2. The ranges, which are what makes a series a series.
+  for (const column of CONSTELLATION_RANGES) {
+    if (facts.length >= limit) break;
+    const range = modelRange(series, column);
+    if (range) facts.push({ id: column, kind: 'spec', labelKey: column, value: range, group: 'travel' });
+  }
+
+  // 3. Series-constant rows, verbatim.
+  const flat = series.specGroups.flatMap((group) => group.rows);
+  for (const label of CONSTELLATION_ROWS) {
+    if (facts.length >= limit) break;
+    if (facts.some((fact) => fact.id === label)) continue;
+    const row = flat.find((entry) => entry.label === label);
+    if (row) {
+      facts.push({ id: label, kind: 'spec', labelKey: label, value: row.value, group: groupOf(label) });
+    }
+  }
+
+  // 4. The architecture note, where the catalogue states one. Long, so it goes
+  //    last and the node truncates it rather than the selection dropping it.
+  if (facts.length < limit && series.architecture) {
+    facts.push({
+      id: 'architecture',
+      kind: 'structural',
+      labelKey: 'architecture',
+      value: series.architecture,
+      group: null,
+    });
+  }
+
+  // 5. Anything still short, filled from whatever the series does state, in the
+  //    catalogue's own order. Better a real row than an empty arm.
+  for (const row of flat) {
+    if (facts.length >= limit) break;
+    if (facts.some((fact) => fact.id === row.label)) continue;
+    facts.push({
+      id: row.label,
+      kind: 'spec',
+      labelKey: row.label,
+      value: row.value,
+      group: groupOf(row.label),
+    });
+  }
+
+  return facts.slice(0, limit);
+}
+
+/**
+ * The minimum and maximum a model column states, formatted as the catalogue
+ * formats them. Null where the column does not exist or holds no figures.
+ *
+ * Shared with `specHighlights`, which had its own copy of this.
+ */
+function modelRange(series: Series, column: string): string | null {
+  const index = series.modelColumns.indexOf(column);
+  if (index === -1 || !series.models.length) return null;
+
+  const parsed = series.models
+    .map((model) => model.cells[index])
+    .filter(Boolean)
+    .map((cell) => ({ cell, number: Number(cell.replace(/[^\d.]/g, '')) }))
+    .filter((entry) => Number.isFinite(entry.number) && entry.number > 0);
+  if (!parsed.length) return null;
+
+  const min = parsed.reduce((a, b) => (b.number < a.number ? b : a));
+  const max = parsed.reduce((a, b) => (b.number > a.number ? b : a));
+  const unit = max.cell.replace(/^[\d.,\s]+/, '').trim();
+
+  return min.number === max.number
+    ? max.cell
+    : `${min.number.toLocaleString('en-US')} – ${max.number.toLocaleString('en-US')} ${unit}`.trim();
 }
 
 /** The catalogue that covers a series, for the downloads block. */

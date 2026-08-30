@@ -208,7 +208,15 @@
     "viewSpecifications": "View full specifications",
     "hideSpecifications": "Hide full specifications",
     "backToProducts": "Back to products",
-    "downloadsPending": "The 2026 catalogue is the only document KAO MING has supplied for this series. Brochure, machine layout, options and application guide follow as they are released."
+    "downloadsPending": "The 2026 catalogue is the only document KAO MING has supplied for this series. Brochure, machine layout, options and application guide follow as they are released.",
+    "view3d": "Open the 3D view",
+    "turntable": "Photographed views",
+    "constellationHint": "Every figure here is transcribed from the 2026 catalogue · hover a card to trace it",
+    "specificationsTitle": "Specifications",
+    "fact": {
+      "models": "Models in the series",
+      "architecture": "Architecture"
+    }
   },
   "Spec": {
     "model": "Model",

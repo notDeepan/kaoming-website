@@ -12,7 +12,7 @@ import { WorkpieceScene } from '@/components/product/workpiece-scene';
 import { ProductExperience } from '@/components/three/product-experience';
 import { DocumentActions } from '@/components/ui/document-actions';
 import { RAIL } from '@/components/ui/layout';
-import { MachinePlate } from '@/components/ui/machine-plate';
+import { MachineConstellation } from '@/components/product/machine-constellation';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
 import { SourceNote } from '@/components/ui/source-note';
@@ -20,7 +20,13 @@ import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import { catalogueDocuments, displayImage } from '@/lib/images';
 import { MAX_FEATURE_CARDS, overflowFeatures as overflowFor } from '@/lib/features';
-import { allSeries, catalogueForSeries, getSeries, specHighlights } from '@/lib/machines';
+import {
+  allSeries,
+  catalogueForSeries,
+  constellationFacts,
+  getSeries,
+  specHighlights,
+} from '@/lib/machines';
 import { RFQ_HREF } from '@/lib/nav';
 import { breadcrumbSchema, productSchema, schemaScript } from '@/lib/schema';
 import { alternatesFor } from '@/lib/site';
@@ -104,6 +110,31 @@ export default async function SeriesPage({
   const highlights = specHighlights(entry);
   const catalogue = catalogueForSeries(entry.slug, catalogueDocuments);
 
+  /*
+   * The constellation's data, resolved here rather than in the client component.
+   *
+   * Spec labels are message keys and the values are already transcribed strings,
+   * so translating them on the server keeps next-intl's server API out of a
+   * component that has to be a client one for the pointer and the turntable.
+   *
+   * A fact that belongs to a specification group links to that group's table
+   * further down the page. One that does not — the model span, the architecture
+   * note — is a card and nothing more, because a link that goes nowhere is worse
+   * than no link.
+   */
+  const nodes = constellationFacts(entry).map((fact) => ({
+    id: fact.id,
+    label: fact.kind === 'spec' ? tSpecLabel(fact.labelKey) : t(`fact.${fact.labelKey}`),
+    value: fact.value,
+    href: fact.group ? '#specifications' : null,
+  }));
+
+  const views = entry.images.map((image) => ({
+    ...displayImage(image),
+    view: image.view,
+    model: image.model,
+  }));
+
   // Scene 03 shows the first six; this is what it did not reach.
   const overflowFeatures = overflowFor(entry);
 
@@ -143,70 +174,71 @@ export default async function SeriesPage({
         }}
       />
 
-      {/* ---------------------------------------------------------- hero */}
-      <section className={`${SHELL} pt-36 pb-16 sm:pt-44`}>
-        {/* One line, always.
-            Wrapping was the site's entire CLS budget: at 412px this trail is
-            two lines in the fallback face and one in Plex Mono, so the swap at
-            ~690ms lifted the whole hero by 22px — 0.148, measured, on the most
-            important page on the site. Metric-matching the fallback does not
-            help, because the reflow is a line count, not a line height. A
-            breadcrumb that scrolls sideways on a narrow screen cannot reflow at
-            all, and reads better there anyway. */}
-        <nav
-          aria-label={t('breadcrumb')}
-          className="km-label -mx-5 flex gap-2 overflow-x-auto px-5 whitespace-nowrap text-km-steel-400 sm:mx-0 sm:px-0"
-        >
-          <Link href="/products" className="hover:text-km-offwhite">
-            {t('allTitle')}
-          </Link>
-          <span aria-hidden="true">/</span>
-          <Link href={`/products/${entry.categorySlug}`} className="hover:text-km-offwhite">
-            {entry.categorySlug.replace(/-/g, ' ')}
-          </Link>
-        </nav>
+      {/*
+       * The opening.
+       *
+       * A series page used to open with a photograph, a name and two buttons,
+       * and put every figure about the machine below the fold in a table. It now
+       * opens with the figures arranged around the machine — see
+       * components/product/machine-constellation.tsx for why radially.
+       *
+       * The breadcrumb stays above it. Everything the old hero did is still
+       * done: the enquiry and the comparison move to the strip under the
+       * constellation, and the catalogue is a button in its core.
+       */}
+      <nav
+        aria-label={t('breadcrumb')}
+        /* One line, always.
+           Wrapping was the site's entire CLS budget: at 412px this trail is two
+           lines in the fallback face and one in Plex Mono, so the swap at ~690ms
+           lifted the whole hero by 22px — 0.148, measured, on the most important
+           page on the site. Metric-matching the fallback does not help, because
+           the reflow is a line count, not a line height. A breadcrumb that
+           scrolls sideways on a narrow screen cannot reflow at all, and reads
+           better there anyway. */
+        /* Over the constellation from `lg` up, where the field has margin to
+           spare; in normal flow below that, where absolutely positioning it
+           would drop it on top of the core card. */
+        className={`${SHELL} km-label z-3 flex gap-2 overflow-x-auto pt-28 whitespace-nowrap text-km-steel-400 lg:absolute lg:inset-x-0 lg:top-32 lg:pt-0`}
+      >
+        <Link href="/products" className="hover:text-km-offwhite">
+          {t('allTitle')}
+        </Link>
+        <span aria-hidden="true">/</span>
+        <Link href={`/products/${entry.categorySlug}`} className="hover:text-km-offwhite">
+          {entry.categorySlug.replace(/-/g, ' ')}
+        </Link>
+      </nav>
 
-        {/* The machine leads and the plate runs to the right edge of the
-            viewport; the name and the buttons are a title block hung under it
-            on the left. It was a centred 32rem/1fr split with the type vertically
-            centred against the photograph — tidy, and it made a 50-tonne machine
-            look like a product thumbnail. */}
-        <div className="mt-12 grid items-end gap-x-10 gap-y-10 lg:grid-cols-[minmax(0,34%)_1fr]">
-          <div className="relative z-1 lg:pb-4">
-            <h1 className="max-w-[11ch] text-h1 text-balance text-km-paper uppercase lg:w-[125%]">
-              {entry.name}
-            </h1>
-            <p className="mt-5 max-w-[26ch] font-display text-h3 text-km-steel-400">
-              {entry.type}
-            </p>
-          </div>
+      <div className="relative">
+        <MachineConstellation
+          name={entry.name}
+          type={entry.type}
+          views={views}
+          nodes={nodes}
+          onOpen3d="#experience"
+          transitionName={`machine-${entry.slug}`}
+          catalogueHref={catalogue?.path ?? null}
+          labels={{
+            view3d: t('view3d'),
+            catalogue: t('openCatalogue'),
+            turntable: t('turntable'),
+            viewOf: t('imageAlt', { model: '{model}', view: '{view}' }),
+            hint: t('constellationHint'),
+            specifications: t('specificationsTitle'),
+          }}
+        />
+      </div>
 
-          {hero ? (
-            <div className="lg:-me-5 xl:-me-10">
-              <MachinePlate
-                image={displayImage(hero)}
-                alt={t('imageAlt', { model: hero.model, view: hero.view })}
-                priority
-                glow="lg"
-                sizes="(min-width: 1024px) 68vw, 92vw"
-                transitionName={`machine-${entry.slug}`}
-              />
-            </div>
-          ) : null}
-        </div>
-
-        {/* Compression: the caption sits almost on the plate it names, and the
-            actions ride the same hairline. */}
-        <div className="mt-4 flex flex-col gap-8 border-t border-km-steel-600/60 pt-6 lg:flex-row lg:items-start lg:justify-between">
+      {/* The actions and the catalogue positioning, on the hairline directly
+          under the constellation — the same relationship the old hero had
+          between the plate and its title block. */}
+      <section className={`${SHELL} py-8`}>
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-[52ch]">
-            {hero ? (
-              <p className="km-label text-km-steel-400">{t('shown', { model: hero.model })}</p>
-            ) : null}
             {/* Several series carry a catalogue positioning line that restates
                 the type almost word for word. Printing both reads as padding. */}
-            {positioning ? (
-              <p className="mt-5 text-body text-km-steel-400">{positioning}</p>
-            ) : null}
+            {positioning ? <p className="text-body text-km-steel-400">{positioning}</p> : null}
           </div>
 
           <div className="flex shrink-0 flex-wrap gap-4">
@@ -216,17 +248,14 @@ export default async function SeriesPage({
             <CompareToggle
               entry={{ slug: entry.slug, name: entry.name, category: entry.categorySlug }}
             />
-            {catalogue ? (
-              <ActionLink href={catalogue.path} target="_blank" rel="noopener" variant="secondary">
-                {t('openCatalogue')}
-              </ActionLink>
-            ) : null}
           </div>
         </div>
       </section>
 
       {/* --------------------------------------------------- scenes 01 to 06 */}
-      <ProductExperience series={entry} fallbackImage={hero ? hero.plate : null} />
+      <div id="experience" className="scroll-mt-24">
+        <ProductExperience series={entry} fallbackImage={hero ? hero.plate : null} />
+      </div>
 
       {/* ------------------------------------------- remaining features */}
       {/* Scene 03 carries the first six features as its info cards. Anything
@@ -311,6 +340,7 @@ export default async function SeriesPage({
       <ApplicationsBand index="02" />
 
       {/* ---------------------------------------------------- scene 09 */}
+      <div id="specifications" className="scroll-mt-24" />
       <SpecificationsScene
         index="03"
         series={entry}

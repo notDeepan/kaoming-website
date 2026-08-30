@@ -195,6 +195,98 @@ with sync_playwright() as p:
     page_named = t.evaluate("""() => !![...document.querySelectorAll('img')]
       .find((img) => img.style.viewTransitionName === 'machine-kmc-gm')""")
     check("product hero names the same machine", page_named)
+
+    # ------------------------------------------------ the constellation
+    #
+    # The series page opens on a ring of transcribed figures around the machine
+    # rather than on a photograph and a table. Four things have to hold, and the
+    # first two are the ones that broke while it was being built.
+    t.goto(f"{BASE}{PRODUCT}")
+    t.wait_for_load_state("networkidle")
+    t.wait_for_timeout(2200)
+
+    nodes = t.locator("[data-node]").count()
+    check("the constellation renders its facts", 0 < nodes <= 10, f"{nodes} nodes")
+    check(
+        "a connector per fact",
+        t.locator("[data-connector]").count() == nodes,
+        f"{t.locator('[data-connector]').count()} connectors",
+    )
+
+    # The connectors are drawn with a dash offset animated to zero. An offset
+    # left at full length is an invisible line, which is exactly what happened
+    # when the tween was scheduled before the value that feeds it was set.
+    drawn = t.evaluate(
+        """() => [...document.querySelectorAll('[data-connector]')]
+             .every((l) => parseFloat(getComputedStyle(l).strokeDashoffset || '0') < 1)"""
+    )
+    check("the connectors finish drawing", drawn)
+
+    # Nothing may sit on top of anything else: the ring is positioned, and a
+    # radius that is too small for the cards silently stacks them.
+    overlaps = t.evaluate(
+        """() => {
+          const boxes = [...document.querySelectorAll('[data-node]')]
+            .map((e) => ({ id: e.dataset.fact, r: e.getBoundingClientRect() }));
+          const core = document.querySelector('[data-constellation-core]').getBoundingClientRect();
+          const hit = (a, b) =>
+            !(a.right < b.left || b.right < a.left || a.bottom < b.top || b.bottom < a.top);
+          const out = [];
+          for (let i = 0; i < boxes.length; i += 1) {
+            if (hit(boxes[i].r, core)) out.push(boxes[i].id + ' over the core');
+            for (let j = i + 1; j < boxes.length; j += 1) {
+              if (hit(boxes[i].r, boxes[j].r)) out.push(boxes[i].id + ' over ' + boxes[j].id);
+            }
+          }
+          return out;
+        }"""
+    )
+    check("nothing in the ring overlaps", not overlaps, "; ".join(overlaps[:2]))
+
+    # The core's two ways out.
+    check(
+        "the core opens the 3D view",
+        t.locator("[data-constellation-core] a[href='#experience']").count() == 1,
+    )
+    check("the 3D anchor exists", t.locator("#experience").count() == 1)
+
+    # Hovering a fact traces it back to the middle.
+    first = t.locator("[data-node]").first.get_attribute("data-fact")
+    t.hover(f"[data-fact='{first}']")
+    t.wait_for_timeout(400)
+    lit = t.evaluate(
+        f"""() => getComputedStyle(document.querySelector("[data-connector]")).stroke"""
+    )
+    check("hovering a fact lights its connector", lit is not None, str(lit))
+
+    # On a phone a ring is a pile, so the same nodes are a column instead. The
+    # DOM order never changes — only the positioning.
+    phone = browser.new_page(viewport={"width": 390, "height": 844})
+    phone.goto(f"{BASE}{PRODUCT}")
+    phone.wait_for_load_state("networkidle")
+    phone.wait_for_timeout(1200)
+    stacked = phone.evaluate(
+        """() => {
+          const nodes = [...document.querySelectorAll('[data-node]')];
+          if (nodes.length < 2) return false;
+          const tops = nodes.map((n) => Math.round(n.getBoundingClientRect().top));
+          return tops.every((top, i) => i === 0 || top >= tops[i - 1]);
+        }"""
+    )
+    check("the ring becomes a column on a phone", stacked)
+    # `offsetParent` is an HTMLElement property and is simply undefined on an
+    # SVG node, so the display of the sheet the lines live on is what says
+    # whether they are drawn.
+    check(
+        "and the connectors are not drawn there",
+        phone.evaluate(
+            """() => {
+              const sheet = document.querySelector('[data-connector]')?.closest('svg');
+              return !sheet || getComputedStyle(sheet).display === 'none';
+            }"""
+        ),
+    )
+    phone.close()
     t.close()
 
     browser.close()
