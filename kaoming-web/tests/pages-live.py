@@ -76,8 +76,12 @@ with sync_playwright() as p:
         wait_until="load",
         timeout=120_000,
     )
-    page.mouse.wheel(0, 1200)
+    # A machine is a window, and the 3D is one of its panes — reached by opening
+    # that pane rather than by scrolling to it. Over the network, from a
+    # subdirectory, which is the point of checking it here at all.
     try:
+        page.wait_for_selector("[data-pane='viewer']", timeout=60_000)
+        page.locator("[data-pane='viewer']").first.click()
         page.wait_for_selector("canvas", timeout=60_000)
         canvas = True
     except Exception:
@@ -85,6 +89,11 @@ with sync_playwright() as p:
     check("canvas mounts on the deployed build", canvas)
 
     if canvas:
+        # Pin the tier before waiting. Headless Chromium rasterises in software,
+        # misses the frame floor and walks the Part O ladder down to `static` —
+        # which removes the canvas, correctly, and would make the probe below
+        # look like a deployment fault rather than a slow renderer.
+        page.get_by_role("button", name="Low", exact=True).first.dispatch_event("click")
         page.wait_for_timeout(8000)
         check("scene probe reports a camera", bool(page.evaluate("() => !!window.__kmScene")))
 
