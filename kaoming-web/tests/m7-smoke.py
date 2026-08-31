@@ -249,22 +249,99 @@ with sync_playwright() as p:
     # disagree on is disclosed rather than quietly averaged.
     page.goto(f"{BASE}/en/company/history")
     page.wait_for_load_state("networkidle")
-    check("ten milestone years", page.locator("[data-year]").count() == 10)
-    check("ten milestones", page.locator("[data-milestone]").count() == 10)
-    check("ten records in the list", page.locator("[data-record]").count() == 10)
+    # Counted against each other rather than against a number written here. The
+    # record grows — it stood at the about page's ten, and the 2026 research
+    # carried it to fourteen — and a test that pins the count turns every
+    # addition into a failure. What must hold is that the three renderings of it
+    # agree, and that it never shrinks below what kaoming.com itself publishes.
+    years = page.locator("[data-year]").count()
+    milestones = page.locator("[data-milestone]").count()
+    records = page.locator("[data-record]").count()
+    check("the timeline, the years and the list agree", years == milestones == records,
+          f"{years} years, {milestones} milestones, {records} records")
+    check("the record is at least what the about page carries", records >= 10, str(records))
 
     paired = page.evaluate(
         """() => [...document.querySelectorAll('[data-milestone]')]
              .filter((el) => el.textContent.trim().replace(/^\d{4}/, '').trim().length > 8)
              .length"""
     )
-    check("every year carries its milestone", paired == 10, str(paired))
+    check("every year carries its milestone", paired == records, f"{paired} of {records}")
 
     body = page.inner_text("body")
     check("1968 is the founding", "1968" in body and "founder" in body.lower())
     check(
         "the locales' disagreement on the plant area is disclosed",
         "40,000" in body and "25,000" in body,
+    )
+
+    # --- News. The section grew from seven entries transcribed off kaoming.com
+    # to eleven, and the four that came from the 2026 research carry rules the
+    # earlier ones never had to. Each of these fails quietly and looks fine.
+    page.goto(f"{BASE}/en/news")
+    page.wait_for_load_state("networkidle")
+    entries = page.locator("[data-news-item]").count()
+    check("the news index carries the whole record", entries >= 11, f"{entries} entries")
+
+    news_body = page.inner_text("main")
+
+    # CLAUDE.md forbids a named cooperation claim. Two organiser releases list
+    # KAO MING beside other manufacturers, and that roster is recorded in the
+    # source file and must never reach a page: on KAO MING's own news section a
+    # competitor list reads as an association whether or not it is meant to.
+    leaked = [
+        name
+        for name in ("FFG", "HIWIN", "MAZAK", "Tongtai", "Quaser", "SOCO", "HEIDENHAIN",
+                     "Victor Taichung", "TTGroup")
+        if name in news_body
+    ]
+    check("no other manufacturer is named on the news index", not leaked, ", ".join(leaked))
+
+    # A legacy code is a search synonym and never a displayed name.
+    legacy = [c for c in ("KMC-HIS", "KMC-RF", "KMC-321HIS") if c in news_body]
+    check("no legacy model code is displayed", not legacy, ", ".join(legacy))
+
+    # The staleness notice reads the data. It existed because the newest entry
+    # was 2023; with 2026 entries present it must take itself off the page.
+    check(
+        "the staleness notice is gone now the record is current",
+        page.locator("text=Nothing later exists").count() == 0,
+    )
+
+    # A date the source never stated is never printed. TIMTOS 2023 is the case:
+    # the source gives a month, so a month is what may appear.
+    page.goto(f"{BASE}/en/news/timtos-2023")
+    page.wait_for_load_state("networkidle")
+    stamp = page.locator("time").first.inner_text()
+    check("a month-precision date prints a month", stamp.strip() == "March 2023", stamp)
+
+    # Trade-press figures are marked as trade-press figures. The KMC-123EU has
+    # no catalogue in the kit, so its numbers are the press's and the page says
+    # so beside them.
+    page.goto(f"{BASE}/en/news/tmts-2026")
+    page.wait_for_load_state("networkidle")
+    check("press-sourced figures carry their caveat", page.locator("[data-spec-caveat]").count() == 1)
+    links = page.locator("[data-press] a")
+    check("both outlets are cited", links.count() == 2, f"{links.count()} citations")
+    hrefs = page.evaluate(
+        "() => [...document.querySelectorAll('[data-press] a')].map((a) => a.getAttribute('href'))"
+    )
+    check(
+        "each citation links out to the outlet",
+        all(h and h.startswith("https://") for h in hrefs),
+        str(hrefs),
+    )
+    # A quotation, not an article. The longest thing reproduced from either
+    # outlet stays short enough to be a citation rather than a republication.
+    longest = page.evaluate(
+        "() => Math.max(0, ...[...document.querySelectorAll('[data-press] blockquote')]"
+        ".map((q) => q.textContent.trim().length))"
+    )
+    check("what is quoted stays a quotation", 0 < longest <= 200, f"{longest} characters")
+
+    check(
+        "the launch is not given a product page it has no catalogue for",
+        page.locator("a[href*='kmc-123eu']").count() == 0,
     )
 
     # --- Technology: the way selector is a comparison, not prose.

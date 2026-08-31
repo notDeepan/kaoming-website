@@ -18,16 +18,48 @@ import { productCategories } from './taxonomy';
  *     source itself gives the announcement. Where the series survives into the
  *     2026 catalogue, `series` resolves to its current name and its page.
  *
- *  2. **A date the source did not state is never invented.** Only the EMO entry
- *     carries a real date. Everything else states a year in its own title and
- *     nothing finer, so it is flagged approximate and renders as a bare year.
+ *  2. **A date the source did not state is never invented.** `datePrecision`
+ *     records how much of the date the source actually gave — a day, a month or
+ *     a year — and the site prints exactly that much. A visible "1 January" that
+ *     no source ever stated is a false claim, and the ISO `date` beneath it
+ *     exists to sort and to be machine-read, not to be shown.
+ *
+ *  3. **Third-party coverage is cited, never reproduced.** Trade-press articles
+ *     are not KAO MING's to republish. `press` carries an outlet, a date, one
+ *     short quotation and a link out — the credibility marker and the whole of
+ *     what is reproduced.
  */
 
 type Locale = string;
 
 export type NewsKind = 'exhibition' | 'product' | 'company';
 
-type RawText = { title: string; body: string; dateline?: string; booth?: string };
+/** How much of the date the source actually stated. */
+export type DatePrecision = 'day' | 'month' | 'year';
+
+export type NewsPress = {
+  outlet: string;
+  /** ISO date of the article, where the source gave one. */
+  date: string | null;
+  url: string;
+  /** One short quotation. Never an article body — see rule 3 above. */
+  quote: string | null;
+};
+
+type RawText = {
+  title: string;
+  body: string;
+  dateline?: string;
+  booth?: string;
+  venue?: string;
+};
+
+type RawPress = {
+  outlet: string;
+  date: string | null;
+  url: string;
+  quote: string | null;
+};
 
 type RawItem = {
   slug: string;
@@ -35,10 +67,17 @@ type RawItem = {
   date: string;
   endDate?: string;
   dateIsApproximate: boolean;
+  datePrecision?: DatePrecision;
+  featured?: boolean;
+  specCaveat?: boolean;
   image: string | null;
   series: { category: string; slug: string } | null;
   legacyCode: string | null;
   note?: string;
+  sourceRef?: string;
+  sourceNote?: string;
+  imagesWanted?: string;
+  press?: RawPress[];
   en: RawText;
   zh: RawText;
 };
@@ -56,18 +95,30 @@ export type NewsItem = {
   /** ISO date. Sorting key, and the `datetime` attribute. */
   date: string;
   endDate: string | null;
-  /** True where the source stated only a year. */
+  /** True where the source stated less than a full date. */
   dateIsApproximate: boolean;
+  datePrecision: DatePrecision;
   year: number;
   title: string;
   body: string;
   /** Exhibition entries only: the source's own date line and booth number. */
   dateline: string | null;
   booth: string | null;
+  /** Where it happened, where the source names a venue. */
+  venue: string | null;
   image: string | null;
   series: NewsSeriesRef | null;
   /** Search synonym. Never rendered — see rule 1 above. */
   legacyCode: string | null;
+  /** Lead entries. Newest first among themselves. */
+  featured: boolean;
+  /**
+   * The figures in this entry come from trade-press coverage, not from a KAO
+   * MING catalogue, and the page says so where it prints them. True only for
+   * the KMC-123EU launch, whose Epeius series has no 2026 catalogue in the kit.
+   */
+  specCaveat: boolean;
+  press: NewsPress[];
 };
 
 const raw = (newsJson as { items: RawItem[] }).items;
@@ -95,14 +146,20 @@ function normalise(item: RawItem, locale: Locale): NewsItem {
     date: item.date,
     endDate: item.endDate ?? null,
     dateIsApproximate: item.dateIsApproximate,
+    // Older entries predate the field and were all year-only where approximate.
+    datePrecision: item.datePrecision ?? (item.dateIsApproximate ? 'year' : 'day'),
     year: Number(item.date.slice(0, 4)),
     title: text.title,
     body: text.body,
     dateline: text.dateline ?? null,
     booth: text.booth ?? null,
+    venue: text.venue ?? null,
     image: item.image,
     series: resolveSeries(item.series),
     legacyCode: item.legacyCode,
+    featured: item.featured === true,
+    specCaveat: item.specCaveat === true,
+    press: item.press ?? [],
   };
 }
 
@@ -118,6 +175,29 @@ export function newsItem(slug: string, locale: Locale): NewsItem | null {
   return item ? normalise(item, locale) : null;
 }
 
+/**
+ * The date, printed to exactly the precision the source stated.
+ *
+ * Both the card and the entry page need this and they must not disagree, which
+ * is the whole reason it lives here rather than twice in the components. A
+ * source that gave a month gets a month; one that gave a year gets a year. The
+ * ISO value goes in `<time dateTime>` either way — it is the sort key and the
+ * format a search engine reads, and "2023-03-01" behind a visible "March 2023"
+ * is honest in a way a visible "1 March 2023" would not be.
+ */
+export function newsStamp(item: NewsItem, locale: Locale): string {
+  if (item.datePrecision === 'year') return String(item.year);
+  const date = new Date(item.date);
+  if (item.datePrecision === 'month') {
+    return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long' }).format(date);
+  }
+  return new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+}
+
 /** Every slug, for `generateStaticParams`. */
 export const newsSlugs = raw.map((item) => item.slug);
 
@@ -126,8 +206,21 @@ export const NEWS_KINDS: NewsKind[] = ['exhibition', 'product', 'company'];
 /**
  * The most recent item KAO MING has published anywhere.
  *
- * Surfaced rather than hidden. The newest entry is from 2023, and a NEWS section
- * whose top item is three years old is a fact about the section — one the site
- * states plainly on the page instead of letting a visitor work it out.
+ * Surfaced rather than hidden, and the page says so when it has gone stale. It
+ * was 2023 when this section was built from kaoming.com alone, which is why the
+ * staleness notice exists at all; the 2026 research closed that gap and the
+ * notice now stays quiet on its own, because it reads the data rather than a
+ * hard-coded year.
  */
 export const latestNewsYear = Math.max(...raw.map((item) => Number(item.date.slice(0, 4))));
+
+/**
+ * The lead entries, newest first.
+ *
+ * A section with eleven entries does not need a hierarchy imposed on it, but it
+ * does need the two that matter most to a buyer — the newest machine and the
+ * newest proof the company is moving — above the ones from 2018.
+ */
+export function featuredNews(locale: Locale): NewsItem[] {
+  return newsFor(locale).filter((item) => item.featured);
+}

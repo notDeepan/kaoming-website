@@ -25,7 +25,6 @@ import {
 import { breadcrumbSchema, productSchema, schemaScript } from "@/lib/schema";
 import { alternatesFor } from "@/lib/site";
 
-const SHELL = "mx-auto max-w-[1600px] px-5 sm:px-6 xl:px-10";
 
 export const dynamicParams = false;
 
@@ -101,7 +100,6 @@ export default async function SeriesPage({
 
   const t = await getTranslations("Products");
   const tSpecLabel = await getTranslations("Spec");
-  const tCatalogue = await getTranslations("Catalogue");
   const hero = entry.images[0];
   const highlights = specHighlights(entry);
   const catalogue = catalogueForSeries(entry.slug, catalogueDocuments);

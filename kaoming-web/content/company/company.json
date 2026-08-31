@@ -16,7 +16,12 @@
     ],
     "founding": "1968, by Mr. Chang Gao-Ming and Ms. Chang Tsai Mei-Hsia, at Chung Cheng Road, Feng Yuan City, Taichung County",
     "origin_story": "Started producing rotary arm drilling beds; under Director Chang the company reoriented to end-to-end vertical integration — own development, production, marketing and sales.",
-    "sales_presence": "Sales locations across Europe, the Americas and Asia"
+    "sales_presence": "Sales locations across Europe, the Americas and Asia",
+    "positioning_corroborated_2025": {
+      "source": "機械工業網 / Mechanical Industry Network, published by ITRI, 14 August 2025 — https://www.automan.tw/tw/news-detail/Events/20250821_u_kaoming",
+      "note": "The same claims the company makes about itself, written by someone else. That is worth more on an About page than the company's own wording, and it is the only third-party statement of the positioning the site holds.",
+      "statement_en": "Founded in 1968 and starting with radial drilling machines, KAO MING established itself through end-to-end vertical integration and an innovation-driven R&D culture as the originator of Taiwan's gantry-type machining centers, selling across Europe, the Americas and Asia with locations worldwide providing immediate service."
+    }
   },
   "contact": {
     "address_en": "CTSP, No. 53, Houke S. Rd., Houli Dist., Taichung City 421012, Taiwan",
@@ -39,7 +44,8 @@
     "PAIRING_RESOLVED": "Superseded the earlier warning. The Wix DOM scrambles reading order, but the page's stored layout does not: every year label and every milestone body is a positioned box in the page JSON at static.wixstatic.com/sites/<pageJsonFileName>.json.z. Sorting those boxes by y and grouping by x recovers a two-column timeline that alternates left/right as the years descend, with no ambiguity. The Traditional-Chinese page (about-us-tw) was decoded the same way and produces the identical pairing, independently. Both are recorded below.",
     "sources": [
       "https://www.kaoming.com/about-us-en",
-      "https://www.kaoming.com/about-us-tw"
+      "https://www.kaoming.com/about-us-tw",
+      "KAOMING_NEWS_RESEARCH_2016-2026 (compiled 31 August 2026 from named public sources)"
     ],
     "pairing_confirmed": true,
     "DISCREPANCY_CTSP_AREA": "The 2008 milestone states 25,000 square meters in English and 40,000 square meters in Traditional Chinese. Both are verbatim from KAO MING. Neither has been reconciled; each locale renders its own figure and the site never averages them. Confirm with KAO MING.",
@@ -47,55 +53,91 @@
       {
         "year": 1968,
         "en": "KAO MING Machinery Company set up by the founder Mr. Chang, Gao-Ming and his wife Ms. Chang, Tsai Mei-Hsia and located in Chung Cheng Road of Feng Yuan City, Taichung County.",
-        "zh": "創辦人故張鎬洺先生及夫人故張蔡梅霞女士於台中市豐原區中正路巷內成立高明機械公司。"
+        "zh": "創辦人故張鎬洺先生及夫人故張蔡梅霞女士於台中市豐原區中正路巷內成立高明機械公司。",
+        "source": "about-us"
       },
       {
         "year": 1972,
         "en": "Change the company named to be Kao Ming Industry Co.",
-        "zh": "更名為高明工業有限公司。"
+        "zh": "更名為高明工業有限公司。",
+        "source": "about-us"
       },
       {
         "year": 1974,
         "en": "Relocated to the new headquarter.",
-        "zh": "遷廠至台中市豐原區三豐路二段。(總公司)"
+        "zh": "遷廠至台中市豐原區三豐路二段。(總公司)",
+        "source": "about-us"
       },
       {
         "year": 1982,
         "en": "Reorganized as Kao Ming machinery Industrial Co., Ltd.",
-        "zh": "二次更名為高明精機工業股份有限公司。"
+        "zh": "二次更名為高明精機工業股份有限公司。",
+        "source": "about-us"
       },
       {
         "year": 1983,
         "en": "Kao Ming is the first company to invest the production line to assembling the double column machining center.",
-        "zh": "自行研發台灣第一台龍門加工中心機。"
+        "zh": "自行研發台灣第一台龍門加工中心機。",
+        "source": "about-us"
       },
       {
         "year": 1995,
         "en": "First machine tool manufacturer in Taiwan got ISO9001. KMC-SD series obtained Good Design award.",
-        "zh": "通過國際ISO9001認證，為台灣機械業第一家。榮獲優良設計產品獎，門型加工中心機KMC-SD系列。"
+        "zh": "通過國際ISO9001認證，為台灣機械業第一家。榮獲優良設計產品獎，門型加工中心機KMC-SD系列。",
+        "source": "about-us"
       },
       {
         "year": 2007,
         "en": "Announced gantry type machining center KMC-G series. Two-step spindle inline integrated design obtained Utility Model patent #M316769. Y-axis extension bellow obtained Utility Model patent #M322297.",
-        "zh": "研發大型高架式動樑門型加工中心機KMC-G系列。榮獲專利，綜合加工中心機二段變速主軸頭一直線式整合裝置(第M316769號)。"
+        "zh": "研發大型高架式動樑門型加工中心機KMC-G系列。榮獲專利，綜合加工中心機二段變速主軸頭一直線式整合裝置(第M316769號)。",
+        "source": "about-us"
       },
       {
         "year": 2008,
         "en": "Application of the plant in the Central Taiwan Science Park was approved, with the area 25,000 square meters. Built the constant temperature plant and make efforts to develop the high quality machines.",
-        "zh": "分公司進駐中部科學園區完工，佔地 40,000 平方公尺，興建恆溫空調廠房，積極投入，致力研發生產更高品質工具機種。"
+        "zh": "分公司進駐中部科學園區完工，佔地 40,000 平方公尺，興建恆溫空調廠房，積極投入，致力研發生產更高品質工具機種。",
+        "source": "about-us"
       },
       {
         "year": 2013,
         "en": "Announced five axis moving crossbeam & moving column KMC-EPG series.",
-        "zh": "研發動樑動柱龍門加工中心機 KMC-EPG系列。"
+        "zh": "研發動樑動柱龍門加工中心機 KMC-EPG系列。",
+        "source": "about-us"
       },
       {
         "year": 2016,
         "en": "Importing-in Toyota Production System.",
-        "zh": "導入TPS豐田式生產系統。"
+        "zh": "導入TPS豐田式生產系統。",
+        "source": "about-us"
+      },
+      {
+        "year": 2019,
+        "en": "Lean management rolled out across the company, continuing the Toyota Production System adopted in 2016 and laying the groundwork for the digital results presented in 2025.",
+        "zh": "全公司導入精實管理，延續 2016 年導入的 TPS 豐田式生產系統，並為 2025 年的數位化成果奠定基礎。",
+        "source": "news-2026"
+      },
+      {
+        "year": 2023,
+        "en": "KAO MING's 55th anniversary, celebrated together with customers, suppliers and partners.",
+        "zh": "高明精機成立 55 週年，與客戶、供應商及合作夥伴共同慶祝。",
+        "source": "news-2026"
+      },
+      {
+        "year": 2025,
+        "en": "Presented the results of the government-supported Digital Lean Management (TPS) programme at the Houli plant: digital scheduling, delivery-date response and inventory control.",
+        "zh": "於后里廠發表 114 年數位化精實管理 TPS 補助計畫成果：數位化排程、交期回覆與庫存管控。",
+        "source": "news-2026"
+      },
+      {
+        "year": 2026,
+        "en": "Launched the KMC-123EU high-speed vertical double-column machining center at TMTS 2026 in Taichung, covered independently by two international trade titles.",
+        "zh": "於台中 TMTS 2026 台灣國際工具機展發表 KMC-123EU 高速立式龍門加工中心機，並獲兩家國際專業媒體報導。",
+        "source": "news-2026"
       }
     ],
-    "corroborated_elsewhere": "2023 = 55th anniversary (consistent with 1968 founding). 2023 EMO Hannover, Sept 18–23, was the last exhibition posted."
+    "corroborated_elsewhere": "2023 = 55th anniversary, consistent with the 1968 founding. The record now runs to the KMC-123EU launch at TMTS 2026; the two trade titles that covered that launch are cited on the news entry itself.",
+    "PROVENANCE_PER_MILESTONE": "`source` on each milestone says where it came from and how far it can be trusted. 'about-us' — decoded verbatim from kaoming.com's own about page, both locales, and the Traditional Chinese is KAO MING's own writing. 'news-2026' — carried forward from a named public source recorded in the 2026 research file; the English is drawn from that source and the Traditional Chinese is written for this site, EXCEPT the TPS programme name (114年數位化精實管理TPS補助計畫), which is the source's own. Nothing in the second group is a verbatim KAO MING sentence, and it should be replaced with KAO MING's own wording when marketing supplies it.",
+    "ENDS_AT": "The about-us timeline on kaoming.com stops at 2016. Everything after it comes from KAO MING's own news page and from the 2026 research; the thread it completes is a real one — Toyota Production System adopted in 2016, lean management in 2019-2020, digital results presented in 2025."
   },
   "patents_and_awards": [
     {

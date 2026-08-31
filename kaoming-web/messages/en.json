@@ -566,20 +566,21 @@
       "email": "Email"
     },
     "cta": "Contact KAO MING",
-    "provenance": "Company facts transcribed from kaoming.com, August 2026."
+    "provenance": "Company facts transcribed from kaoming.com, August 2026.",
+    "corroborationLabel": "Written by someone else"
   },
   "History": {
     "label": "Company",
     "title": "Since 1968",
-    "lede": "Ten milestones, from a rotary arm drilling bed workshop on Chung Cheng Road to a 25,000 m² constant-temperature plant in the Central Taiwan Science Park.",
-    "timelineLabel": "KAO MING milestones, 1968 to 2016",
+    "lede": "{count} milestones, from a rotary arm drilling bed workshop on Chung Cheng Road to a 25,000 m² constant-temperature plant in the Central Taiwan Science Park — and, most recently, a five-axis machine launched in Taichung.",
+    "timelineLabel": "KAO MING milestones, {first} to {last}",
     "milestonesLabel": "The record",
-    "milestonesTitle": "Ten events, as KAO MING states them",
+    "milestonesTitle": "{count} events, as KAO MING states them",
     "scrollHint": "Scroll to travel the timeline",
     "founded": "Founded",
     "latest": "Latest milestone",
     "yearsLabel": "Years",
-    "provenance": "Years and milestones transcribed verbatim from kaoming.com, August 2026, and paired from the source page's own stored layout — which the Traditional Chinese page reproduces independently. The two locales differ on one figure: the 2008 plant is 25,000 m² in English and 40,000 m² in Chinese. Each is printed as KAO MING wrote it, pending their confirmation."
+    "provenance": "Milestones to 2016 are transcribed verbatim from kaoming.com, August 2026, and paired from the source page's own stored layout — which the Traditional Chinese page reproduces independently. The two locales differ on one figure: the 2008 plant is 25,000 m² in English and 40,000 m² in Chinese, and each is printed as KAO MING wrote it, pending their confirmation. Milestones from 2019 onward are carried forward from KAO MING's own news and from named public sources cited on the news entries; their English follows those sources and their Chinese is written for this site, so KAO MING's own wording should replace it when marketing supplies it."
   },
   "Factory": {
     "label": "Company",
@@ -760,13 +761,17 @@
     "field": {
       "date": "Date",
       "when": "When",
-      "booth": "Stand"
+      "booth": "Stand",
+      "venue": "Where"
     },
     "noBody": "KAO MING published this entry as a headline and a date, with no further text. Nothing has been added to it.",
     "relatedSeries": "The machine",
     "viewSeries": "Full specification",
     "more": "More news",
     "all": "All news",
-    "provenance": "Transcribed verbatim from the NEWS page on kaoming.com, August 2026. Product announcements are titled by machine type and linked to their 2026 catalogue series; the legacy model codes the source used are kept for search only. Photographs of named employees are not republished."
+    "provenance": "Entries to 2023 are transcribed verbatim from the NEWS page on kaoming.com. Entries from 2023 onward come from named public sources — the show organisers, the trade press and the Mechanical Industry Network — each cited on its own entry. Product announcements are titled by machine type and linked to their 2026 catalogue series; the legacy model codes the source used are kept for search only. Third-party articles are cited and linked, never reproduced, and photographs of named employees are not republished.",
+    "coveredBy": "Covered by",
+    "press": "Press coverage",
+    "specCaveat": "These figures are as published by the trade press reporting the show. They are not transcribed from a KAO MING catalogue, and no catalogue for this series is held. Ask sales for the official specification before you rely on them."
   }
 }

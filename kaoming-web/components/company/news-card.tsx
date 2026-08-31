@@ -1,29 +1,22 @@
 import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
-import type { NewsItem } from '@/lib/news';
+import { newsStamp, type NewsItem } from '@/lib/news';
 
 /**
  * One entry in the NEWS index.
  *
  * The card leads with the date because that is what a visitor checking whether a
  * company is still moving actually reads, and because half of these entries are
- * exhibitions, where the date IS the news. Where the source stated only a year,
- * the year is all that is printed — a fabricated "1 January" in a `<time>` would
- * be a false claim in a machine-readable field.
- *
- * `<time dateTime>` still carries the full ISO value for the same reason: it is
- * the sort key and the format search engines read, and 2023-01-01 with a visible
- * "2023" is honest in a way a visible "1 January 2023" is not.
+ * exhibitions, where the date IS the news. It is printed to exactly the
+ * precision the source stated — see `newsStamp` — while `<time dateTime>`
+ * carries the full ISO value, which is the sort key and the format search
+ * engines read.
  */
 export async function NewsCard({ item, locale }: { item: NewsItem; locale: string }) {
   const t = await getTranslations('News');
 
-  const stamp = item.dateIsApproximate
-    ? String(item.year)
-    : new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(
-        new Date(item.date),
-      );
+  const stamp = newsStamp(item, locale);
 
   return (
     <article
@@ -69,13 +62,24 @@ export async function NewsCard({ item, locale }: { item: NewsItem; locale: strin
           <p className="mt-3 font-mono text-spec text-km-offwhite">{item.booth}</p>
         ) : null}
 
+        {item.venue ? (
+          <p className="mt-3 text-small text-km-steel-400">{item.venue}</p>
+        ) : null}
+
         {item.body ? (
           <p className="mt-4 line-clamp-4 text-small text-km-offwhite">{item.body}</p>
         ) : null}
 
-        {item.series ? (
-          <p className="km-label mt-auto pt-8 text-km-steel-400">{item.series.name}</p>
-        ) : null}
+        <div className="mt-auto pt-8">
+          {item.press.length ? (
+            <p data-press-outlets className="km-label text-km-steel-400">
+              {t('coveredBy')} {item.press.map((entry) => entry.outlet).join(' · ')}
+            </p>
+          ) : null}
+          {item.series ? (
+            <p className="km-label pt-2 text-km-steel-400">{item.series.name}</p>
+          ) : null}
+        </div>
       </div>
     </article>
   );

@@ -82,14 +82,21 @@ python tests/theme-audit.py   # both themes, WCAG contrast computed per surface
 python tests/perf-guards.py   # GPU tier cap and the smooth-scroll gate
 ```
 
-**472 checks, all green.** Every one needs the production server running, built
+**481 checks, all green.** Every one needs the production server running, built
 by `npm run build` — after `npm run pages` the `.next` directory holds the static
 export and `next start` answers every route with a 308. The M2 suite also needs a
 database (`npm run db:migrate`); it and M6 each send their enquiries from their
 own `X-Forwarded-For`, so the rate limiter is exercised for real without one
 suite spending another's budget.
 
-The count fell from 488 when the machine page became a window. Nothing was
+The count moves with the site. It fell from 488 when the machine page became a
+window, and rose again when the news section was carried from 2023 to 2026:
+that content brought rules a test has to hold — no other manufacturer named on
+KAO MING's own pages, no legacy model code displayed, no date printed finer than
+the source stated, and trade-press figures marked as trade-press figures.
+Milestone counts are no longer pinned to a number, because the record grows.
+
+The earlier drop from 488: Nothing was
 relaxed: what went was the scroll choreography that no longer exists on that
 route — M4's scripted camera path, its pinned stage and its alternating feature
 cards, and M5's sampling of the disassembly at points along a scroll range. The

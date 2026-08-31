@@ -6,7 +6,7 @@ import { Action } from '@/components/ui/action';
 import { PageHeader, Provenance, SHELL } from '@/components/ui/page-shell';
 import { NewsCard } from '@/components/company/news-card';
 import { routing } from '@/i18n/routing';
-import { newsFor, newsItem, newsSlugs } from '@/lib/news';
+import { newsFor, newsItem, newsSlugs, newsStamp } from '@/lib/news';
 import { alternatesFor } from '@/lib/site';
 
 type Params = { locale: string; slug: string };
@@ -54,11 +54,7 @@ export default async function NewsItemPage({ params }: { params: Promise<Params>
 
   const t = await getTranslations('News');
 
-  const stamp = item.dateIsApproximate
-    ? String(item.year)
-    : new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(
-        new Date(item.date),
-      );
+  const stamp = newsStamp(item, locale);
 
   const related = newsFor(locale)
     .filter((entry) => entry.slug !== item.slug)
@@ -109,6 +105,12 @@ export default async function NewsItemPage({ params }: { params: Promise<Params>
                     <dd className="text-km-offwhite">{item.booth}</dd>
                   </>
                 ) : null}
+                {item.venue ? (
+                  <>
+                    <dt className="km-label text-km-steel-400">{t('field.venue')}</dt>
+                    <dd className="text-km-offwhite">{item.venue}</dd>
+                  </>
+                ) : null}
               </dl>
             ) : null}
 
@@ -117,6 +119,47 @@ export default async function NewsItemPage({ params }: { params: Promise<Params>
             ) : (
               <p className="max-w-[70ch] text-body text-km-steel-400">{t('noBody')}</p>
             )}
+
+            {item.specCaveat ? (
+              <p
+                data-spec-caveat
+                className="mt-8 max-w-[70ch] border-s-2 border-km-warning ps-6 text-small text-km-steel-400"
+              >
+                {t('specCaveat')}
+              </p>
+            ) : null}
+
+            {item.press.length ? (
+              <section data-press className="mt-12 border-t border-km-steel-600/60 pt-8">
+                <h2 className="km-label text-km-steel-400">{t('press')}</h2>
+                <ul className="mt-6 grid gap-6">
+                  {item.press.map((entry) => (
+                    <li key={entry.url} className="max-w-[70ch]">
+                      {entry.quote ? (
+                        <blockquote className="border-s-2 border-km-steel-600 ps-6 text-body text-km-offwhite">
+                          &ldquo;{entry.quote}&rdquo;
+                        </blockquote>
+                      ) : null}
+                      <p className={entry.quote ? 'mt-3 ps-6' : ''}>
+                        <a
+                          href={entry.url}
+                          rel="noopener noreferrer"
+                          className="km-label text-km-steel-400 underline decoration-km-steel-600 underline-offset-4 transition-colors duration-(--duration-km) ease-(--ease-km) hover:text-km-paper"
+                        >
+                          {entry.outlet}
+                          {entry.date
+                            ? `, ${new Intl.DateTimeFormat(locale, {
+                                year: 'numeric',
+                                month: 'long',
+                              }).format(new Date(entry.date))}`
+                            : ''}
+                        </a>
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
           </div>
 
           {item.series ? (

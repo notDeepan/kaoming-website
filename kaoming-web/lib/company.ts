@@ -52,6 +52,20 @@ export const identity = {
   brandMarks: source.identity.brand_marks as string[],
 };
 
+/**
+ * The same positioning, written by someone who is not KAO MING.
+ *
+ * Everything else on the About page is the company describing itself, which a
+ * buyer discounts and is right to. This is the one statement of the same facts
+ * from a third party — the Mechanical Industry Network, published by ITRI, in
+ * its announcement of the 2025 lean-management event — so it is carried as what
+ * it is: attributed, dated, and linked.
+ */
+export const positioningCorroborated = {
+  statement: source.identity.positioning_corroborated_2025.statement_en as string,
+  source: source.identity.positioning_corroborated_2025.source as string,
+};
+
 export type SocialLink = { id: string; label: string; href: string };
 
 /**

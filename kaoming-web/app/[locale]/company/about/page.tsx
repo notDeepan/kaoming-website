@@ -7,7 +7,7 @@ import { FigureStrip } from '@/components/ui/figures';
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeader } from '@/components/ui/section-header';
 import { routing } from '@/i18n/routing';
-import { contact, identity, PLANT_AREA_M2 } from '@/lib/company';
+import { PLANT_AREA_M2, contact, identity, positioningCorroborated } from '@/lib/company';
 import { factoryImages } from '@/lib/images';
 import { allSeries } from '@/lib/machines';
 import { networkCounts } from '@/lib/distributors';
@@ -96,6 +96,23 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           ))}
         </Reveal>
         <p className="km-label mt-10 max-w-[70ch] text-km-steel-400">{t('claimsNote')}</p>
+
+        {/* And the same thing, said by someone else. A buyer discounts a
+            company's account of itself; this is the one third-party statement
+            of that account the site holds, so it is attributed and linked
+            rather than absorbed into the copy above. */}
+        <figure
+          data-corroboration
+          className="mt-16 max-w-[70ch] border-t border-km-steel-600/60 pt-10"
+        >
+          <p className="km-label text-km-steel-400">{t('corroborationLabel')}</p>
+          <blockquote className="mt-6 text-body text-km-offwhite">
+            {positioningCorroborated.statement}
+          </blockquote>
+          <figcaption className="km-label mt-4 text-km-steel-400">
+            {positioningCorroborated.source}
+          </figcaption>
+        </figure>
       </section>
 
       {/* --------------------------------------------------------- contact */}

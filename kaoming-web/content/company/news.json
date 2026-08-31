@@ -1,9 +1,9 @@
 {
-  "SOURCE": "Transcribed verbatim from https://www.kaoming.com/news-en and /news-tw — the NEWS page's three tabs (EXHIBITION, NEW PRODUCT, NEWEST). Decoded from the page's stored layout JSON rather than the rendered DOM, so nothing was paraphrased and nothing was lost to the carousel.",
+  "SOURCE": "Two provenances, recorded per item in `sourceRef`. (1) `kaoming.com` — transcribed verbatim from https://www.kaoming.com/news-en and /news-tw, decoded from the page's stored layout JSON rather than the rendered DOM, so nothing was paraphrased and nothing was lost to the carousel. (2) `research-2026` — KAOMING_NEWS_RESEARCH_2016-2026, compiled 31 August 2026 from named public sources and supplied by the client. Only entries that document marks VERIFIED are here; PENDING below records what was deliberately withheld.",
   "NAMING_RULE": "The source titles its product announcements by legacy code (KMC-321HIS, KMC-RF). CLAUDE.md forbids a legacy code as a displayed name, so each item is titled by the machine TYPE the source itself gives it and carries a `series` reference to the 2026 series page where one exists. The legacy code survives only in `legacyCode`, which is a search synonym and is never rendered.",
   "STALENESS": "The newest item KAO MING has published is from 2023. Nothing from 2024–2026 exists to transcribe. This file is the whole section's source: adding an entry here publishes it, in both locales, with no page edit.",
   "IMAGE_POLICY": "The source illustrates its internal items (staff incentive tours, the year-end dinner) with photographs of named employees. Those are not republished. Company items use _kit/factory imagery; product items link to the series page and use its catalogue photography.",
-  "DATE_NOTE": "The source dates only the exhibition. Every other item states a year in its own title and nothing finer, so `date` carries 1 January of that year and `dateIsApproximate` is true — the site prints the year alone for those, never a fabricated day.",
+  "DATE_NOTE": "`datePrecision` says how much of the date the source actually stated — 'day', 'month' or 'year'. The site prints exactly that much and never more: a fabricated '1 January' in a visible date would be a false claim. `date` always carries a full ISO value because it is the sort key and the machine-readable `datetime`.",
   "items": [
     {
       "slug": "emo-hannover-2023",
@@ -25,7 +25,9 @@
         "dateline": "日期：2023年9月18-23日",
         "booth": "攤位號碼 : HALL 013 C12",
         "body": ""
-      }
+      },
+      "datePrecision": "day",
+      "sourceRef": "kaoming.com"
     },
     {
       "slug": "high-speed-vertical-machining-center",
@@ -33,16 +35,22 @@
       "date": "2021-01-01",
       "dateIsApproximate": true,
       "image": null,
-      "series": { "category": "vertical-machining-center", "slug": "kmc-ce" },
+      "series": {
+        "category": "vertical-machining-center",
+        "slug": "kmc-ce"
+      },
       "legacyCode": "KMC-CE",
       "en": {
         "title": "High-speed Vertical Machining Center",
-        "body": "Apply Japan's top brand linear guideway, THK, and increase sliders on all three axes to enhance loading capacity response time for machining. Different from the common box type with internal rib, utilize the keel design with stronger bending resistance. Larger the table base to provide strong full support without overhang problem. The design of the inner cooled ballscrew, coolant system in the bearing seat, and motor board with cooling circuit are to reduce thermal growth."
+        "body": "Apply Japan's top brand linear guideway, THK, and increase sliders on all three axes to enhance loading capacity response time for machining. Different from the common box type with internal rib, utilize the keel design with stronger bending resistance. Larger the table base to provide strong full support without overhang problem. The design of the inner cooled ballscrew, coolant system in the bearing seat, and motor board with cooling circuit are to reduce thermal growth. Rapid traverse is provided at 32-36 m/min, against an industry average of 30 m/min."
       },
       "zh": {
         "title": "高速立式加工中心機",
         "body": "線軌全面採用日本第一品牌THK，增加線軌滑塊，提升反應速度及載重能力。有別於一般立柱箱型肋骨設計，採用龍骨設計提升整體抗彎抗扭能力。床身底座支撐面積加大，提高機台加工支撐剛性。三軸螺桿通孔、馬達板、軸承座冷卻設計，防止熱昇長維持高精度。快送速度提供 32-36 m/min，超越業界平均 30 m/min。"
-      }
+      },
+      "datePrecision": "year",
+      "sourceRef": "kaoming.com",
+      "sourceNote": "The rapid-traverse sentence was present in the Traditional-Chinese body on kaoming.com and absent from the English one. Restored to the English from the 2026 research file, which states the same figures in English."
     },
     {
       "slug": "high-rigidity-multi-face-machining-center",
@@ -50,7 +58,10 @@
       "date": "2019-01-01",
       "dateIsApproximate": true,
       "image": null,
-      "series": { "category": "multi-face-machining-center", "slug": "kmc-hma" },
+      "series": {
+        "category": "multi-face-machining-center",
+        "slug": "kmc-hma"
+      },
       "legacyCode": "KMC-RF",
       "en": {
         "title": "High Rigidity Multi-Face Machining Center",
@@ -59,7 +70,9 @@
       "zh": {
         "title": "高剛性多面體加工中心機",
         "body": "主要特色是結合具有多個附加頭可交換的四角柱主軸頭，以及具有高效率的定樑結構，主軸轉速可達 8000rpm，輸出馬力可達 22/26KW，輸出扭距可達 1000Nm，使機器的切削力更強勁，應用也更廣泛。由於高剛性四角柱主軸頭設計，切削能力比同類型競爭者高出 30%。"
-      }
+      },
+      "datePrecision": "year",
+      "sourceRef": "kaoming.com"
     },
     {
       "slug": "high-speed-double-column-machining-center",
@@ -77,7 +90,9 @@
       "zh": {
         "title": "高速龍門加工中心機",
         "body": "主要特色是配備了 4 支線軌支撐的四角柱主軸頭，使 Z 軸在 BOX IN BOX 的建構中上下移動，確保強力切削之剛性與穩定性。Z 軸 850mm 行程，可客製需求選配超大行程 1050mm。X／Y 軸均配備帶有高剛性最大預壓力之大型滾柱式線性導軌。其主軸為 IDD 直結傳動，BT40／BT50 錐度均可選用；並提供 10000rpm、12000rpm、15000rpm 等多樣化選擇。"
-      }
+      },
+      "datePrecision": "year",
+      "sourceRef": "kaoming.com"
     },
     {
       "slug": "55-years-anniversary",
@@ -94,7 +109,9 @@
       "zh": {
         "title": "2023 高明精機 55 週年慶",
         "body": "今年我們將與親愛的客戶、供應商和合作夥伴歡聚一堂，共同慶祝高明 55 週年！"
-      }
+      },
+      "datePrecision": "year",
+      "sourceRef": "kaoming.com"
     },
     {
       "slug": "lean-manufacturing",
@@ -111,7 +128,9 @@
       "zh": {
         "title": "2019-2020 精實管理",
         "body": "精實管理。"
-      }
+      },
+      "datePrecision": "year",
+      "sourceRef": "kaoming.com"
     },
     {
       "slug": "tmts-2018",
@@ -128,7 +147,158 @@
       "zh": {
         "title": "TMTS 2018 展覽花絮",
         "body": "TMTS 圓滿落幕，感謝幕前與幕後的所有的主管與員工。"
+      },
+      "datePrecision": "year",
+      "sourceRef": "kaoming.com"
+    },
+    {
+      "slug": "tmts-2026",
+      "kind": "exhibition",
+      "date": "2026-03-25",
+      "endDate": "2026-03-28",
+      "dateIsApproximate": false,
+      "datePrecision": "day",
+      "featured": true,
+      "image": null,
+      "series": null,
+      "legacyCode": null,
+      "sourceRef": "research-2026",
+      "sourceNote": "Show ran 25-28 March 2026 at the Taichung International Exhibition Center under the theme 'AI-Powered Sustainable Manufacturing': 750 exhibitors, 4,500+ booths, 80,000 sq m. The KMC-123EU is an Epeius EU machine with no 2026 catalogue in the content kit, so it has no series page to link to and its figures are attributed to the press rather than to a catalogue.",
+      "specCaveat": true,
+      "imagesWanted": "REQUEST FROM MARKETING: the KMC-123EU photograph supplied to Aerospace Manufacturing and Design (the original exists internally), and TMTS 2026 stand photographs.",
+      "press": [
+        {
+          "outlet": "Aerospace Manufacturing and Design",
+          "date": "2026-06-09",
+          "url": "https://www.aerospacemanufacturinganddesign.com/article/tmts-2026-highlights-ai-powered-sustainable-manufacturing/",
+          "quote": "high-rigidity gantry structures with integrated thermal management and smart compensation"
+        },
+        {
+          "outlet": "Modern Machine Shop",
+          "date": "2026-06-17",
+          "url": "https://www.mmsonline.com/articles/tmts-2026-taiwan-redefines-its-advanced-manufacturing-strategy",
+          "quote": "solutions designed to maintain structural rigidity and thermal stability during high-torque operations"
+        }
+      ],
+      "en": {
+        "title": "KMC-123EU launched at TMTS 2026",
+        "dateline": "DATE：March 25-28, 2026",
+        "venue": "Taichung International Exhibition Center, Taiwan",
+        "body": "KAO MING launched the KMC-123EU high-speed vertical double-column machining center at TMTS 2026, built for high-speed, high-precision work in aerospace and mould machining. As reported by the trade press covering the show, it carries a 24,000 rpm built-in spindle (HSK-A63, 25 kW) and an A/C-axis rotary table of 630 mm diameter for full five-axis capability, with travel of X 800 / Y 1,000 / Z 520 mm on linear guideways throughout, a 32-tool changer (40 optional), positioning accuracy of ±0.005 mm and repeatability of ±0.002 mm."
+      },
+      "zh": {
+        "title": "KMC-123EU 於 TMTS 2026 發表",
+        "dateline": "日期：2026年 3 月 25-28 日",
+        "venue": "台中國際展覽館",
+        "body": "高明精機於 TMTS 2026 台灣國際工具機展發表 KMC-123EU 高速立式龍門加工中心機，針對航太與模具加工的高速高精密需求而設。依展會現場國際專業媒體報導，該機配置 24,000 rpm 內建式主軸（HSK-A63，25 kW）及 630 mm A/C 軸轉盤，具備完整五軸加工能力；行程 X 800 / Y 1,000 / Z 520 mm，三軸均採用線性導軌，刀庫 32 把（可選配 40 把），定位精度 ±0.005 mm、重複精度 ±0.002 mm。"
+      }
+    },
+    {
+      "slug": "digital-lean-management-2025",
+      "kind": "company",
+      "date": "2025-08-21",
+      "dateIsApproximate": false,
+      "datePrecision": "day",
+      "featured": true,
+      "image": "/img/factory/shopfloor-168CE-assembly.jpg",
+      "series": null,
+      "legacyCode": null,
+      "sourceRef": "research-2026",
+      "sourceNote": "Open demonstration event, 13:30-15:30 at No. 53 Houke S. Rd., Houli, Taichung. Announced by 機械工業網 (Mechanical Industry Network, published by ITRI), 14 August 2025. The programme is the government-supported 114年數位化精實管理 TPS 補助計畫. Illustrated with KAO MING's own shop-floor photography; the article's own header image is third-party and is not used.",
+      "imagesWanted": "REQUEST FROM MARKETING: event photographs — attendees, the results presentation, the production-line tour.",
+      "press": [
+        {
+          "outlet": "機械工業網 / Mechanical Industry Network (ITRI)",
+          "date": "2025-08-14",
+          "url": "https://www.automan.tw/tw/news-detail/Events/20250821_u_kaoming",
+          "quote": null
+        }
+      ],
+      "en": {
+        "title": "Results of the 2025 Digital Lean Management programme",
+        "venue": "KAO MING, Houli District, Taichung",
+        "body": "KAO MING opened its Houli plant to present the results of the government-supported 2025 Digital Lean Management (TPS) programme. Three outcomes were shown: digital scheduling, for more precise operation of the production line; delivery-date response, which significantly improved customer satisfaction; and inventory control, at lower cost and higher efficiency. The afternoon closed with a tour of the production line. The work continues the Toyota Production System KAO MING adopted in 2016 and the lean management programme of 2019-2020."
+      },
+      "zh": {
+        "title": "114 年數位化精實管理 TPS 計畫成果發表",
+        "venue": "高明精機，台中市后里區",
+        "body": "高明精機於后里廠舉辦成果發表會，公開 114 年數位化精實管理 TPS 補助計畫的導入成果：數位化排程，使產線運作更為精準；交期回覆，顯著提升客戶滿意度；庫存管控，降低成本並提升效率。活動最後安排產線參觀。該計畫延續 2016 年導入的 TPS 豐田式生產系統，以及 2019-2020 年的精實管理工作。"
+      }
+    },
+    {
+      "slug": "timtos-2025",
+      "kind": "exhibition",
+      "date": "2025-03-03",
+      "endDate": "2025-03-08",
+      "dateIsApproximate": false,
+      "datePrecision": "day",
+      "image": null,
+      "series": null,
+      "legacyCode": null,
+      "sourceRef": "research-2026",
+      "sourceNote": "TIMTOS 2025 was the 30th edition, themed 'Integrate to Innovate'. The organiser named KAO MING among the industry leaders commending the show, alongside FFG, Tongtai, Quaser, YCM and SOCO — that roster is recorded here and is not published, see COMPETITOR_NAMES. Stand number not established; no placeholder is rendered.",
+      "imagesWanted": "REQUEST FROM MARKETING: TIMTOS 2025 stand photographs.",
+      "press": [
+        {
+          "outlet": "TIMTOS official",
+          "date": "2025-03-08",
+          "url": "https://www.timtos.com.tw/en/news/5C618295AABA9519/info.html",
+          "quote": null
+        }
+      ],
+      "en": {
+        "title": "2025 TIMTOS Taipei",
+        "dateline": "DATE：March 3-8, 2025",
+        "venue": "Taipei Nangang Exhibition Center Halls 1 & 2, and TWTC Hall 1",
+        "body": "The 30th edition of TIMTOS, themed 'Integrate to Innovate', where KAO MING was named by the organiser among the industry leaders commending the show. More than 1,000 exhibitors took 6,100 booths, and 4,163 international buyers from 90 countries attended — up 5.1% on the previous edition."
+      },
+      "zh": {
+        "title": "2025 台北國際工具機展 TIMTOS",
+        "dateline": "日期：2025年 3 月 3-8 日",
+        "venue": "台北南港展覽館第一、二館及世貿一館",
+        "body": "第 30 屆 TIMTOS 台北國際工具機展，主題為「Integrate to Innovate」，高明精機獲主辦單位列為肯定展會的業界領導廠商之一。本屆展會逾 1,000 家廠商參展、6,100 個攤位，來自 90 個國家的國際買主達 4,163 人，較上屆成長 5.1%。"
+      }
+    },
+    {
+      "slug": "timtos-2023",
+      "kind": "exhibition",
+      "date": "2023-03-01",
+      "dateIsApproximate": true,
+      "datePrecision": "month",
+      "image": null,
+      "series": null,
+      "legacyCode": null,
+      "sourceRef": "research-2026",
+      "sourceNote": "The organiser listed KAO MING among the show's all-star exhibitors, alongside FFG, TTGroup, HIWIN, YCM, Victor Taichung, Siemens, HEIDENHAIN, FANUC and MAZAK — recorded here, not published, see COMPETITOR_NAMES. The source gives the month and not the day, so a month is what the site prints. Stand number not established.",
+      "imagesWanted": "REQUEST FROM MARKETING: TIMTOS 2023 stand photographs.",
+      "press": [
+        {
+          "outlet": "TIMTOS official",
+          "date": null,
+          "url": "https://www.timtos.com.tw/en/news/2AF754815274DDCD/info.html",
+          "quote": null
+        }
+      ],
+      "en": {
+        "title": "2023 TIMTOS Taipei",
+        "body": "KAO MING was listed by the organiser among the show's all-star exhibitors. TIMTOS 2023 drew more than 45,000 visitors, including nearly 6,000 international buyers from over 100 countries."
+      },
+      "zh": {
+        "title": "2023 台北國際工具機展 TIMTOS",
+        "body": "高明精機獲主辦單位列為本屆展會的明星展出廠商之一。TIMTOS 2023 吸引逾 45,000 人次參觀，包含來自逾 100 個國家、近 6,000 位的國際買主。"
       }
     }
-  ]
+  ],
+  "PRESS_POLICY": "Trade-press articles are not KAO MING's to republish. Where third-party coverage exists it is carried as `press`: outlet, date, one short quotation and a link out. That is the credibility marker and the whole of what is reproduced — never an article body, never an article's photograph.",
+  "COMPETITOR_NAMES": "Two organiser releases list KAO MING among other named exhibitors (TIMTOS 2023 and 2025). Those rosters are recorded in `sourceNote` and are NOT published: CLAUDE.md forbids a named cooperation claim, and a list of other manufacturers on KAO MING's own news page reads as one whether or not it is meant to.",
+  "PENDING": {
+    "_note": "Real, but not publishable yet. Recorded here so none of it is lost, and none of it reaches the site until someone at KAO MING confirms the missing detail. Source: KAOMING_NEWS_RESEARCH_2016-2026.",
+    "imts-2026": "Chicago, September 2026. A 20-minute case study in the Smart Manufacturing Theater. Known internally, published nowhere. NEEDED: exact date and slot, stand number, final presentation title. Strongest candidate for an Upcoming Events block, and it supports the stated ambition to grow in the United States.",
+    "timtos-2027": "Taipei, 2-6 March 2027, themed 'Manufacturing the Next'. Booth applications ran 28 April - 31 August 2026. NEEDED: has KAO MING booked, and which stand?",
+    "awards": "Taiwan Excellence Award; Good Design Product Award; Machine Tool R&D Innovation Product Competition Innovation Product Award; National Standard Mark (1982); CE; German TÜV; ISO 9001. Listed without years on a third-party directory. No published source confirms the years, so none is published as a dated item. NEEDED: the certificates or trophy photographs — they carry the year, the edition, the tier and the winning model, and would convert one vague claim into several dated, photographed entries. Highest-value single action on the list.",
+    "jimtof-2024": "KAO MING was NOT among the companies named in the association's release. Do not claim attendance without internal confirmation.",
+    "product-launch-dates": "The KMC-CE and multi-face machining centre announcements are undated on kaoming.com and are dated here only to the year each announcement implies. NEEDED: real publication dates.",
+    "kmc-123eu-spec-sheet": "The trade press has published a full KMC-123EU specification that is in no catalogue in the kit. It appears in the TMTS 2026 entry attributed to the press and marked as such. It must NOT reach a product page, and no KMC-123EU series page exists, until an official spec sheet is signed off.",
+    "culture": "Company trips (Shikoku 2019, Kyushu 2018, Singapore and Malaysia 2017) and the 2018 year-end banquet are verified and photographed on the current site. Held back from the news feed deliberately: on an English-language B2B site they read as filler beside exhibitions and launches. They belong in a Life at KAO MING or careers block."
+  }
 }

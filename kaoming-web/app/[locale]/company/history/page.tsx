@@ -52,6 +52,13 @@ const ILLUSTRATIONS: Record<number, { src: string; alt: string }> = {
     src: '/img/factory/kaoming-factory-02-ctsp-plant-exterior.jpg',
     alt: 'The constant-temperature plant in the Central Taiwan Science Park.',
   },
+  /* Illustration, not evidence — this is the line the 2025 programme was
+     measured on, not a photograph of the event itself. Marketing has the event
+     photographs; news.json records the request. */
+  2025: {
+    src: '/img/factory/shopfloor-168CE-assembly.jpg',
+    alt: 'Assembly on the KAO MING shop floor.',
+  },
 };
 
 /**
@@ -67,8 +74,12 @@ const ILLUSTRATIONS: Record<number, { src: string; alt: string }> = {
  * — reproduced independently by the Traditional Chinese page. `lib/company`
  * records the method and `content/company/company.json` the evidence.
  *
- * What survives from that caution is the provenance line at the foot, which now
- * names the one figure the two locales still disagree on.
+ * What survives from that caution is the provenance line at the foot, which
+ * names the one figure the two locales still disagree on — and now also marks
+ * where the record stops being KAO MING's own verbatim writing. The about page
+ * timeline ends at 2016; everything after it is carried forward from KAO MING's
+ * news and from named public sources, which is a weaker provenance and is said
+ * to be one rather than quietly blended in.
  */
 export default async function HistoryPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -83,7 +94,7 @@ export default async function HistoryPage({ params }: { params: Promise<{ locale
       <PageHeader
         label={t('label')}
         title={t('title')}
-        lede={t('lede')}
+        lede={t('lede', { count: milestones.length })}
         aside={
           <Figures
             figures={[
@@ -97,19 +108,23 @@ export default async function HistoryPage({ params }: { params: Promise<{ locale
       <HistoryTimeline
         milestones={milestones}
         illustrations={ILLUSTRATIONS}
-        label={t('timelineLabel')}
+        label={t('timelineLabel', { first, last })}
         hint={t('scrollHint')}
       />
 
       {/*
-       * The same ten milestones again, as a plain dated list.
+       * The same milestones again, as a plain dated list.
        *
        * Not a duplicate for its own sake: the timeline above is pinned and
        * scrubbed, which makes it a poor thing to scan, to search in the browser,
        * or to print. This is the record; that is the reading of it.
        */}
       <section className={`${SHELL} py-24`}>
-        <SectionHeader index="01" label={t('milestonesLabel')} title={t('milestonesTitle')} />
+        <SectionHeader
+          index="01"
+          label={t('milestonesLabel')}
+          title={t('milestonesTitle', { count: milestones.length })}
+        />
 
         <ol className="mt-14 border-t border-km-steel-600/60">
           {milestones.map((milestone) => (

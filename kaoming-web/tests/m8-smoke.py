@@ -147,7 +147,16 @@ with sync_playwright() as p:
         rm.evaluate("() => getComputedStyle(document.querySelector('[data-timeline]')).position")
         != "fixed",
     )
-    check("and all ten years are readable", rm.locator("[data-year]").count() == 10)
+    # Every year, not a number written here — the record grows. What Part P asks
+    # is that the calm variant loses none of it, so this is measured against the
+    # plain list, which is the record either way.
+    calm_years = rm.locator("[data-year]").count()
+    calm_records = rm.locator("[data-record]").count()
+    check(
+        "and every year is readable without the motion",
+        calm_years == calm_records and calm_years >= 10,
+        f"{calm_years} years, {calm_records} records",
+    )
 
     rm.goto(f"{BASE}/en/company/factory")
     rm.wait_for_load_state("networkidle")
